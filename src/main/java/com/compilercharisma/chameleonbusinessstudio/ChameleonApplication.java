@@ -1,4 +1,4 @@
-package com.example.chameleon;
+package com.compilercharisma.chameleonbusinessstudio;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
