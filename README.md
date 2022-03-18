@@ -8,7 +8,7 @@
 
 ```
 CREATE DATABASE chameleon_business_studio;
-CREATE USER 'springuser'@'%' IDENTIFIED BY password;
+CREATE USER 'springuser'@'%' IDENTIFIED BY 'password';
 GRANT ALL ON chameleon_business_studio.* TO 'springuser'@'%';
 ```
 
