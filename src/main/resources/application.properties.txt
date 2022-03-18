@@ -1,0 +1,14 @@
+# be careful: after copying this file as application.properties:
+#   DON'T COMMIT THAT FILE TO GIT!!!
+# the .gitignore file in this directory should prevent that, but just be wary
+
+# https://spring.io/guides/gs/accessing-data-mysql/
+
+# 'update' means hibernate handles updating the DB when classes change
+# can set this to 'none' in deployment, after the DB has been setup
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/chameleon_business_studio
+spring.datasource.username=springuser
+spring.datasource.password=<<PASSWORD GOES HERE>>
+spring.datasource.driver-class-name =com.mysql.jdbc.Driver
+#spring.jpa.show-sql: true
