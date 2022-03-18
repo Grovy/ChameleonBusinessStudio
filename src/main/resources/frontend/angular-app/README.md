@@ -1,6 +1,7 @@
 # AngularApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
+To learn more about this file see: https://angular.io/config/tsconfig.
 
 ## Development server
 
