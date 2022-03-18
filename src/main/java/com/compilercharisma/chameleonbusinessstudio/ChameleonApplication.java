@@ -1,4 +1,4 @@
-package com.example.chameleon;
+package com.compilercharisma.chameleonbusinessstudio;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,5 +9,4 @@ public class ChameleonApplication {
     public static void main(String[] args) {
         SpringApplication.run(ChameleonApplication.class, args);
     }
-
 }
