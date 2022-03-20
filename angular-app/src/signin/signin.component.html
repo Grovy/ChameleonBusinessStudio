@@ -1,0 +1,29 @@
+
+<div>
+    <!--https://stackoverflow.com/questions/39625587/how-do-i-securely-use-google-api-keys-->
+    <h1>{{googleClientData.google_client_id}}</h1>    
+    <!-- Can't bind to 'client_id' since it isn't a known property of 'div'. -->
+    <!--<div id="g_id_onload"
+         data-client_id="{{googleClientData.google_client_id}}"
+         data-login_uri="http://localhost:8080/auth/login"
+    ></div>-->
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+    <script>
+        // Angular doesn't allow running script tags inside HTML elements
+        // so this cannot run
+        window.onload = function(){
+            google.accounts.id.initialize({
+                client_id: "{{googleClientData.google_client_id}}",
+                login_uri: "http://localhost:8080/auth/login"
+            });
+            document.getElementById("g_id_onload")["data-client_id"] = "{{googleClientData.google_client_id}}";
+        }
+    </script>
+</div>
