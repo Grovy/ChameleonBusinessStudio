@@ -15,7 +15,7 @@ public class ExampleService {
     
     /**
      * Java Spring sees this ctor and says
-     * "this guy needs an ExampleRepositoy. I'll go ahead and make one for him"
+     * "this guy needs an ExampleRepository. I'll go ahead and make one for him"
      * 
      * @param repo a need this class has, which Spring will supply 
      */
