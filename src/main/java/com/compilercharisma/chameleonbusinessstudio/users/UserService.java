@@ -28,6 +28,15 @@ public class UserService {
         return new Admin(repo.save(user));
     }
     
+    /**
+     * note that this method throws a NoSuchElementException if no user
+     * exits with the given email.
+     * 
+     * @param email the email of the user to get
+     * 
+     * @return the user with the given email. Their role is given by the 
+     * actual type returned 
+     */
     public AbstractUser get(String email){
         UserEntity e = repo.findUserByEmail(email).orElseThrow();
         // don't like hard-coding strings like this. Probably use some enum-ish class instead

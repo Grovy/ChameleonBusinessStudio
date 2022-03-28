@@ -3,10 +3,10 @@
     <!--https://stackoverflow.com/questions/39625587/how-do-i-securely-use-google-api-keys-->
     <h1>{{googleClientData.google_client_id}}</h1>    
     <!-- Can't bind to 'client_id' since it isn't a known property of 'div'. -->
-    <!--<div id="g_id_onload"
-         data-client_id="{{googleClientData.google_client_id}}"
+    <div id="g_id_onload"
+         attr.data-client_id="{{googleClientData.google_client_id}}"
          data-login_uri="http://localhost:8080/auth/login"
-    ></div>-->
+    ></div>
     <div class="g_id_signin"
          data-type="standard"
          data-size="large"
