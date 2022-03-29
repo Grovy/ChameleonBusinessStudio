@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- *
+ * we will definitely want to rework this
  * @author Matt
  */
 @Configuration
@@ -20,5 +20,6 @@ public class TempSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         security.httpBasic().disable();
+        security.csrf().disable();
     }
 }

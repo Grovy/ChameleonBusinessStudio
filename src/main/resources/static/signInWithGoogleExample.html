@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign in with Google Example</title>
+        <!--https://stackoverflow.com/questions/39625587/how-do-i-securely-use-google-api-keys-->
+        <meta charset="windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+    </head>
+    <body>
+        <!-- I'm using a custom 'template engine' to load this file -->
+        <div id="g_id_onload"
+            data-client_id="$(google_client_id)"
+            data-login_uri="/auth/login"
+        ></div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
+    </body>
+</html>

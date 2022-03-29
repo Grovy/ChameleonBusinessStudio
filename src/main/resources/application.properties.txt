@@ -12,3 +12,6 @@ spring.datasource.username=springuser
 spring.datasource.password=<<PASSWORD GOES HERE>>
 spring.datasource.driver-class-name =com.mysql.jdbc.Driver
 #spring.jpa.show-sql: true
+
+google.client.id=<<GOOGLE CLIENT ID GOES HERE>>
+spring.thymeleaf.enabled=false
