@@ -4,11 +4,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SignInComponent } from '../signin/signin.component';
+import { SplashPageComponent } from '../splash/splash.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignInComponent
+    SignInComponent,
+    SplashPageComponent
   ],
   imports: [
     BrowserModule,

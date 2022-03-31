@@ -10,15 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * this class is responsible for handling the "login with Google" aspect of the
  * project.
- * 
- * It still has yet to implement the redirects and setting the logged in user
- * upon validating the user's Google account
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
@@ -29,33 +28,57 @@ public class AuthenticationController {
     we can use this to access values from application.properties 
      */
     private final Environment env;
+    
     private final GoogleAuthenticator auth;
+    private final AuthenticationService authService;
     private final UserService users;
     
     @Autowired
-    public AuthenticationController(Environment env, GoogleAuthenticator auth, UserService users){
+    public AuthenticationController(Environment env, GoogleAuthenticator auth, AuthenticationService authService, UserService users){
         this.env = env;
         this.auth = auth;
+        this.authService = authService;
         this.users = users;
     }
     
     /**
-     * the CrossOrigin annotation allows the Angular app to make get requests to
-     * this method. We will not do a hard-coded allowed origin in the final
-     * version, and I'm starting to think only Angular needs the google client
-     * id anyway, so I could just store that in the Angular app instead
+     * allows the Angular app to get the google client id, as it does not have
+     * direct access to the property file
+     * 
+     * note that this method should not require authentication, as it's OK for
+     * the Google client ID to be visible, JUST NOT THE CLIENT SECRET
      * 
      * @return a JSON object containing {google_client_id: string}
      */
-    @CrossOrigin(origins="http://localhost:4200")
     @GetMapping("/credentials")
     public @ResponseBody Map<String, Object> getCredentialsForAngular(){
         Map<String, Object> giveThisToNg = new HashMap<>();
-        giveThisToNg.put("google_client_id", env.getProperty("google.client.id"));
+        giveThisToNg.put("google_client_id", env.getProperty("spring.security.oauth2.client.registration.google.clientId"));
         return giveThisToNg;
     }
     
+    /**
+     * test method so we can see what attributes the Google login provides.
+     * 
+     * @param user automatically set by Spring if the user is logged in
+     * 
+     * @return JSON data of the user 
+     */
+    @GetMapping(path="/principal")
+    public @ResponseBody Map<String, Object> user(@AuthenticationPrincipal OAuth2User user){
+        try {
+            AbstractUser model = authService.getLoggedInUser();
+            System.out.println(model);
+        } catch(UserNotRegisteredException ex){
+            System.out.println("Current user isn't registered");
+        }
+        return user.getAttributes();
+    }
+    
     /** 
+     * Currently unused, as I'm using the default Spring Security Oauth2 to
+     * handle authentication
+     * 
      * each param is provided by the Google Sign In library
      * @param cookiesCsrfToken 
      * @param credential
@@ -91,6 +114,7 @@ public class AuthenticationController {
         return sb.toString();
     }
     
+    // unused for now
     private void handleGoogleLogin(String email){
         try {
             AbstractUser user = users.get(email);
@@ -102,7 +126,8 @@ public class AuthenticationController {
     }
     
     /**
-     * this one is meant to be accessed via the Spring Boot port
+     * test example showing how the manual implementation of signin with google
+     * looks.
      * 
      * @return signInWithGoogleExample.html with the credentials baked in
      */
@@ -110,7 +135,7 @@ public class AuthenticationController {
     public @ResponseBody String test(){
         StringBuilder content = new StringBuilder();
         try(
-            InputStream s = AuthenticationController.class.getResourceAsStream("/static/signInWithGoogleExample.html");
+            InputStream s = AuthenticationController.class.getResourceAsStream("/signinWithGoogleManual.html");
             InputStreamReader in = new InputStreamReader(s);
             BufferedReader buff = new BufferedReader(in);
         ){
@@ -123,7 +148,7 @@ public class AuthenticationController {
         
         return content.toString().replace(
             "$(google_client_id)", 
-            env.getProperty("google.client.id"
+            env.getProperty("spring.security.oauth2.client.registration.google.clientId"
         ));
     }
 }

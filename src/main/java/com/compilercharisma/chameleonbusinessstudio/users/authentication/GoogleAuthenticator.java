@@ -2,9 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.users.authentication;
 
 import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -14,6 +12,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /** 
+ * Required if we manually implement "sign in with google"
+ * not needed if we go with the Spring Boot built-in implementation
+ * 
  * Helpful links:
  * - https://developers.google.com/identity/gsi/web/guides/overview
  * - https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
@@ -23,17 +24,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GoogleAuthenticator {
-    private HttpTransport transport;
-    private JsonFactory jsonFactory;
-    private GoogleIdTokenVerifier verifier;
-    private final Environment env;
+    private final GoogleIdTokenVerifier verifier;
     
     @Autowired
-    public GoogleAuthenticator(Environment env){
-        this.env = env;        
+    public GoogleAuthenticator(Environment env){      
         verifier = new GoogleIdTokenVerifier
                 .Builder(new NetHttpTransport(), new GsonFactory())
-                .setAudience(Collections.singleton(env.getProperty("google.client.id")))
+                .setAudience(Collections.singleton(env.getProperty("spring.security.oauth2.client.registration.google.clientId")))
                 .build();
     }
     

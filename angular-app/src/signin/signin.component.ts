@@ -2,6 +2,13 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 /*
+I can remove a lot of this if we just stick to Spring Boot's implementation of
+sign in with Google
+
+https://developers.google.com/identity/gsi/web/guides/overview
+
+
+
 Good GRAVY Angular does NOT want to work with Google libraries.
 
 Angular only loads script tags in the document head
@@ -30,13 +37,23 @@ interface GoogleClientData {
     styleUrls: ['./signin.component.css']
 })
 export class SignInComponent {
+    // GNDN
+}
+
+/*
+old implementation using the minimal "sign in with google"
+I really like how this one looks, but I'm not sure if it's compatible with
+Spring, as I couldn't find any way of setting the Principal or having Spring
+mark the request as "Authenticated" using this method
+*/
+class SignInComponentOld {
     // Google Authentication library
     SCRIPT_URL: string = "https://accounts.google.com/gsi/client";
     googleClientData: GoogleClientData;
     
     constructor(private http: HttpClient) {
         this.googleClientData = {
-            google_client_id: "not found"
+            google_client_id: "waiting for response from Spring Boot server..."
         };
         
         // I don't like hard coding this URL

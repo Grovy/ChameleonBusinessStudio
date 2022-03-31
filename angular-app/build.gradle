@@ -1,0 +1,16 @@
+// https://github.com/node-gradle/gradle-node-plugin
+// https://blogs.perficient.com/2021/08/30/angular-and-spring-boot-as-a-single-application/
+// https://stackoverflow.com/questions/53058824/angular-and-spring-boot-are-not-binding-together-so-they-run-on-same-port-8080
+plugins {
+    id "com.github.node-gradle.node" version "3.2.1"
+}
+
+version '0.0.0'
+
+node {
+  download = false
+}
+
+task build(type: NpmTask) {
+  args = ['run', 'build']
+}

@@ -53,4 +53,8 @@ public class UserService {
                 throw new UnsupportedOperationException(String.format("no data class for role \"%s\"!", e.getRole()));
         }
     }
+    
+    public boolean isRegistered(String email){
+        return repo.findUserByEmail(email).isPresent();
+    }
 }
