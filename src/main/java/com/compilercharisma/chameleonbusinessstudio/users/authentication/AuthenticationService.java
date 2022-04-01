@@ -10,8 +10,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 /**
- * this currently works, we just MAY want to implement some way of setting the 
- * Principal to an instance of AbstractUser instead of the default OAuth2User
+ * Use this class to get the logged in user.
+ * 
+ * Note that there are two types of user that can log in:
+ * - Google Users (unregistered)
+ * - OUR Users (registered)
+ * 
+ * Keep that in mind when using this class
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
