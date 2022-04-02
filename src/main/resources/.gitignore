@@ -1,2 +1,3 @@
 # don't commit credentials!
-application.properties 
+application.properties
+client_secret.apps.googleusercontent.com.json
