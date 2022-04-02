@@ -1,0 +1,43 @@
+.header{
+  position: absolute;
+  text-align: center;
+  background: lightseagreen;
+}
+
+.right{
+  background: deepskyblue;
+}
+
+.left{
+  background: inherit;
+}
+
+.login_form{
+  position: relative;
+  width: 272px;
+  height: 403px;
+}
+
+.footer{
+  background: lightseagreen;
+  width: 100%;
+  margin: auto;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  color: #ffffff;
+}
+
+.vendia{
+  margin: auto;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.copyright{
+  text-align: center;
+  margin: auto;
+}
+
+
+
