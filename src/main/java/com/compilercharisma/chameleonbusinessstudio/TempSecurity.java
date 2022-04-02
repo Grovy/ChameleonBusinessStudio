@@ -8,7 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.web.cors.CorsConfiguration;
 
 /**
- * we will definitely want to rework this
+ * we will definitely want to rework this, as I'm not sure which paths we need
+ * to authenticate and allow
+ * 
  * @author Matt
  */
 @Configuration
@@ -39,8 +41,8 @@ public class TempSecurity extends WebSecurityConfigurerAdapter {
                     .antMatchers(
                             "/", 
                             "/index", 
-                            "/index.html", 
-                            "/auth/credentials"
+                            "/index.html",
+                            "/oauth/**"
                     ).permitAll()
                     //.anyRequest().authenticated()//a -> a.antMatchers("/auth/credentials").permitAll().anyRequest().authenticated());
                 .and()

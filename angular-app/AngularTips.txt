@@ -1,0 +1,5 @@
+
+
+# How to fix "Can't bind to X since it isn't a known property of Y":
+    replace <Y X={{Z}}></Y>
+    with <Y attr.X={{Z}}></Y>

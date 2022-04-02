@@ -11,6 +11,22 @@ After logging in, you can check the logged in user in /auth/principal
 
 ## Setting up the application
 
+### Angular CLI
+
+1. Make sure you have Node.Js installed in your local machine
+
+https://nodejs.org/en/
+
+2. At the time of cloning the repository, if you go to ChameleonBusinessStudio/angular-app and there is no directory called /node_modules
+    
+    1. First change directory to /angular-app
+    2. Run the command `> npm i`
+    3. You should see the /node_modules installed in the directory
+    4. Run the command `> npm install -g @angular/cli` to install Angular CLI globally
+    5. Lastly, install typescript by running the command `> npm install -g typescript`
+
+3. By then, hopefully all the error messages are gone now
+
 ### Database
 
 1. Run the following commands in mysql:
