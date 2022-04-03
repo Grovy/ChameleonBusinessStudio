@@ -11,6 +11,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {MatButtonModule} from "@angular/material/button";
+import { HelloComponent } from './hello/hello.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import {MatButtonModule} from "@angular/material/button";
     AppComponent,
     SignInComponent,
     SplashComponent,
+    HelloComponent,
     AdminConfigurationComponent,
     SplashComponent
 
