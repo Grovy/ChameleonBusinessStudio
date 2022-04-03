@@ -2,25 +2,19 @@ package com.compilercharisma.chameleonbusinessstudio;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.cors.CorsConfiguration;
 
 /**
- * we will definitely want to rework this, as I'm not sure which paths we need
+ * we will definitely need to rework this, as I'm not sure which paths we need
  * to authenticate and allow
  * 
  * @author Matt
  */
 @Configuration
 @EnableWebSecurity
-public class TempSecurity extends WebSecurityConfigurerAdapter {
-    
-    @Override
-    public void configure(WebSecurity security) throws Exception {
-        security.ignoring().antMatchers("/resources/static/**");
-    }
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity security) throws Exception {
@@ -31,22 +25,36 @@ public class TempSecurity extends WebSecurityConfigurerAdapter {
         Maybe put API under an /api route?
         */
         security
-                .httpBasic()
-                .disable();
+                .httpBasic(); // not sure if we need this
         security
                 .oauth2Login()
+                    .permitAll() // non-logged in users need access to log in page
+                    .and()
+                .logout()
                     .permitAll()
-                .and()
+                    .and()
                 .authorizeRequests()
                     .antMatchers(
                             "/", 
                             "/index", 
                             "/index.html",
-                            "/oauth/**"
+                            "/styles.**.css", // Angular files
+                            "/runtime.**.js",
+                            "/polyfills.**.js",
+                            "/main.**.js",
+                            "/oauth/**" // needed for login
                     ).permitAll()
-                    //.anyRequest().authenticated()//a -> a.antMatchers("/auth/credentials").permitAll().anyRequest().authenticated());
+                    .anyRequest()
+                        .authenticated()
                 .and()
-                .cors().configurationSource(cs-> new CorsConfiguration().applyPermitDefaultValues());
+                .cors().configurationSource(cs-> new CorsConfiguration().applyPermitDefaultValues()); // not sure what this does
+        
+        /*
+        https://stackoverflow.com/questions/58195990/how-to-disable-logout-confirmation-in-spring-security-using-xml
+        
+        can maybe remove this line once we have a post request for logout,
+        assuming it doesn't prompt 'are you sure you want to log out?'
+        */
         security.csrf().disable();
     }
 }

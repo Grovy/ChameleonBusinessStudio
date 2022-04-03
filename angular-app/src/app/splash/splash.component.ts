@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'splash',
-    templateUrl: './splash.component.html',
-    styleUrls: []
+  selector: 'app-splash',
+  templateUrl: './splash.component.html',
+  styleUrls: ['./splash.component.css']
 })
-export class SplashPageComponent {
+export class SplashComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
 
 }

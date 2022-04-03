@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { SignInComponent } from './signin/signin.component';
-import { SplashPageComponent } from './splash/splash.component';
+import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { MatSliderModule } from '@angular/material/slider';
@@ -17,8 +17,10 @@ import {MatButtonModule} from "@angular/material/button";
   declarations: [
     AppComponent,
     SignInComponent,
-    SplashPageComponent,
-    AdminConfigurationComponent
+    SplashComponent,
+    AdminConfigurationComponent,
+    SplashComponent
+
   ],
   imports: [
     BrowserModule,
@@ -29,6 +31,7 @@ import {MatButtonModule} from "@angular/material/button";
       {path: 'admin-configuration', component: AdminConfigurationComponent},
     ]),
     MatToolbarModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
