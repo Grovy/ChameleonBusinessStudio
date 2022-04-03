@@ -4,18 +4,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './signin/signin.component';
-import { SplashPageComponent } from './splash/splash.component';
+import { SplashComponent } from './splash/splash.component';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
-    SplashPageComponent
+    SplashComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
