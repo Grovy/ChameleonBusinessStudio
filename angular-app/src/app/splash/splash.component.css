@@ -1,32 +1,39 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 .header-container{
+  background-color: cornflowerblue;
   position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 10px;
-  background-color: cornflowerblue;
-  /*padding: 20px;*/
 }
-.chameleon-business-studio{
+.business-logo-wrapper{
+  align-self: start;
   position: relative;
+  min-width: 100px;
+  min-height: 125px;
+  grid-column: 1;
   margin: auto;
   padding: 20px;
   display: inline-block;
 }
 
-.chameleon-business-studio h1{
+h1{
   text-align: left;
+  color: white;
+  box-shadow: -2px -2px;
+  padding: 5px 10px;
   margin: auto;
 }
 
-.bolded{
-  font-weight: bold;
+.button-wrapper{
+  position: relative;
+  grid-column: 4;
 }
 
-.google-sign-in{
+sign-in{
   position: absolute;
-  display: inline-block;
+  /*display: inline-block;*/
   right: 50px;
   top: 50px;
 }
