@@ -35,6 +35,7 @@ https://nodejs.org/en/
 
 ### Database
 
+
 1. Run the following commands in mysql:
 
 ```
@@ -61,5 +62,7 @@ be sure to update application.properties!
 
 To run the application, you'll need to make sure your Angular App is built, 
 then run spring via
+
+
 
 ```gradle bootRun```
