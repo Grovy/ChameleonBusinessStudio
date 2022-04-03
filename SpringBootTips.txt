@@ -1,0 +1,20 @@
+
+
+
+# Get the value of something in application.properties:
+    https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/env/Environment.html
+    if class Foo needs access to property "p",
+    then use
+        @Autowired
+        public Foo(Environment env){
+            env.getProperty("p");
+        }
+
+# Get the logged in user
+    if class Foo needs to get the logged in user,
+    then use
+        @Autowired
+        public Foo(AuthenticationService auth){
+            String email = auth.getLoggedInEmail();
+            // see AuthenticationService for more method options!
+        }
