@@ -27,6 +27,12 @@ https://nodejs.org/en/
 
 3. By then, hopefully all the error messages are gone now
 
+4. Also, since we will be using most of the styles and component from @Angular/material it is important that we import and make use of the UI Package
+
+    1. Once everything is installed, go to `/angular-app/` directory
+    2. run the command `> npm install --save @angular/material @angular/cdk`
+    3. Double check that under `/angular-app/angular.json` in line 32, the first stylesheet Angular is using is `"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"`, if its not, then you can go ahead and copy and paste it as the first element of the json array.
+
 ### Database
 
 1. Run the following commands in mysql:
