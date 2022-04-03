@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { SignInComponent } from './signin/signin.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatButtonModule} from "@angular/material/button";
+import { HelloComponent } from './hello/hello.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
-    SplashComponent
+    SplashComponent,
+    HelloComponent
   ],
   imports: [
     BrowserModule,
