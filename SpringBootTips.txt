@@ -18,3 +18,8 @@
             String email = auth.getLoggedInEmail();
             // see AuthenticationService for more method options!
         }
+
+# Spring Security antMatchers
+    antMatchers("/resources/static/**")
+    DOES NOT match requests to that FOLDER, but that URL, so
+    localhost:1234/resources/static/foo

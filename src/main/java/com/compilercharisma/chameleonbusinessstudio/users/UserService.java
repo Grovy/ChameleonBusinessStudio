@@ -1,5 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.users;
 
+import com.compilercharisma.chameleonbusinessstudio.users.authentication.UserNotRegisteredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,9 @@ public class UserService {
      * actual type returned 
      */
     public AbstractUser get(String email){
-        UserEntity e = repo.findUserByEmail(email).orElseThrow();
+        UserEntity e = repo.findUserByEmail(email).orElseThrow(()->{
+            return new UserNotRegisteredException(String.format("No registered user with email %s", email));
+        });
         // don't like hard-coding strings like this. Probably use some enum-ish class instead
         switch(e.getRole()){
             case "admin":
