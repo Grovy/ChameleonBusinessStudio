@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule} from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
@@ -12,6 +13,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {MatButtonModule} from "@angular/material/button";
 import { HelloComponent } from './hello/hello.component';
+import {MatListModule} from "@angular/material/list";
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 @NgModule({
@@ -21,8 +24,7 @@ import { HelloComponent } from './hello/hello.component';
     SplashComponent,
     HelloComponent,
     AdminConfigurationComponent,
-    SplashComponent
-
+    SplashComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,10 @@ import { HelloComponent } from './hello/hello.component';
       {path: 'admin-configuration', component: AdminConfigurationComponent},
     ]),
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
