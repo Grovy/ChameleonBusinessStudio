@@ -9,11 +9,11 @@
 spring.jpa.hibernate.ddl-auto=update
 spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/chameleon_business_studio
 spring.datasource.username=springuser
-spring.datasource.password=<<PASSWORD GOES HERE>>
+spring.datasource.password=password
 spring.datasource.driver-class-name =com.mysql.jdbc.Driver
 #spring.jpa.show-sql: true
 
 spring.thymeleaf.enabled=false
 
-spring.security.oauth2.client.registration.google.clientId=...
-spring.security.oauth2.client.registration.google.clientSecret=...
+spring.security.oauth2.client.registration.google.clientId=<ClientIdGoesHere>
+spring.security.oauth2.client.registration.google.clientSecret=<ClientSecretGoesHere>
