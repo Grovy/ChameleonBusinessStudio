@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio;
+package com.compilercharisma.chameleonbusinessstudio.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
