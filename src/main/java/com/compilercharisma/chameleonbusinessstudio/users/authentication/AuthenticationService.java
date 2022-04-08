@@ -28,11 +28,7 @@ public class AuthenticationService {
     public AuthenticationService(UserService users){
         this.users = users;
     }
-    
-    public String getLoggedInEmail(){
-        return getLoggedInGoogleUser().getAttribute("email");
-    }
-    
+
     /**
      * will throw exceptions if the user isn't registered
      * @return the logged in user, using OUR representation of them 
@@ -68,6 +64,11 @@ public class AuthenticationService {
         OAuth2User googleUser = getLoggedInGoogleUser();
         return users.isRegistered(googleUser.getAttribute("email"));
     }
-    
-    
+
+    public void registerGoogleUser(){
+        if(isLoggedInUserRegistered()){
+            throw new UserNotRegisteredException();
+        }
+        users.registerUser(getLoggedInGoogleUser().getAttribute("name"), getLoggedInGoogleUser().getAttribute("email"));
+    }
 }

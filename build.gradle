@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     // we can remove this one if we wind up going with our current implementation instead of the floating popup
-    implementation 'com.google.api-client:google-api-client:1.32.1'
+    implementation 'com.google.api-client:google-api-client:1.33.4'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'

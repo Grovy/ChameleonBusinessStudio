@@ -1,5 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.users;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 
 /**
@@ -29,13 +31,11 @@ public class UserEntity {
     private String role;
     
     // todo might need some Google auth token, but email may be enough
-    
-    
+
     public UserEntity(){
         
     }
-    
-    
+
     public void setId(int id){
         this.id = id;
     }

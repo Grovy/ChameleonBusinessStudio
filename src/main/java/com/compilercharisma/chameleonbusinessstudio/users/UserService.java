@@ -1,8 +1,13 @@
 package com.compilercharisma.chameleonbusinessstudio.users;
 
 import com.compilercharisma.chameleonbusinessstudio.users.authentication.UserNotRegisteredException;
+//import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.criteria.Fetch;
+import java.util.Map;
 
 /**
  *
@@ -12,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     
     private final UserRepository repo;
-    
+
     @Autowired
     public UserService(UserRepository repo){
         this.repo = repo;
@@ -55,6 +60,17 @@ public class UserService {
             default:
                 throw new UnsupportedOperationException(String.format("no data class for role \"%s\"!", e.getRole()));
         }
+    }
+
+    /* This function registers a user based on their email and display name
+     * to our database, it is directly called on the authenticationService class
+     */
+    public void registerUser(String name, String email){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setDisplayName(name);
+        userEntity.setEmail(email);
+        userEntity.setRole("Admin");
+        repo.save(userEntity);
     }
     
     public boolean isRegistered(String email){

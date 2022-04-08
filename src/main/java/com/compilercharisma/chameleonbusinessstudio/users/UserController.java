@@ -36,4 +36,7 @@ public class UserController {
                 ? String.format("created %s as an admin", email)
                 : String.format("failed to create %s as an admin", email);
     }
+//
+//    @PostMapping("/oAuth2/registration")
+//    public
 }
