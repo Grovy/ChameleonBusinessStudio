@@ -19,7 +19,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         /*
-        we need to figure out what configuration this needs such that most of
+        We need to figure out what configuration this needs such that most of
         the Angular routes and Spring API resources are restricted, yet doesn't
         block all of our resources.
         Maybe put API under an /api route?
