@@ -15,6 +15,7 @@ import {MatButtonModule} from "@angular/material/button";
 import { HelloComponent } from './hello/hello.component';
 import {MatListModule} from "@angular/material/list";
 import {MatTabsModule} from "@angular/material/tabs";
+import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     HelloComponent,
     AdminConfigurationComponent,
     SplashComponent,
+    SetupWizardComponent,
   ],
   imports: [
     BrowserModule,
