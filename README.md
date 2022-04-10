@@ -66,3 +66,17 @@ then run spring via
 
 
 ```gradle bootRun```
+
+
+## Routes
+/index.html GET
+/admin-configuration GET
+/api/v1/
+    config POST
+    users/admin POST #likely will be removed
+/auth/principal #likely RM
+
+## Misc
+
+The application stores website configuration information in your home folder, in
+```ChameleonBusinessStudio```

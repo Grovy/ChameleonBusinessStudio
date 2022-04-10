@@ -7,3 +7,20 @@
   <button mat-button>Contact</button>
 
 </mat-toolbar>
+<div>
+    <form action="/api/v1/config" method="post" enctype="multipart/form-data">
+        <label for="org-name">Organization name</label>
+        <input id="org-name" name="org-name" type="text"/>
+        
+        <label for="splash">Splash page content</label>
+        <input id="splash" name="splash" type="file"/>
+        
+        <label for="logo">Logo</label>
+        <input id="logo" name="logo" type="file"/>
+        
+        <label for="banner">Banner</label>
+        <input id="banner" name="banner" type="file"/>
+        
+        <input type="submit"/>
+    </form>
+</div>
