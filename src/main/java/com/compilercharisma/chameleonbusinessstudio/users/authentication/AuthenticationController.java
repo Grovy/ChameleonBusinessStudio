@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Controller
-@RequestMapping("auth")
+@RequestMapping("auth/userinfo.email")
 public class AuthenticationController {    
     private final AuthenticationService authService;
     

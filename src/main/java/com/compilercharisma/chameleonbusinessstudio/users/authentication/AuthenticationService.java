@@ -22,8 +22,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuthenticationService {
+
     private final UserService users;
-    
+
     @Autowired
     public AuthenticationService(UserService users){
         this.users = users;
@@ -40,7 +41,7 @@ public class AuthenticationService {
         OAuth2User googleUser = getLoggedInGoogleUser();
         return users.get(googleUser.getAttribute("email"));
     }
-    
+
     public OAuth2User getLoggedInGoogleUser(){
         if(!isUserLoggedIn()){
             throw new NoUserLoggedInException();
@@ -63,12 +64,5 @@ public class AuthenticationService {
     public boolean isLoggedInUserRegistered(){
         OAuth2User googleUser = getLoggedInGoogleUser();
         return users.isRegistered(googleUser.getAttribute("email"));
-    }
-
-    public void registerGoogleUser(){
-        if(isLoggedInUserRegistered()){
-            throw new UserNotRegisteredException();
-        }
-        users.registerUser(getLoggedInGoogleUser().getAttribute("name"), getLoggedInGoogleUser().getAttribute("email"));
     }
 }
