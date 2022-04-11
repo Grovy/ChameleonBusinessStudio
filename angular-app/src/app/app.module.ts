@@ -9,6 +9,7 @@ import { SignInComponent } from './signin/signin.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {MatButtonModule} from "@angular/material/button";
@@ -16,6 +17,11 @@ import { HelloComponent } from './hello/hello.component';
 import {MatListModule} from "@angular/material/list";
 import {MatTabsModule} from "@angular/material/tabs";
 import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
+import {ReactiveFormsModule} from '@angular/forms'
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -30,6 +36,7 @@ import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     MatButtonModule,
@@ -40,7 +47,13 @@ import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
-    MatTabsModule
+    MatTabsModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+
+
   ],
   providers: [],
   bootstrap: [AppComponent]
