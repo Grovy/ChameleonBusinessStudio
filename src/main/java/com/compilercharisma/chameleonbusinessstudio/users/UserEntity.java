@@ -1,7 +1,5 @@
 package com.compilercharisma.chameleonbusinessstudio.users;
 
-import lombok.AllArgsConstructor;
-
 import javax.persistence.*;
 
 /**
@@ -36,6 +34,7 @@ public class UserEntity {
         
     }
 
+    @GeneratedValue
     public void setId(int id){
         this.id = id;
     }
