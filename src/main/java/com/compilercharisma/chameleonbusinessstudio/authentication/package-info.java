@@ -4,4 +4,4 @@
  * 1. are you who you say you are?
  * 2. are you registered with the website?
  */
-package com.compilercharisma.chameleonbusinessstudio.users.authentication;
+package com.compilercharisma.chameleonbusinessstudio.authentication;

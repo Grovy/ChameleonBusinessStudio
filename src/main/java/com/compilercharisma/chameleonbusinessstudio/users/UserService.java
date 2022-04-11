@@ -1,14 +1,12 @@
 package com.compilercharisma.chameleonbusinessstudio.users;
 
-import com.compilercharisma.chameleonbusinessstudio.users.authentication.AuthenticationService;
-import com.compilercharisma.chameleonbusinessstudio.users.authentication.UserNotRegisteredException;
-//import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
+import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
+import com.compilercharisma.chameleonbusinessstudio.authentication.UserNotRegisteredException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.Fetch;
-import java.util.Map;
 
 /**
  *
@@ -18,13 +16,10 @@ import java.util.Map;
 public class UserService {
     
     private final UserRepository repo;
-//    private final AuthenticationService authoenticationService;
 
     @Autowired
-    public UserService(UserRepository repo/*,
-                       AuthenticationService authenticationService*/){
+    public UserService(UserRepository repo){
         this.repo = repo;
-//        this.authenticationService = authenticationService;
     }
     
     public Admin createAdmin(String email){
@@ -66,17 +61,9 @@ public class UserService {
         }
     }
 
-    /* This function registers a user based on their email and display name
-     * to our database, it is directly called on the authenticationService class
-     */
-//    public void registerUser(){
-//        OAuth2User oAuth2User = authenticationService.getLoggedInGoogleUser();
-//        UserEntity userEntity = new UserEntity();
-//        userEntity.setDisplayName(oAuth2User.getAttribute("name"));
-//        userEntity.setEmail(oAuth2User.getAttribute("email"));
-//        userEntity.setRole("Admin");
-//        repo.save(userEntity);
-//    }
+    public void registerUser(UserEntity userEntity){
+        repo.save(userEntity);
+    }
     
     public boolean isRegistered(String email){
         return repo.findUserByEmail(email).isPresent();

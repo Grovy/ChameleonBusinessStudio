@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.users.authentication;
+package com.compilercharisma.chameleonbusinessstudio.authentication;
 
 import com.compilercharisma.chameleonbusinessstudio.users.AbstractUser;
 import java.util.Map;

@@ -1,5 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.Security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,7 +16,13 @@ import org.springframework.web.cors.CorsConfiguration;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    
+
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    public SecurityConfiguration(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+    }
+
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         /*
@@ -25,10 +32,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         Maybe put API under an /api route?
         */
         security
-                .httpBasic(); // not sure if we need this
-        security
                 .oauth2Login()
-                    .permitAll() // non-logged in users need access to log in page
+                .successHandler(oAuth2LoginSuccessHandler)
+                    .permitAll()// non-logged in users need access to log in page
                     .and()
                 .logout()
                     .permitAll()
@@ -57,4 +63,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         */
         security.csrf().disable();
     }
+
 }
