@@ -9,6 +9,7 @@ import { SignInComponent } from './sign-in-form/signin/signin.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {MatButtonModule} from "@angular/material/button";
@@ -19,6 +20,10 @@ import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
 import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
+import {ReactiveFormsModule} from '@angular/forms'
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -34,6 +39,7 @@ import {MatIconModule} from "@angular/material/icon";
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     MatButtonModule,
@@ -48,7 +54,13 @@ import {MatIconModule} from "@angular/material/icon";
     MatListModule,
     MatTabsModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+
+
   ],
   providers: [],
   bootstrap: [AppComponent]
