@@ -31,17 +31,17 @@ h1{
   grid-column: 4;
 }
 
-sign-in{
+.sign-in{
   position: absolute;
   /*display: inline-block;*/
-  right: 50px;
+  right: 100px;
   top: 50px;
 }
 
 .about-us{
   position: absolute;
   display: inline-block;
-  right: 250px;
+  right: 200px;
   top: 50px;
 }
 

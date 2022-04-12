@@ -47,7 +47,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         ourUser.setEmail(googleUser.getAttribute("email"));
         ourUser.setDisplayName(googleUser.getAttribute("name"));
         ourUser.setRole("Participant");
-        userService.registerUser(ourUser);
+        if(!(userService.isRegistered(ourUser.getEmail()))){
+            userService.registerUser(ourUser);
+        }
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
