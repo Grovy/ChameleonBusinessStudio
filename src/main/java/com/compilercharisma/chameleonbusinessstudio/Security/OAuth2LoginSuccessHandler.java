@@ -36,8 +36,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     /*
     Business Logic on what to do after a successful Google-sign in
     Get the OAuth2User from the AuthenticationService, get its details (name, email) and build
-    a new UserEntity from them.
-    Store in the UserRepository.
+    a new UserEntity from them. If the email is already in our database, then ignore and do not save,
+    else save it on our database
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
