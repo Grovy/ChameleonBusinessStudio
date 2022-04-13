@@ -1,0 +1,12 @@
+/index.html GET
+/admin-configuration GET
+/api/v1
+    /config POST
+    /users/admin POST #likely will be removed
+/auth/principal #likely RM
+/custom
+    /organization GET
+    /splash GET
+    /logo GET
+    /banner GET
+/site-header GET

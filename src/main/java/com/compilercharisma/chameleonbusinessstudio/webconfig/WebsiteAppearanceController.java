@@ -1,14 +1,12 @@
 package com.compilercharisma.chameleonbusinessstudio.webconfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- *
+ * handles configuration requests that require authentication
+ * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @RestController
@@ -26,14 +24,14 @@ public class WebsiteAppearanceController {
             @RequestParam("org-name") String organizationName,
             @RequestParam("splash") MultipartFile splash,
             @RequestParam("logo") MultipartFile logo,
-            @RequestParam("banner") MultipartFile banner
+            @RequestParam("banner-color") String bannerColor
     ){
         // need to do this way so the files get saved
         // serv.setConfig won't do that
         serv.setOrganizationName(organizationName);
         serv.setSplashPageContent(splash);
         serv.setLogo(logo);
-        serv.setBanner(banner);
+        serv.setBannerColor(bannerColor);
         return "yay";
     }
 }

@@ -1,8 +1,8 @@
 package com.compilercharisma.chameleonbusinessstudio.webconfig;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.nio.file.*;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -20,13 +20,8 @@ public class ApplicationFolder {
     private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
     private static final String SPLASH_DIR = "splashes";
     private static final String LOGO_DIR = "logos";
-    private static final String BANNER_DIR = "banners";
-    
-    private final ObjectMapper jsonSerializer;
     
     public ApplicationFolder(){
-        jsonSerializer = new ObjectMapper();
-        
         try {
             createAbsentFolders();
         } catch (IOException ex) {
@@ -36,7 +31,7 @@ public class ApplicationFolder {
     }
     
     private void createAbsentFolders() throws IOException{
-        String[] dirs = {SPLASH_DIR, LOGO_DIR, BANNER_DIR};
+        String[] dirs = {SPLASH_DIR, LOGO_DIR};
         Path p;
         for(String dir : dirs){
             p = getSubdir(dir);
@@ -54,12 +49,30 @@ public class ApplicationFolder {
         save(SPLASH_DIR, file);
     }
     
+    public String readSplash(String fileName){
+        String content = "";
+        try {
+            content = Files.readString(Paths.get(getSubdir(SPLASH_DIR).toString(), fileName));
+        } catch (IOException ex) {
+            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+        return content;
+    }
+    
     public void saveLogo(MultipartFile file){
         save(LOGO_DIR, file);
     }
     
-    public void saveBanner(MultipartFile file){
-        save(BANNER_DIR, file);
+    public InputStream readLogo(String fileName){
+        InputStream in = null;
+        try {
+            in = Files.newInputStream(Paths.get(getSubdir(LOGO_DIR).toString(), fileName));
+        } catch (IOException ex) {
+            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+        return in;
     }
     
     private void save(String dirName, MultipartFile contents){
@@ -68,16 +81,32 @@ public class ApplicationFolder {
             IOUtils.copy(contents.getInputStream(), out);
         } catch (IOException ex) {
             Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         }
     }
     
-    public void saveConfig(WebsiteAppearanceConfig config){
-        Path p = Paths.get(ROOT.toString(), "config.json");
+    public void saveConfig(Properties config){
+        Path p = Paths.get(ROOT.toString(), "config.properties");
         try {
-            String asJson = jsonSerializer.writerWithDefaultPrettyPrinter().writeValueAsString(config);
-            Files.write(p, asJson.getBytes());
+            config.store(new FileOutputStream(p.toFile()), "no comment");
         } catch (IOException ex) {
             Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         }
+    }
+    
+    public Properties readConfig(){
+        Properties conf = new Properties();
+        try {
+            conf.load(Files.newInputStream(Paths.get(ROOT.toString(), "config.properties")));
+        } catch (IOException ex) {
+            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
+        }
+        return conf;
+    }
+    
+    public boolean fileExists(String fileName){
+        return Paths.get(ROOT.toString(), fileName).toFile().exists();
     }
 }

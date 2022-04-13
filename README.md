@@ -9,6 +9,7 @@ see AuthenticationService for getting logged-in user
 If Angular doesn't look like it's working, try rebuilding.
 After logging in, you can check the logged in user in /auth/principal
 
+
 ## Setting up the application
 
 ### Angular CLI
@@ -66,15 +67,6 @@ then run spring via
 
 
 ```gradle bootRun```
-
-
-## Routes
-/index.html GET
-/admin-configuration GET
-/api/v1/
-    config POST
-    users/admin POST #likely will be removed
-/auth/principal #likely RM
 
 ## Misc
 

@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { SignInComponent } from './sign-in-form/signin/signin.component';
+import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -30,6 +31,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   declarations: [
     AppComponent,
     SignInComponent,
+    SiteHeaderComponent,
     SplashComponent,
     HelloComponent,
     AdminConfigurationComponent,
@@ -46,7 +48,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     RouterModule.forRoot([
       {path: '', component: SplashComponent},
       {path: 'admin-configuration', component: AdminConfigurationComponent},
-      {path: 'sign-in', component: SignInFormComponent}
+      {path: 'sign-in', component: SignInFormComponent},
+      {path: 'site-header', component: SiteHeaderComponent}
     ]),
     MatToolbarModule,
     MatButtonModule,

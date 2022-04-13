@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.Security;
+package com.compilercharisma.chameleonbusinessstudio.security;
 
 import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.users.UserEntity;

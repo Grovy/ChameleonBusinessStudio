@@ -1,6 +1,5 @@
-package com.compilercharisma.chameleonbusinessstudio.Security;
+package com.compilercharisma.chameleonbusinessstudio.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,7 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                             "/runtime.**.js",
                             "/polyfills.**.js",
                             "/main.**.js",
-                            "/oauth/**" // needed for login
+                            "/oauth/**", // needed for login
+                            "/custom/**/*",
+                            "/**/*.ico", // angular icon
+                            "/site-header"
                     ).permitAll()
                     .anyRequest()
                         .authenticated()
