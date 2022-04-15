@@ -9,43 +9,51 @@ import org.springframework.web.cors.CorsConfiguration;
 /**
  * we will definitely need to rework this, as I'm not sure which paths we need
  * to authenticate and allow
- * 
+ *
  * @author Matt
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    
+
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
+    public SecurityConfiguration(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+    }
+
     @Override
     protected void configure(HttpSecurity security) throws Exception {
         /*
-        we need to figure out what configuration this needs such that most of
+        We need to figure out what configuration this needs such that most of
         the Angular routes and Spring API resources are restricted, yet doesn't
         block all of our resources.
         Maybe put API under an /api route?
         */
         security
-                .httpBasic(); // not sure if we need this
-        security
                 .oauth2Login()
-                    .permitAll() // non-logged in users need access to log in page
-                    .and()
+                .successHandler(oAuth2LoginSuccessHandler)
+                .permitAll()// non-logged in users need access to log in page
+                .and()
                 .logout()
-                    .permitAll()
-                    .and()
+                .permitAll()
+                .and()
                 .authorizeRequests()
-                    .antMatchers(
-                            "/", 
-                            "/index", 
-                            "/index.html",
-                            "/styles.**.css", // Angular files
-                            "/runtime.**.js",
-                            "/polyfills.**.js",
-                            "/main.**.js",
-                            "/oauth/**" // needed for login
-                    ).permitAll()
-                    .anyRequest()
-                        .authenticated()
+                .antMatchers(
+                        "/",
+                        "/index",
+                        "/index.html",
+                        "/styles.**.css", // Angular files
+                        "/runtime.**.js",
+                        "/polyfills.**.js",
+                        "/main.**.js",
+                        "/oauth/**", // needed for login
+                        "/custom/**/*",
+                        "/**/*.ico", // angular icon
+                        "/site-header"
+                ).permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .cors().configurationSource(cs-> new CorsConfiguration().applyPermitDefaultValues()); // not sure what this does
         
@@ -57,4 +65,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         */
         security.csrf().disable();
     }
+
 }

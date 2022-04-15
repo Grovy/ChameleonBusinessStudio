@@ -1,0 +1,44 @@
+.sign-in-form{
+  width: 275px;
+  height: 425px;
+  margin: 200px auto;
+}
+
+mat-card-header{
+  margin-top: 15px;
+  text-align: left;
+}
+
+mat-card-content{
+  margin: 20px 20px;
+  text-align: left;
+}
+
+mat-card-footer{
+  margin: 20px 10px;
+  text-align: center;
+}
+
+a{
+  width: 100%;
+}
+
+#registration{
+  margin: 25px auto;
+}
+
+.mat-icon{
+  vertical-align: middle;
+}
+
+.welcome{
+  margin-top: 20px;
+  text-align: left;
+}
+
+.chameleon{
+  text-align: center;
+}
+
+
+

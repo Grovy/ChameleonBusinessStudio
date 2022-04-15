@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.users.authentication;
+package com.compilercharisma.chameleonbusinessstudio.authentication;
 
 import com.compilercharisma.chameleonbusinessstudio.users.AbstractUser;
 import java.util.Map;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Controller
-@RequestMapping("auth")
+@RequestMapping("auth/userinfo.email")
 public class AuthenticationController {    
     private final AuthenticationService authService;
     

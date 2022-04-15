@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.users.authentication;
+package com.compilercharisma.chameleonbusinessstudio.authentication;
 
 import com.compilercharisma.chameleonbusinessstudio.users.AbstractUser;
 import com.compilercharisma.chameleonbusinessstudio.users.UserService;
@@ -22,17 +22,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuthenticationService {
+
     private final UserService users;
-    
+
     @Autowired
     public AuthenticationService(UserService users){
         this.users = users;
     }
-    
-    public String getLoggedInEmail(){
-        return getLoggedInGoogleUser().getAttribute("email");
-    }
-    
+
     /**
      * will throw exceptions if the user isn't registered
      * @return the logged in user, using OUR representation of them 
@@ -44,7 +41,7 @@ public class AuthenticationService {
         OAuth2User googleUser = getLoggedInGoogleUser();
         return users.get(googleUser.getAttribute("email"));
     }
-    
+
     public OAuth2User getLoggedInGoogleUser(){
         if(!isUserLoggedIn()){
             throw new NoUserLoggedInException();
@@ -68,6 +65,4 @@ public class AuthenticationService {
         OAuth2User googleUser = getLoggedInGoogleUser();
         return users.isRegistered(googleUser.getAttribute("email"));
     }
-    
-    
 }

@@ -9,6 +9,7 @@ see AuthenticationService for getting logged-in user
 If Angular doesn't look like it's working, try rebuilding.
 After logging in, you can check the logged in user in /auth/principal
 
+
 ## Setting up the application
 
 ### Angular CLI
@@ -66,3 +67,8 @@ then run spring via
 
 
 ```gradle bootRun```
+
+## Misc
+
+The application stores website configuration information in your home folder, in
+```ChameleonBusinessStudio```

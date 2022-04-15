@@ -1,0 +1,38 @@
+<mat-toolbar class="header">
+  <span>GETTING STARTED WIZARD</span>
+</mat-toolbar>
+<div class="container">
+  <div class="text-container">
+    <p>asdfkasdfasdfasdfsadfasdfsadfasdfsad</p>
+  </div>
+
+  <div class="example-container">
+    <form [formGroup]="profileForm">
+      <p>
+        <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder=" " formControlName="firstName" type='text' required>
+        <mat-error *ngIf="profileForm.get('firstName').invalid">{{getfirstNameError()}}</mat-error>
+      </mat-form-field>
+      <span></span>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput placeholder=" " formControlName="LastName" type='text' required>
+        <mat-error *ngIf="profileForm.get('lastName').invalid">{{getlastNameError()}}</mat-error>
+      </mat-form-field>
+      </p>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="pat@example.com" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <!-- <mat-form-field appearance="fill">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="pat@example.com" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field> -->
+    </form>
+  </div>
+
+</div>

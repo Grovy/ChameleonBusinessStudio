@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @RestController
-@RequestMapping(path="/users")
+@RequestMapping(path="/api/v1/users")
 public class UserController {
     
     private final UserService serv;
@@ -21,7 +21,7 @@ public class UserController {
         this.serv = serv;
     }
     
-    // curl -X POST localhost:8080/users/admin?email=johndoe@gmail.com
+    // curl -X POST localhost:8080/api/v1/users/admin?email=johndoe@gmail.com
     @PostMapping("/admin")
     public @ResponseBody String createAdmin(@RequestParam(name="email") String email){
         boolean success = true;

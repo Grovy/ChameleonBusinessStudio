@@ -1,0 +1,12 @@
+.header{
+  background-color: black;
+  color: whitesmoke;
+}
+mat-form-field.mat-form-field {
+  font-size: 16px;
+
+}
+
+span{
+  margin-left: 10px;
+}

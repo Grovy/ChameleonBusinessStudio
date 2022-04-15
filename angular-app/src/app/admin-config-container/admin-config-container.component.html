@@ -1,0 +1,38 @@
+
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-3"><strong>Customize Your Splash Page!</strong></h1>
+    <p><strong>Follow the options to the side to get your splash page up and running!</strong></p>
+
+  </div>
+</div>
+
+<div>
+  <form action="/api/v1/config" method="post" enctype="multipart/form-data">
+    <label for="org-name">Organization name</label>
+    <input id="org-name" name="org-name" type="text"/>
+
+    <label for="splash">Splash page content</label>
+    <input id="splash" name="splash" type="file"/>
+
+    <label for="logo">Logo</label>
+    <input id="logo" name="logo" type="file"/>
+
+    <label for="banner-color">Banner</label>
+    <input id="banner-color" name="banner-color" type="color"/>
+
+    <input type="submit"/>
+  </form>
+</div>
+
+<div class="preview">
+  <app-splash></app-splash>
+  <div class="container text-center">
+    <img [src]="url"/>
+    <input type="file" (change)="onselectFile($event)">
+  </div>
+
+</div>
+
+
+
