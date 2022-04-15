@@ -10,3 +10,48 @@ mat-form-field.mat-form-field {
 span{
   margin-left: 10px;
 }
+.exp .mat-form-field {
+  width: 420px;
+}
+
+.esc .mat-form-field{
+  width: 130px;
+}
+
+.terms-card p{
+font-size: 24px;
+max-width: 681px;
+max-height: 751px;
+overflow-y: scroll;
+text-align:justify;
+}
+
+.form-container{
+  margin-left: 50px;
+}
+.container mat-card{
+  padding-right:250px;
+  max-width: 687px;
+}
+
+.box{
+  padding: 20px;
+  max-width: 1500px;
+
+}
+
+button{
+  min-width: 366px;
+  height:86px;
+  font-size: 36px;
+  font-style: bold;
+}
+
+.custom-control label {
+  font-weight: 400;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.custom-control{
+  margin-bottom: 20px;
+}

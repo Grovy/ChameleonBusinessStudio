@@ -23,6 +23,8 @@ import {MatInputModule} from '@angular/material/input';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
+import {MatCardModule} from '@angular/material/card';
+
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatCardModule,
+
 
 
   ],
