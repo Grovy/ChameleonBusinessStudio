@@ -1,2 +1,33 @@
 <!-- Author:Ariel Camargo-->
-<h1>Test</h1>
+<mat-toolbar color = "primary">
+  <span>Admin Panel</span>
+  <button mat-button>Home</button>
+  <button mat-button>About</button>
+  <button mat-button>Contact</button>
+
+</mat-toolbar>
+<div>
+  <input
+    type="text"
+    [(ngModel)]="userName">
+  <button class="btn"
+          (click)="onCreateUser()">Add User</button>
+  <select name="Role"
+          id="role"
+          [(ngModel)]="selectedRole">
+    <option value="Admin">Admin</option>
+    <option value="User">User</option>
+  </select>
+  <p>{{userCreatedStatus}}</p>
+</div>
+
+<div>
+  <input
+    type="submit"
+    >
+</div>
+
+<div>
+  <p>Users Added:</p>
+  <p>Admins Added:</p>
+</div>

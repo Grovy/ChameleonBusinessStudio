@@ -51,7 +51,8 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
       {path: '', component: SplashComponent},
       {path: 'admin-configuration', component: AdminConfigurationComponent},
       {path: 'sign-in', component: SignInFormComponent},
-      {path: 'site-header', component: SiteHeaderComponent}
+      {path: 'site-header', component: SiteHeaderComponent},
+      {path: 'admin-panel', component: AdminPanelComponent}
     ]),
     MatToolbarModule,
     MatButtonModule,
@@ -64,6 +65,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
+    FormsModule
 
 
   ],
