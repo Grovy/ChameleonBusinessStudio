@@ -1,8 +1,11 @@
 #sec1 {
   height: 650px;
-  color: #fff; /*background-image: url("../../assets/images/Confidence.jpg"); */
-  background-size: 100%;
-  background-size: cover;
+  /*   Background image goes here   */
+
+  /*background-image: url("{{url}}");*/
+  color: #fff;
+  /*background-size: 100%;
+  background-size: cover;*/
 }
 
 .test-div {
