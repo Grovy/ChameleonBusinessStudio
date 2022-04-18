@@ -9,7 +9,7 @@ import { SignInComponent } from './signin/signin.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {MatButtonModule} from "@angular/material/button";
@@ -59,7 +59,7 @@ import {MatCardModule} from '@angular/material/card';
 
 
   ],
-  providers: [],
+  providers: [MediaObserver],
   bootstrap: [AppComponent]
 })
 

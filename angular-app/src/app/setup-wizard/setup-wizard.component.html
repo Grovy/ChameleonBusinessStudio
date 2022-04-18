@@ -3,7 +3,7 @@
 </mat-toolbar>
 <div class="box">
 <div class="container" fxLayout="row" fxLayoutAlign="space-between">
-  <mat-card class="terms-card">
+  <mat-card fxShow fxHide.xs="true" class="terms-card">
     <mat-card-title>TERMS AND CONDITION</mat-card-title>
     <mat-card-subtitle>WELCOME to Chameleon Business Studio</mat-card-subtitle>
     <mat-card-content>
@@ -170,6 +170,7 @@
       <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field> -->
     <!-- <button class="button" type="submit">Purchase</button> -->
+    <p class="terms">you have read terms and conditions</p>
     <div class="custom-control custom-radio">
       <input id="iagree" type="radio" class="custom-control-input" value="i agree" name="consent" formControlName="consent" required>
       <label class="custom-control-label" for="i agree">I Agree</label>

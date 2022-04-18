@@ -17,14 +17,11 @@ this.email = new FormControl(" ",[Validators.required,Validators.email]);
   profileForm!: FormGroup;
    email:FormControl;
 
-   private mediaSub!: Subscription;
-
-   deviceSmall!: boolean;
-
 
 
 
   ngOnInit(): void {
+
     this.profileForm = new FormGroup({
       firstName: new FormControl("",[Validators.required,Validators.maxLength(25)]),
       lastName :new FormControl("",[Validators.required,Validators.maxLength(25)]),
@@ -40,20 +37,21 @@ this.email = new FormControl(" ",[Validators.required,Validators.email]);
 
     })
 
-    this.mediaSub = this.mediaObserver.asObservable().subscribe((result)=>{
-     result.forEach((item)=>{
-       console.log(item.mqAlias);
-     })
-    })
+
   }
 
 ngOnDestroy(): void {
-   this.mediaSub.unsubscribe();
+
 
 }
 
 onSubmit(){
-return 0;
+  if(this.profileForm.valid){
+    console.log(this.profileForm.value);
+  } else{
+    console.log("Please provide sufficient information");
+  }
+
 }
 getfirstNameError(){
   if(this.profileForm.controls["firstName"].hasError('required')){
@@ -79,6 +77,6 @@ getErrorMessage(){
   if(this.profileForm.controls["emails"].hasError('required')){
     return "You must enter a value";
   }
-  return this.email.hasError('email')? 'Not a valid email': ' ';
+  return this.profileForm.controls["emails"].hasError('email')? 'Not a valid email': ' ';
 }
 }
