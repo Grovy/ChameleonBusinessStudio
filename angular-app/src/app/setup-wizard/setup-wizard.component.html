@@ -3,7 +3,7 @@
 </mat-toolbar>
 <div class="box">
 <div class="container" fxLayout="row" fxLayoutAlign="space-between">
-  <mat-card fxShow fxHide.xs="true" class="terms-card">
+  <mat-card fxShow fxHide.sm="true" fxHide.xs="true" class="terms-card">
     <mat-card-title>TERMS AND CONDITION</mat-card-title>
     <mat-card-subtitle>WELCOME to Chameleon Business Studio</mat-card-subtitle>
     <mat-card-content>
@@ -86,10 +86,7 @@
       </p>
 
     </mat-card-content>
-    <!-- <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions> -->
+
   </mat-card>
 
   <div class="form-container">
@@ -151,6 +148,7 @@
         <mat-error *ngIf="profileForm.get('city')?.invalid">City name required </mat-error>
       </mat-form-field>
       <span></span>
+
       <mat-form-field appearance="fill">
         <mat-label>State</mat-label>
         <input matInput placeholder="State" formControlName="state"  required>
@@ -164,14 +162,9 @@
       </mat-form-field>
       </p>
     </div>
-    <!-- <mat-form-field appearance="fill">
-      <mat-label>Enter your email</mat-label>
-      <input matInput placeholder="pat@example.com" [formControl]="email" required>
-      <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
-    </mat-form-field> -->
-    <!-- <button class="button" type="submit">Purchase</button> -->
-    <p class="terms">you have read terms and conditions</p>
+
     <div class="custom-control custom-radio">
+      <p class="terms">you have read terms and conditions</p>
       <input id="iagree" type="radio" class="custom-control-input" value="i agree" name="consent" formControlName="consent" required>
       <label class="custom-control-label" for="i agree">I Agree</label>
 <span></span>

@@ -59,7 +59,7 @@ import {MatCardModule} from '@angular/material/card';
 
 
   ],
-  providers: [MediaObserver],
+  providers: [],
   bootstrap: [AppComponent]
 })
 

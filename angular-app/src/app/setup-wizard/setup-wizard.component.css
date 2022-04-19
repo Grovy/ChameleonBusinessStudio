@@ -1,6 +1,8 @@
 .header{
   background-color: black;
   color: whitesmoke;
+  width: 100%;
+  justify-content: center;
 
 }
 mat-form-field.mat-form-field {
@@ -29,9 +31,11 @@ text-align:justify;
 
 .form-container{
   margin-left: 50px;
+  margin-right: 50px;
+  padding-right: 50px;
 }
 .container mat-card{
-  padding-right:250px;
+  padding-right:0px;
   max-width: 687px;
   border: none;
   box-shadow: none;
@@ -56,12 +60,13 @@ button{
 }
 
 .custom-control{
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .terms{
   font-size: 20px;
-
+  padding: 0px;
+  margin:0px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 
 
