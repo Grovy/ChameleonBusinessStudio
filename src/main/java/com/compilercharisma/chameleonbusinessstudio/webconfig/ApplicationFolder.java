@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -19,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Component
 public class ApplicationFolder {
-    private static final Path ROOT = Paths.get(System.getProperty("user.dir", "./"), "ChameleonBusinessStudio");
+    private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
     private static final String SPLASH_DIR = "splashes";
     private static final String LOGO_DIR = "logos";
     
@@ -60,7 +61,8 @@ public class ApplicationFolder {
             Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
-        return content.toString();
+        String s = content.collect(Collectors.joining("\n")); // stream to string
+        return s;
     }
     
     public void saveLogo(MultipartFile file){
