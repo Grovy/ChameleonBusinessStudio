@@ -29,7 +29,6 @@ public class UserEntity {
     @Column(nullable=false)
     private String role;
     
-    // todo might need some Google auth token, but email may be enough
 
     public UserEntity(){
         

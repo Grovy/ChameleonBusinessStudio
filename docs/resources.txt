@@ -1,0 +1,27 @@
+appt {
+    id: int,
+    startTime: "yyyy-mm-ddThh:mm:ss",
+    endTime: "yyyy-mm-ddThh:mm:ss",
+    title: string,
+    location: string,
+    description: string,
+    restrictions: string,
+    totalSlots: int,
+    tags: {string: string[]},
+    registeredUsers: string[],
+    canceled: boolean
+}
+
+org {
+    name: string
+}
+
+splash {
+    // html content
+    content: string
+}
+
+banner {
+    //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color 
+    color: string
+}

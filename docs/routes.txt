@@ -1,12 +1,15 @@
-/index.html GET
-/admin-configuration GET
-/api/v1
-    /config POST
-    /users/admin POST #likely will be removed
-/auth/principal #likely RM
-/custom
-    /organization GET
-    /splash GET
-    /logo GET
-    /banner GET
-/site-header GET
+       ROUTE           | Method | Resource | comments
+=======================#========#==========#====================================
+/index.html            | GET    | html     |
+/admin-configuration   | GET    | html     |
+/api/v1                |        |          |
+    /appointments/test | GET    | appt[]   | remove later
+    /config            | POST   |          |
+    /users/admin       | POST   |          | likely will be removed
+/auth/principal        | GET    | JSON     | likely RM
+/custom                |        |          |
+    /organization      | GET    | org      |
+    /splash            | GET    | splash   |
+    /logo              | GET    | image    |
+    /banner            | GET    | banner   |
+/site-header           | GET    | html     |
