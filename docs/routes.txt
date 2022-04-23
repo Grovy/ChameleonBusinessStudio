@@ -3,7 +3,9 @@
 /index.html            | GET    | html     |
 /admin-configuration   | GET    | html     |
 /api/v1                |        |          |
-    /appointments/test | GET    | appt[]   | remove later
+    /appointments      |        |          |
+        /available     | GET    | appt[]   | params days=#&startHour=#&endHour=#
+        /test          | GET    | appt[]   | remove later
     /config            | POST   |          |
     /users/admin       | POST   |          | likely will be removed
 /auth/principal        | GET    | JSON     | likely RM
