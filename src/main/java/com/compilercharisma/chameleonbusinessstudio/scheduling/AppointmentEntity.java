@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +11,12 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 /**
- * https://stackoverflow.com/questions/6164123/org-hibernate-mappingexception-could-not-determine-type-for-java-util-set
+ * This class contains all the raw data that represents an appointment
+ * don't put business logic in this class, 
+ * as some methods might be called by JPA,
+ * and business logic belongs in the service.
  * 
- * While appointmentTags really should be a Map<String, Set<String>>, JPA does
- * not support that: https://stackoverflow.com/a/14571422
- * 
- * https://stackoverflow.com/a/62848296
+ * Using Collections with OnDelete: https://stackoverflow.com/a/62848296
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
@@ -95,39 +94,6 @@ public class AppointmentEntity implements Serializable {
         
     }
     
-    /**
-     * Adds the given value to the given tag for this appointment
-     * 
-     * @param tag the tag key
-     * @param value the value to add to the set of values for the tag 
-     */
-    public void addTagValue(String tag, String value){
-        AppointmentTagEntity e = new AppointmentTagEntity();
-        e.setName(tag);
-        e.setValue(value);
-        tags.add(e);
-    }
-    
-    /**
-     * @param tag the tag to get values for
-     * @return a copy of the values associated with the given tag
-     */
-    public Set<String> getValuesForTag(String tag){
-        return tags.stream().filter((e)->{
-            return e.getName().equals(tag);
-        }).map((e)->{
-            return e.getValue();
-        }).collect(Collectors.toSet());
-    }
-    
-    public void addRegisteredUser(String email){
-        registeredUsers.add(email);
-    }
-    
-    public boolean isUserRegistered(String email){
-        return registeredUsers.contains(email);
-    }
-    
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -149,7 +115,7 @@ public class AppointmentEntity implements Serializable {
         
         sb.append("* tags: \n");
         tags.forEach((e)->{
-            sb.append(String.format("\t%s = %s", e.getName(), e.getValue()));
+            sb.append(String.format("\t%s = %s%n", e.getName(), e.getValue()));
         });
         
         sb.append("* registeredUsers: \n");
