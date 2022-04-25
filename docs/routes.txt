@@ -4,7 +4,7 @@
 /admin-configuration   | GET    | html     |
 /api/v1                |        |          |
     /appointments      |        |          |
-        /available     | GET    | appt[]   | params days=#&startHour=#&endHour=#
+        /available     | GET    | appt[]   | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
         /test          | GET    | appt[]   | remove later
     /config            | POST   |          |
     /users/admin       | POST   |          | likely will be removed

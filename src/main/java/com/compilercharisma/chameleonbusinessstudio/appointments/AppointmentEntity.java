@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.scheduling;
+package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -88,11 +88,12 @@ public class AppointmentEntity implements Serializable {
     @JoinColumn(name = "appt_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<String> registeredUsers = new HashSet<>();
+    /*
+    registeredUsers column should have an FK relation to user email, but I don't
+    think it's possible to specify in JPA. Regardless, we'll be migrating to
+    Vendia in the near future, so it likely isn't worth investing time into.
+    */
     
-    
-    public AppointmentEntity(){
-        
-    }
     
     @Override
     public String toString(){

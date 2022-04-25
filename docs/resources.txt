@@ -1,19 +1,4 @@
-appt {
-    id: int,
-    startTime: "yyyy-mm-ddThh:mm:ss",
-    endTime: "yyyy-mm-ddThh:mm:ss",
-    title: string,
-    location: string,
-    description: string,
-    restrictions: string,
-    totalSlots: int,
-    tags: {
-        name: string,
-        value: string
-    }[],
-    registeredUsers: string[],
-    canceled: boolean
-}
+appt: see resource-examples folder
 
 org {
     name: string

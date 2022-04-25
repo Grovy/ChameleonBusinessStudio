@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.scheduling;
+package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import javax.persistence.*;
 import lombok.Getter;

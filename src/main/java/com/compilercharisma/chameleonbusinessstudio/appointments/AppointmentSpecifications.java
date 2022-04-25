@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.scheduling;
+package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import java.util.Set;
 import java.time.LocalDateTime;
@@ -15,7 +15,8 @@ import org.springframework.data.jpa.domain.Specification;
  * The primary advantages of using this system is that they are applied before
  * transforming from database records to java objects, which is faster than
  * filtering within the java program; additionally, Specifications can be 
- * chained together (or, and, etc.) for great re-usability.
+ * chained together (or, and, etc.) for great re-usability. Additionally, these
+ * do not mess with Spring's paging support as using Collection filtering would.
  * 
  * However, these will likely be unusable after we transition to using Vendia as
  * our data store, though we can just use their native API language instead of
