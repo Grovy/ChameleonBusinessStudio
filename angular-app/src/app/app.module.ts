@@ -28,6 +28,7 @@ import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admin-config.component';
 import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 
 @NgModule({
@@ -45,33 +46,34 @@ import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-pr
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MatButtonModule,
-    RouterModule.forRoot([
-      {path: '', component: SplashComponent},
-      {path: 'admin-configuration', component: AdminConfigurationComponent},
-      {path: 'splash-page-preview', component: SplashPagePreviewComponent},
-      {path: 'sign-in', component: SignInFormComponent},
-      {path: 'site-header', component: SiteHeaderComponent}
-    ]),
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatTabsModule,
-    MatCardModule,
-    MatIconModule,
-    FlexLayoutModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatInputModule,
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        MatButtonModule,
+        RouterModule.forRoot([
+            {path: '', component: SplashComponent},
+            {path: 'admin-configuration', component: AdminConfigurationComponent},
+            {path: 'splash-page-preview', component: SplashPagePreviewComponent},
+            {path: 'sign-in', component: SignInFormComponent},
+            {path: 'site-header', component: SiteHeaderComponent}
+        ]),
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatListModule,
+        MatTabsModule,
+        MatCardModule,
+        MatIconModule,
+        FlexLayoutModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatDatepickerModule,
 
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -9,8 +9,6 @@ import { DomSanitizer} from "@angular/platform-browser";
 })
 export class SignInFormComponent implements OnInit {
 
-  private googleUrl : string =  "/oauth2/authorization/google";
-
   constructor(
     private matIconRegistry: MatIconRegistry,
     private domSanitizer : DomSanitizer) {
