@@ -8,21 +8,7 @@
 </div>
 
 <div>
-  <form action="/api/v1/config" method="post" enctype="multipart/form-data">
-    <label for="org-name">Organization name</label>
-    <input id="org-name" name="org-name" type="text"/>
-
-    <label for="splash">Splash page content</label>
-    <input id="splash" name="splash" type="file"/>
-
-    <label for="logo">Logo</label>
-    <input id="logo" name="logo" type="file"/>
-
-    <label for="banner-color">Banner</label>
-    <input id="banner-color" name="banner-color" type="color"/>
-
-    <input type="submit"/>
-  </form>
+  <admin-configuration-form></admin-configuration-form>
 </div>
 
 <div class="preview">

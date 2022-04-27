@@ -16,6 +16,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigContainerComponent } from "./admin-config-container/admin-config-container.component";
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
+import { AdminConfigurationFormComponent } from './admin-configuration-form/admin-configuration-form.component';
 import { AppointmentComponent} from './appointment/appointment.component';
 import { AppointmentListComponent } from './appointment-list/appointment-list.component';
 import { BookingPageComponent} from './booking-page/booking-page.component';
@@ -45,6 +46,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     HelloComponent,
     AdminConfigurationComponent,
     AdminConfigContainerComponent,
+    AdminConfigurationFormComponent,
     AppointmentComponent,
     AppointmentListComponent,
     BookingPageComponent,
