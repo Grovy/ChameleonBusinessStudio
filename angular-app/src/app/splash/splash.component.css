@@ -22,3 +22,35 @@ mat-toolbar{
   display: flex;
   align-content: center;
 }
+
+.main-content{
+  display: flex;
+  scroll-behavior: smooth;
+  padding: 20px;
+  alignment: center;
+}
+
+.card{
+  margin: 15px;
+  width: 50%;
+  text-align: center;
+}
+
+.label{
+  text-align: center;
+}
+
+.main-icon{
+  width: 100px;
+  height: 100px;
+  min-height: 80px;
+  min-width: 80px;
+  max-height: 180px;
+  max-width: 180px;
+}
+
+.description{
+  text-align: center;
+  min-height: 80px;
+  min-width: 300px;
+}

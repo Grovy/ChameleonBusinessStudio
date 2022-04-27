@@ -23,6 +23,18 @@ export class SplashComponent implements OnInit {
       'linkedIn',
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-linkedin-circled.svg")
     );
+    this.matIconRegistry.addSvgIcon(
+      'graphQl',
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-graphql.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      'checkAll',
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-check-all.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      'edit',
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-edit.svg")
+    );
     http.get<{content: string}>("/custom/splash").subscribe((obj: {content: string})=>{
       const e = <HTMLElement>document.querySelector("#splash");
       e.innerHTML = obj.content; // replace element content
