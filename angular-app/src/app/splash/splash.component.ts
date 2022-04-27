@@ -20,8 +20,8 @@ export class SplashComponent implements OnInit {
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-github.svg")
     );
     this.matIconRegistry.addSvgIcon(
-      'instagram',
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-instagram.svg")
+      'linkedIn',
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-linkedin-circled.svg")
     );
     http.get<{content: string}>("/custom/splash").subscribe((obj: {content: string})=>{
       const e = <HTMLElement>document.querySelector("#splash");

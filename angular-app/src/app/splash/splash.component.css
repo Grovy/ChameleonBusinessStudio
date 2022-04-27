@@ -1,15 +1,17 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 mat-toolbar{
-  padding: 10px;
+  padding: 15px;
 }
+
 .icon{
-  padding: 0 14px;
+  padding: 0 20px;
   margin: 0 20px;
 }
 
 .business-title{
-  margin: 10px;
+  font-size: 32px;
+  margin: 15px;
 }
 
 .example-spacer{
