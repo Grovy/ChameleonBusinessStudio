@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.scheduling;
+package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,15 +1,21 @@
-package com.compilercharisma.chameleonbusinessstudio.scheduling;
+package com.compilercharisma.chameleonbusinessstudio.appointments;
 
-import static com.compilercharisma.chameleonbusinessstudio.scheduling.AppointmentSpecifications.*;
+import static com.compilercharisma.chameleonbusinessstudio.appointments.AppointmentSpecifications.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ * https://stackoverflow.com/q/56241495
+ * if we filter the Page, then convert to a List, then back to a Page, this
+ * loses a lot of info, and so the _links attribute of the JSON response
+ * cannot be properly generated. Therefore, we must use the Criteria API to
+ * filter
+ * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Service
@@ -46,37 +52,24 @@ public class AppointmentService {
         }
     }
     
-    
     public void createAppointment(AppointmentEntity appt){
         repo.save(appt);
     }
     
     public List<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime){
-        return repo
-                .findAll(occursWithin(startTime, endTime))
-                .stream()
-                .collect(Collectors.toList());
+        return repo.findAll(occursWithin(startTime, endTime));
+    }
+    
+    public Page<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime, Pageable pageable){
+        return repo.findAll(occursWithin(startTime, endTime), pageable);
     }
     
     public List<AppointmentEntity> getAvailableAppointments(LocalDateTime startTime, LocalDateTime endTime){
-        return repo
-                .findAll(occursWithin(startTime, endTime).and(isAvailable()))
-                .stream()
-                .collect(Collectors.toList());
+        return repo.findAll(occursWithin(startTime, endTime).and(isAvailable()));
     }
     
-    public List<AppointmentEntity> getAvailableAppointments(
-            LocalDateTime startDate, LocalDateTime endDate, 
-            LocalTime startTime, LocalTime endTime
-    ){
-        return repo
-                .findAll(occursWithin(startDate, endDate).and(isAvailable()))
-                .stream()
-                .filter((ae)->{ // JPA Criteria cannot easily convert date to time
-                    return !ae.getStartTime().toLocalTime().isBefore(startTime)
-                            && !ae.getEndTime().toLocalTime().isAfter(endTime);
-                })
-                .collect(Collectors.toList());
+    public Page<AppointmentEntity> getAvailableAppointments(LocalDateTime startTime, LocalDateTime endTime, Pageable page){
+        return repo.findAll(occursWithin(startTime, endTime).and(isAvailable()), page);
     }
     
     private void registerUser(AppointmentEntity appt, String email){

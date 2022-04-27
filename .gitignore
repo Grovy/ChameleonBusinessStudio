@@ -1,3 +1,6 @@
+# prevent this from being added if ApplicationFolder uses default root 
+/ChameleonBusinessStudio/
+
 HELP.md
 .gradle
 build/
