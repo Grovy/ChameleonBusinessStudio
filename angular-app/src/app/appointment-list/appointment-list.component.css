@@ -1,0 +1,16 @@
+/* 
+    Created on : Apr 27, 2022, 12:26:03 PM
+    Author     : Matt Crow <mattcrow19@gmail.com>
+*/
+
+.appt-list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.appt-box {
+    flex-grow: 1; 
+    border: 5px solid black;
+}

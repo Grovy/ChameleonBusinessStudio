@@ -1,7 +1,7 @@
        ROUTE           | Method | Resource | comments
 =======================#========#==========#====================================
-/index.html            | GET    | html     |
-/admin-configuration   | GET    | html     |
+/index.html            | GET    | HTML     |
+/admin-configuration   | GET    | HTML     |
 /api/v1                |        |          |
     /appointments      |        |          |
         /available     | GET    | appt[]   | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
@@ -9,9 +9,10 @@
     /config            | POST   |          |
     /users/admin       | POST   |          | likely will be removed
 /auth/principal        | GET    | JSON     | likely RM
+/booking-page          | GET    | HTML     |
 /custom                |        |          |
     /organization      | GET    | org      |
     /splash            | GET    | splash   |
     /logo              | GET    | image    |
     /banner            | GET    | banner   |
-/site-header           | GET    | html     |
+/site-header           | GET    | HTML     |

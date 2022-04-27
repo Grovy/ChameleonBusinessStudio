@@ -1,0 +1,12 @@
+/* 
+    Created on : Apr 26, 2022, 12:05:54 PM
+    Author     : Matt Crow <mattcrow19@gmail.com>
+*/
+
+.page-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 10px;
+} 

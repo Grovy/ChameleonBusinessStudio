@@ -5,15 +5,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
+
 import { SignInComponent } from './sign-in-form/signin/signin.component';
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
+
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigContainerComponent } from "./admin-config-container/admin-config-container.component";
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
+import { AppointmentComponent} from './appointment/appointment.component';
+import { AppointmentListComponent } from './appointment-list/appointment-list.component';
+import { BookingPageComponent} from './booking-page/booking-page.component';
 import {MatButtonModule} from "@angular/material/button";
 import { HelloComponent } from './hello/hello.component';
 import {MatListModule} from "@angular/material/list";
@@ -40,6 +45,9 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     HelloComponent,
     AdminConfigurationComponent,
     AdminConfigContainerComponent,
+    AppointmentComponent,
+    AppointmentListComponent,
+    BookingPageComponent,
     SplashComponent,
     SetupWizardComponent,
     SignInFormComponent,
@@ -50,11 +58,13 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
+        FormsModule,
         HttpClientModule,
         MatButtonModule,
         RouterModule.forRoot([
             {path: '', component: SplashComponent},
             {path: 'admin-configuration', component: AdminConfigurationComponent},
+            {path: 'booking-page', component: BookingPageComponent},
             {path: 'splash-page-preview', component: SplashPagePreviewComponent},
             {path: 'sign-in', component: SignInFormComponent},
             {path: 'site-header', component: SiteHeaderComponent}
@@ -70,9 +80,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
-        MatDatepickerModule,
-
-
+        MatDatepickerModule
     ],
   providers: [],
   bootstrap: [AppComponent]

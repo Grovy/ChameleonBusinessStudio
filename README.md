@@ -61,12 +61,16 @@ be sure to update application.properties!
 
 ## Launching the application
 
-To run the application, you'll need to make sure your Angular App is built, 
-then run spring via
+To run the application, you'll need to make sure your Angular App is built, if
+not, navigate to the ```/angular-app``` directory and run
 
-
+```gradle build```
+ 
+once the Angular App is buile, run spring via
 
 ```gradle bootRun```
+
+You can now access the web application via ```http://localhost:8080```
 
 ## Misc
 

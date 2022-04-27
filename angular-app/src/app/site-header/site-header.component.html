@@ -3,5 +3,10 @@
         <img src="/custom/logo" alt="website logo" style="max-width: 250px"/>
         <h1>{{name}}</h1>
     </header>
+    <!-- need some way of only showing nav if logged in -->
+    <nav>
+        <a class="button" routerLink="/booking-page"> Booking </a> |
+        <a class="button" routerLink="/admin-configuration"> Admin Config </a> <!-- only show if admin -->
+    </nav>
 </div>
 
