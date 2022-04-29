@@ -35,6 +35,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admin-config.component';
 import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     SplashComponent,
     SetupWizardComponent,
     SignInFormComponent,
+    AdminPanelComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
   ],
@@ -82,7 +84,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        FormsModule
     ],
   providers: [],
   bootstrap: [AppComponent]
