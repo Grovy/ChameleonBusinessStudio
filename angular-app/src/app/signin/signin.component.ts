@@ -17,5 +17,4 @@ which shouldn't be too hard.
     styleUrls: ['./signin.component.css']
 })
 export class SignInComponent {
-    // GNDN
 }

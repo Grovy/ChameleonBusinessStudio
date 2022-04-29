@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
-import { SignInComponent } from './sign-in-form/signin/signin.component';
+import { SignInComponent } from './signin/signin.component';
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -29,6 +29,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admin-config.component';
 import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import { SiteFooterComponent } from './site-footer/site-footer.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     SignInFormComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
+    SiteFooterComponent,
   ],
     imports: [
         BrowserModule,
