@@ -1,0 +1,21 @@
+/* 
+    Created on : Apr 28, 2022, 12:10:25 PM
+    Author     : Matt Crow <mattcrow19@gmail.com>
+*/
+
+.appointment {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.cell {
+    flex-grow: 1;
+}

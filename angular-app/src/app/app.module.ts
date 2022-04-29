@@ -5,15 +5,25 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
+<<<<<<< HEAD
 import { SignInComponent } from './signin/signin.component';
+=======
+
+import { SignInComponent } from './sign-in-form/signin/signin.component';
+>>>>>>> 6c78076217c05baf2856dec081c1a9f1a4c680e5
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
+
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigContainerComponent } from "./admin-config-container/admin-config-container.component";
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
+import { AdminConfigurationFormComponent } from './admin-configuration-form/admin-configuration-form.component';
+import { AppointmentComponent} from './appointment/appointment.component';
+import { AppointmentListComponent } from './appointment-list/appointment-list.component';
+import { BookingPageComponent} from './booking-page/booking-page.component';
 import {MatButtonModule} from "@angular/material/button";
 import { HelloComponent } from './hello/hello.component';
 import {MatListModule} from "@angular/material/list";
@@ -29,7 +39,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admin-config.component';
 import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+<<<<<<< HEAD
 import { SiteFooterComponent } from './site-footer/site-footer.component';
+=======
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+>>>>>>> 6c78076217c05baf2856dec081c1a9f1a4c680e5
 
 
 @NgModule({
@@ -41,9 +55,14 @@ import { SiteFooterComponent } from './site-footer/site-footer.component';
     HelloComponent,
     AdminConfigurationComponent,
     AdminConfigContainerComponent,
+    AdminConfigurationFormComponent,
+    AppointmentComponent,
+    AppointmentListComponent,
+    BookingPageComponent,
     SplashComponent,
     SetupWizardComponent,
     SignInFormComponent,
+    AdminPanelComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
     SiteFooterComponent,
@@ -52,11 +71,13 @@ import { SiteFooterComponent } from './site-footer/site-footer.component';
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
+        FormsModule,
         HttpClientModule,
         MatButtonModule,
         RouterModule.forRoot([
             {path: '', component: SplashComponent},
             {path: 'admin-configuration', component: AdminConfigurationComponent},
+            {path: 'booking-page', component: BookingPageComponent},
             {path: 'splash-page-preview', component: SplashPagePreviewComponent},
             {path: 'sign-in', component: SignInFormComponent},
             {path: 'site-header', component: SiteHeaderComponent}
@@ -73,8 +94,7 @@ import { SiteFooterComponent } from './site-footer/site-footer.component';
         ReactiveFormsModule,
         MatInputModule,
         MatDatepickerModule,
-
-
+        FormsModule
     ],
   providers: [],
   bootstrap: [AppComponent]

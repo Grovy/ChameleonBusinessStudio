@@ -1,7 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import java.time.*;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -57,25 +56,5 @@ public class AppointmentController {
                 .ok()
                 .contentType(MediaTypes.HAL_JSON)
                 .body(asm.toModel(entities, modelAssembler));
-    }
-    
-    @GetMapping(path="test")
-    public List<AppointmentEntity> test(){
-        List<AppointmentEntity> appts = serv.getAppointmentsBetween( // between 4/15/2022 & 4/25/2022
-                LocalDateTime.of(2022, 4, 15, 0, 0), 
-                LocalDateTime.of(2022, 4, 25, 0, 0)
-        );
-        
-        if(appts.isEmpty()){
-            serv.createTestData();
-            appts = serv.getAppointmentsBetween( // between 4/15/2022 & 4/25/2022
-                    LocalDateTime.of(2022, 4, 15, 0, 0), 
-                    LocalDateTime.of(2022, 4, 25, 0, 0)
-            );
-        }
-        
-        System.out.println(appts.get(0));
-        
-        return appts;
     }
 }

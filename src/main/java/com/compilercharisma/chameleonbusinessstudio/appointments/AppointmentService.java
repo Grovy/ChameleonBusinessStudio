@@ -1,10 +1,13 @@
 package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import static com.compilercharisma.chameleonbusinessstudio.appointments.AppointmentSpecifications.*;
+import com.sun.media.jfxmedia.logging.Logger;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Service
-public class AppointmentService {
+public class AppointmentService implements ApplicationListener<ApplicationReadyEvent>{
     
     private final AppointmentRepository repo;
     
@@ -28,12 +31,32 @@ public class AppointmentService {
         this.repo = repo;
     }
     
-    public void createTestData(){
+    /**
+     * temporary until we have actual data to test with
+     * @param event 
+     */
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime later = now.plusDays(30);
+        List<AppointmentEntity> data = getAppointmentsBetween(now, later);
+        if(data.isEmpty()){
+            System.out.println("Creating test appointment data...");
+            createTestData();
+            System.out.println("done creating test appointment data");
+        }
+    }
+    
+    /**
+     * temporary until we have actual data to test with
+     */
+    private void createTestData(){
+        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
         AppointmentEntity appt;
         for(int i = 1; i <= 50; ++i){
             appt = new AppointmentEntity();
             // year, month, day, hour, minute
-            appt.setStartTime(LocalDateTime.of(2022, i % 12 + 1, i % 28 + 1, i % 16, 0));
+            appt.setStartTime(now.plusDays(i - 10).plusHours(i % 4).plusMinutes(i / 15));
             appt.setEndTime(appt.getStartTime().plusHours(i % 4 + 1));
             appt.setTitle(String.format("Appt. #%d", i));
             appt.setLocation(String.format("%d J Street", i * 20));

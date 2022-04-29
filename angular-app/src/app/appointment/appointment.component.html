@@ -1,0 +1,19 @@
+<h1 *ngIf="!appt">appointment is null</h1>
+<div *ngIf="appt" class="appointment">
+    <div class="row">
+        <b class="cell">{{appt.title}}</b>
+        <b class="cell">{{formatTime(appt.startTime)}} to {{formatTime(appt.endTime)}}</b>
+        <b class="cell">{{appt.totalSlots - appt.registeredUsers.length}} / {{appt.totalSlots}} slots available</b>
+    </div>
+    <div class="row">
+        <p class="cell">{{appt.description}}</p>
+    </div>
+    <div class="row">
+        <div>
+            <a class="cell">more info</a>
+        </div>
+        <div>
+            <button class="cell">book it</button>
+        </div>
+    </div>
+</div>
