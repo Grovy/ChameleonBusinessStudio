@@ -13,7 +13,7 @@ After logging in, you can check the logged in user in /auth/principal
 
 To start, go to the ```./src/main/resources/``` directory, then copy 
 ```application.properties.txt``` as ```application.properties``` (essentially,
-remove the `.txt` from the end. You'll put your application credentials here.
+remove the `.txt` from the end.) You'll put your application credentials here.
 
 ### Angular CLI
 

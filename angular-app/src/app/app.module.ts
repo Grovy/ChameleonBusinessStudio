@@ -5,8 +5,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
+<<<<<<< HEAD
+import { SignInComponent } from './signin/signin.component';
+=======
 
 import { SignInComponent } from './sign-in-form/signin/signin.component';
+>>>>>>> 6c78076217c05baf2856dec081c1a9f1a4c680e5
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
 
@@ -35,6 +39,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admin-config.component';
 import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+<<<<<<< HEAD
+import { SiteFooterComponent } from './site-footer/site-footer.component';
+=======
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+>>>>>>> 6c78076217c05baf2856dec081c1a9f1a4c680e5
 
 
 @NgModule({
@@ -53,8 +62,10 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     SplashComponent,
     SetupWizardComponent,
     SignInFormComponent,
+    AdminPanelComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
+    SiteFooterComponent,
   ],
     imports: [
         BrowserModule,
@@ -82,7 +93,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
         MatFormFieldModule,
         ReactiveFormsModule,
         MatInputModule,
-        MatDatepickerModule
+        MatDatepickerModule,
+        FormsModule
     ],
   providers: [],
   bootstrap: [AppComponent]
