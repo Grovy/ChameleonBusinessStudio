@@ -25,14 +25,18 @@ mat-toolbar{
 
 .main-content{
   display: flex;
+  flex-flow: row wrap;
   scroll-behavior: smooth;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
   alignment: center;
+  margin: auto;
 }
 
 .card{
   margin: 15px;
-  width: 50%;
+  width: 25%;
   text-align: center;
 }
 
