@@ -1,7 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import static com.compilercharisma.chameleonbusinessstudio.appointments.AppointmentSpecifications.*;
-import com.sun.media.jfxmedia.logging.Logger;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;

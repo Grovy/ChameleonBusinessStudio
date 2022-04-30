@@ -1,4 +1,2 @@
 # don't commit credentials!
 application.properties
-client_secret.apps.googleusercontent.com.json
-ByteArrayHelper.java

@@ -1,8 +1,7 @@
-# ChameleonBusinessStudio
+# Chameleon Business Studio
 
-You no longer need to run Angular & Spring separately, just use 
-```gradle build``` in the Angular App folder, then run Spring.
-App is now 100% hosted on localhost:8080
+An open source scheduling application usable without an extensive Information
+Technology department.
 
 /logout to log out
 see AuthenticationService for getting logged-in user
@@ -11,6 +10,10 @@ After logging in, you can check the logged in user in /auth/principal
 
 
 ## Setting up the application
+
+To start, go to the ```./src/main/resources/``` directory, then copy 
+```application.properties.txt``` as ```application.properties``` (essentially,
+remove the `.txt` from the end. You'll put your application credentials here.
 
 ### Angular CLI
 
@@ -36,6 +39,8 @@ https://nodejs.org/en/
 
 ### Database
 
+While the application will eventually be migrated to Vendia, it currently uses a
+a database on the running machine.
 
 1. Run the following commands in mysql:
 
@@ -47,17 +52,31 @@ GRANT ALL ON chameleon_business_studio.* TO 'springuser'@'%';
 
 where ```password``` is a password of your choice (remember it for later!)
 
-2. navigate to ./src/main/resources/, and copy application.properties.txt as application.properties
-3. fill in the password field in the application.properties file
+2. fill in the password field in the application.properties file
+
+for example, if the password is ```password123```, the line should look like 
+this: ```spring.datasource.password=password123```
+
 
 ### Google API Credentials
 
 1. create your Google API credentials for Login with Google
-    a. https://developers.google.com/identity/gsi/web/guides/overview
-    b. https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
-add "http://localhost:8080" and "http://localhost" as authorized JS origins
-add "http://localhost:8080/login/oauth2/code/google" as an authorized REDIRECT
-be sure to update application.properties!
+
+    1. https://developers.google.com/identity/gsi/web/guides/overview
+    2. https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+    3. add "http://localhost:8080" and "http://localhost" as authorized **JS origins**
+    4. add "http://localhost:8080/login/oauth2/code/google" as an authorized **REDIRECT**
+
+2. update `application.properties`
+
+for example, if your Google Client Id is `123456789-abcde12345.apps.googleusercontent.com`,
+and your Google Client Secret is `ABCDE-abcde12345`
+your application.properties should contain these:
+```    
+spring.security.oauth2.client.registration.google.clientId=123456789-abcde12345.apps.googleusercontent.com
+spring.security.oauth2.client.registration.google.clientSecret=ABCDE-abcde12345
+```
+
 
 ## Launching the application
 
@@ -66,11 +85,13 @@ not, navigate to the ```/angular-app``` directory and run
 
 ```gradle build```
  
-once the Angular App is buile, run spring via
+once the Angular App is built, run spring via
 
 ```gradle bootRun```
 
 You can now access the web application via ```http://localhost:8080```
+For a list of application routes, check out [routes.txt](./docs/routes.txt)
+
 
 ## Misc
 

@@ -1,8 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.appointments;
 
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @ElementCollection cannot be used inside an @Embeddable that is also 
@@ -21,8 +20,4 @@ public class AppointmentTagEntity {
     @Getter
     @Column(nullable=false)
     private String value;
-    
-    public AppointmentTagEntity(){
-        
-    }
 }
