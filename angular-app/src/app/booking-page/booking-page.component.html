@@ -1,0 +1,17 @@
+<site-header></site-header>
+<div>
+    <h1>Available Appointments</h1>
+    <form>
+        <label for="days">days</label>
+        <input id="days" [(ngModel)]="days" type="number" (ngModelChange)="resetPageThenUpdate()" min="1" max="90" step="1"/>
+        
+        <label for="size">appointments per page</label>
+        <input id="size" [(ngModel)]="size" type="number" (ngModelChange)="resetPageThenUpdate()" min="5" max="100" step="5"/>
+    </form>
+    <appointment-list id="appointments" [appointments]="appointments"></appointment-list>
+    <div class="page-controls">
+        <button [disabled]="!hasPrevPage" (click)="prevPage()">previous</button>
+        <div><b>Page {{page + 1}}</b></div>
+        <button [disabled]="!hasNextPage" (click)="nextPage()">next</button>
+    </div>
+</div>

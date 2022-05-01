@@ -1,0 +1,74 @@
+{
+  "_embedded" : {
+    "appointmentEntities" : [ {
+      "startTime" : "2022-05-01T12:00:00",
+      "endTime" : "2022-05-01T13:00:00",
+      "title" : "Appt. #28",
+      "location" : "560 J Street",
+      "description" : "",
+      "restrictions" : "",
+      "totalSlots" : 9,
+      "tags" : [ ],
+      "registeredUsers" : [ ],
+      "canceled" : false
+    }, {
+      "startTime" : "2022-05-13T08:00:00",
+      "endTime" : "2022-05-13T09:00:00",
+      "title" : "Appt. #40",
+      "location" : "800 J Street",
+      "description" : "",
+      "restrictions" : "",
+      "totalSlots" : 1,
+      "tags" : [ {
+        "name" : "Tag 0",
+        "value" : "Value 0"
+      }, {
+        "name" : "Tag 3",
+        "value" : "Value 3"
+      }, {
+        "name" : "Tag 1",
+        "value" : "Value 1"
+      }, {
+        "name" : "Tag 2",
+        "value" : "Value 2"
+      }, {
+        "name" : "Tag 5",
+        "value" : "Value 5"
+      }, {
+        "name" : "Tag 7",
+        "value" : "Value 7"
+      }, {
+        "name" : "Tag 8",
+        "value" : "Value 8"
+      }, {
+        "name" : "Tag 4",
+        "value" : "Value 4"
+      }, {
+        "name" : "Tag 6",
+        "value" : "Value 6"
+      } ],
+      "registeredUsers" : [ ],
+      "canceled" : false
+    } ]
+  },
+  "_links" : {
+    "first" : {
+      "href" : "http://localhost:8080/api/v1/appointments/available?days=30&page=0&size=2"
+    },
+    "prev" : {
+      "href" : "http://localhost:8080/api/v1/appointments/available?days=30&page=0&size=2"
+    },
+    "self" : {
+      "href" : "http://localhost:8080/api/v1/appointments/available?days=30&page=1&size=2"
+    },
+    "last" : {
+      "href" : "http://localhost:8080/api/v1/appointments/available?days=30&page=1&size=2"
+    }
+  },
+  "page" : {
+    "size" : 2,
+    "totalElements" : 4,
+    "totalPages" : 2,
+    "number" : 1
+  }
+}

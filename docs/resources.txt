@@ -1,0 +1,15 @@
+appt: see resource-examples folder
+
+org {
+    name: string
+}
+
+splash {
+    // html content
+    content: string
+}
+
+banner {
+    //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color 
+    color: string
+}

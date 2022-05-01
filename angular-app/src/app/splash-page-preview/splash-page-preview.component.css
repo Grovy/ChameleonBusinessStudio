@@ -1,0 +1,13 @@
+#sec1 {
+  height: 650px;
+  /*   Background image goes here   */
+
+  /*background-image: url("{{url}}");*/
+  color: #fff;
+  /*background-size: 100%;
+  background-size: cover;*/
+}
+
+.test-div {
+
+}

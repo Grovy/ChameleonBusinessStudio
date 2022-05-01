@@ -1,0 +1,15 @@
+.sidenav {
+  background: lightgrey;
+  height: 100%;
+  width: 300px;
+  display: block;
+  margin-right: 15px;
+  border-radius: 1px;
+
+}
+
+.logo {
+  position: relative;
+  padding: 0.5rem 0.7rem;
+  z-index: 4;
+}

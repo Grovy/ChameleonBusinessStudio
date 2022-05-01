@@ -1,14 +1,43 @@
-<div class="header-container">
-  <div class="business-logo-wrapper">
-    <h1>Chameleon <br><span class="bolded">Business Studio</span></h1>
-  </div>
-  <div class="button-wrapper">
+<mat-toolbar color="accent">
+  <mat-toolbar-row>
+    <p class="business-title">Chameleon <Br>Business Studio</p>
+    <span class="example-spacer"></span>
+    <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
+    <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
+    <button mat-stroked-button class="icon">About Us</button>
     <sign-in></sign-in>
-    <div class="about-us">
-      <button mat-raised-button>About Us</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="main-content">
+  <div class="card">
+    <h2 class="label">Scheduling made easier</h2>
+    <p class="description">
+      Our project provides an open-source scheduling template that can be tailored to an individual
+      or to an organization's specific needs, just like a Chameleon!
+    </p>
+    <div class="icon-wrapper">
+      <mat-icon class="main-icon" svgIcon="checkAll"></mat-icon>
     </div>
   </div>
+  <div class="card">
+    <h2 class="label">Serverless Infrastructure</h2>
+    <p class="description">
+      Using Vendia's serverless infrastructure as our data layer, information is available with zero
+      IT overhead, making our product available to use straight out of the box.
+    </p>
+    <div class="icon-wrapper">
+      <mat-icon class="main-icon" svgIcon="graphQl"></mat-icon>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Highly Customizable</h2>
+    <p class="description">
+      We aim to provide a scalable software template that clients can customize without any
+      extensive IT Department to act as the middle man.
+    </p>
+    <mat-icon class="main-icon" svgIcon="edit"></mat-icon>
+  </div>
 </div>
-
-
-
+<div class="main-content">
+</div>
+<app-site-footer></app-site-footer>

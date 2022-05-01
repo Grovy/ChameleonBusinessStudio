@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class UserEntity {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
     @Column(nullable=false, unique=true)
@@ -28,14 +29,12 @@ public class UserEntity {
     @Column(nullable=false)
     private String role;
     
-    // todo might need some Google auth token, but email may be enough
-    
-    
+
     public UserEntity(){
         
     }
-    
-    
+
+    @GeneratedValue
     public void setId(int id){
         this.id = id;
     }
