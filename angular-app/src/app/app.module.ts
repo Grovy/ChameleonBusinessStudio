@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { SignInComponent } from './signin/signin.component';
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
-
+import {MatIcon} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
@@ -25,7 +25,6 @@ import {MatListModule} from "@angular/material/list";
 import {MatTabsModule} from "@angular/material/tabs";
 import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
 import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
-import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {ReactiveFormsModule} from '@angular/forms'
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -38,6 +37,7 @@ import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 import {MatCardModule} from '@angular/material/card';
+import { DefaultHeaderComponent } from './default-header/default-header.component';
 
 
 @NgModule({
@@ -60,6 +60,7 @@ import {MatCardModule} from '@angular/material/card';
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
     SiteFooterComponent,
+    DefaultHeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,6 +81,8 @@ import {MatCardModule} from '@angular/material/card';
     ReactiveFormsModule,
     MatInputModule,
     MatCardModule,
+    MatIconModule,
+    FormsModule,
 
 
 
