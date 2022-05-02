@@ -36,6 +36,7 @@ import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admi
 import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
     AdminPanelComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
+    AdminGenUserComponent,
   ],
     imports: [
         BrowserModule,
@@ -71,7 +73,8 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
             {path: 'booking-page', component: BookingPageComponent},
             {path: 'splash-page-preview', component: SplashPagePreviewComponent},
             {path: 'sign-in', component: SignInFormComponent},
-            {path: 'site-header', component: SiteHeaderComponent}
+            {path: 'site-header', component: SiteHeaderComponent},
+            {path: 'admin-panel', component: AdminPanelComponent}
         ]),
         MatToolbarModule,
         MatButtonModule,

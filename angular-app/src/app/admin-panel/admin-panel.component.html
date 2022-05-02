@@ -1,33 +1,73 @@
 <!-- Author:Ariel Camargo-->
-<mat-toolbar color = "primary">
-  <span>Admin Panel</span>
-  <button mat-button>Home</button>
-  <button mat-button>About</button>
-  <button mat-button>Contact</button>
-
+<mat-toolbar color="accent">
+  <mat-toolbar-row>
+    <p class="business-title">Chameleon <Br>Business Studio</p>
+    <span class="example-spacer"></span>
+    <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
+    <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
+    <button mat-stroked-button class="icon">About Us</button>
+  </mat-toolbar-row>
 </mat-toolbar>
+
+<!--To add a role-->
 <div>
+  Add a New Role:
   <input
     type="text"
-    [(ngModel)]="userName">
-  <button class="btn"
-          (click)="onCreateUser()">Add User</button>
-  <select name="Role"
-          id="role"
-          [(ngModel)]="selectedRole">
-    <option value="Admin">Admin</option>
-    <option value="User">User</option>
-  </select>
-  <p>{{userCreatedStatus}}</p>
+    (input)="roleGrab($event)">
+  <button (click)="addRole()">Add Role</button>
 </div>
 
+<!--Creation of a new User-->
+Insert Name:
+<input
+  type="text"
+  id="nameField"
+  (input)="textGrab($event)">
+<!--Display all roles-->
+<select [(ngModel)]="selectedRole">
+  <option *ngFor="let test of namedRoles; let i = index"
+          [value]="namedRoles[i]">
+    {{namedRoles[i]}}</option>
+</select>
+
+
+<button (click)="onCreateUser()">
+  Add {{ selectedRole }} </button>
+<!--Fancy clear of text that is not needed-->
+<!--<button (click)="clearField()"-->
+<!--        [disabled]="!selectRole">Clear</button>-->
+<button (click)="removeRole()">Remove Role</button>
+
 <div>
+  Insert Email:
   <input
-    type="submit"
-    >
+    type="email"
+    id="emailField"
+    (input)="emailGrab($event)">
 </div>
 
+
+<admin-gen-user *ngFor="let server of names; let i = index">
+  <p>{{message[i]}}</p>
+  <button (click)="deleteTest(i)">Delete {{names[i]}}</button>
+</admin-gen-user>
+
+
+
 <div>
-  <p>Users Added:</p>
-  <p>Admins Added:</p>
+  <select [(ngModel)]="numberSelected">
+    <option *ngFor="let number of numbers; let i = index"
+            [value]="i">
+      Worker {{numbers[i]}}
+    </option>
+  </select>
+  <button (click)="onShow()">Show</button>
+</div>
+
+
+<p>{{printString}}</p>
+
+<div>
+  <button>Submit</button>
 </div>
