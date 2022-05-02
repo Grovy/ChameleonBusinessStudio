@@ -10,7 +10,7 @@ import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { MatSliderModule } from '@angular/material/slider';
 import { AdminConfigContainerComponent } from "./admin-config-container/admin-config-container.component";
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
@@ -35,7 +35,7 @@ import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-pr
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
-
+import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +56,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
     AdminPanelComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
-    SiteFooterComponent,
+    AdminGenUserComponent,
   ],
     imports: [
         BrowserModule,
@@ -71,7 +71,8 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
             {path: 'booking-page', component: BookingPageComponent},
             {path: 'splash-page-preview', component: SplashPagePreviewComponent},
             {path: 'sign-in', component: SignInFormComponent},
-            {path: 'site-header', component: SiteHeaderComponent}
+            {path: 'site-header', component: SiteHeaderComponent},
+            {path: 'admin-panel', component: AdminPanelComponent}
         ]),
         MatToolbarModule,
         MatButtonModule,
