@@ -12,15 +12,14 @@ appointments.
     styleUrls: ['./appointment.component.css']
 })
 export class AppointmentComponent {
-    @Input() appt?: Appointment;
     
-    constructor(){
-        
-    }
+    // needs to be nullable, as it cannot initialize in the constructor
+    @Input() appt?: Appointment; 
+    
+    constructor(){}
     
     public formatTime(time: string): string {
         let dayStr = new Date(time).toLocaleString();
-        //console.log(dayStr);
         return dayStr;
     }
 }

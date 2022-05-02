@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /** 
- * use findAll(AppointmentSpecification.xyz)
+ * can use findAll(AppointmentSpecification.xyz)
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 public interface AppointmentRepository extends PagingAndSortingRepository<AppointmentEntity, Integer>, JpaSpecificationExecutor<AppointmentEntity> {

@@ -1,0 +1,22 @@
+.bottom-footer{
+  position: absolute;
+  flex-flow: wrap row;
+  background-color: #12002e;
+  align-items: center;
+  justify-content: center;
+  bottom: 0;
+}
+
+.text{
+  text-align: center;
+  color: white;
+  margin: auto;
+}
+
+.text-small{
+  font-size: 12px;
+}
+
+.text-extra-small{
+  font-size: 8px;
+}
