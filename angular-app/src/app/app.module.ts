@@ -38,14 +38,13 @@ import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
 
-import {MatCardModule} from '@angular/material/card';
-
 
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
     SiteHeaderComponent,
+    SiteFooterComponent,
     SplashComponent,
     HelloComponent,
     AdminConfigurationComponent,
