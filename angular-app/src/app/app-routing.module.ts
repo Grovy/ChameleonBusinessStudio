@@ -5,6 +5,7 @@ import { SplashComponent } from './splash/splash.component';
 import {SplashPagePreviewComponent} from "./splash-page-preview/splash-page-preview.component";
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {BookingPageComponent} from "./booking-page/booking-page.component";
+import {AdminPanelComponent} from "./admin-panel/admin-panel.component";
 
 const routes: Routes = [
   {path:'',component: SplashComponent},
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'setupWizard', component: SetupWizardComponent },
   {path: 'admin-configuration', component: AdminConfigurationComponent},
   {path: 'booking-page', component: BookingPageComponent},
+  {path: 'admin-panel', component: AdminPanelComponent},
 
 
 ];

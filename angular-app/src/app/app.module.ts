@@ -35,7 +35,7 @@ import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-pr
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
-
+import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
 import {MatCardModule} from '@angular/material/card';
 import { DefaultHeaderComponent } from './default-header/default-header.component';
 
@@ -61,6 +61,7 @@ import { DefaultHeaderComponent } from './default-header/default-header.componen
     SplashPagePreviewComponent,
     SiteFooterComponent,
     DefaultHeaderComponent,
+    AdminGenUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +71,12 @@ import { DefaultHeaderComponent } from './default-header/default-header.componen
     MatButtonModule,
     RouterModule.forRoot([
       {path: 'admin-configuration', component: AdminConfigurationComponent},
+      {path: '', component: SplashComponent},
+      {path: 'booking-page', component: BookingPageComponent},
+      {path: 'splash-page-preview', component: SplashPagePreviewComponent},
+      {path: 'sign-in', component: SignInFormComponent},
+      {path: 'site-header', component: SiteHeaderComponent},
+      {path: 'admin-panel', component: AdminPanelComponent}
     ]),
     MatToolbarModule,
     MatButtonModule,
@@ -85,8 +92,8 @@ import { DefaultHeaderComponent } from './default-header/default-header.componen
     FormsModule,
 
 
-
   ],
+
   providers: [],
   bootstrap: [AppComponent]
 })
