@@ -3,7 +3,7 @@ import {Appointment} from '../appointment/model';
 
 /*
 This component is currently responsible for rendering a list of appointments. As
-our design evolves, we may need to push more responsibilities into this 
+our design evolves, we may need to push more responsibilities into this
 component.
 */
 
@@ -14,12 +14,13 @@ component.
 })
 export class AppointmentListComponent {
     @Input() appointments: Appointment[];
-    
+
     constructor(){
         this.appointments = [];
     }
-    
+
     ngOnChanges(changes: SimpleChanges){
+        console.log(changes);
         this.appointments = changes['appointments'].currentValue;
     }
 }
