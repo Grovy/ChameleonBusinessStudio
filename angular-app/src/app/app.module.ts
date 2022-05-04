@@ -38,6 +38,8 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
 import {MatCardModule} from '@angular/material/card';
 import { DefaultHeaderComponent } from './default-header/default-header.component';
+import { LandingPageConfigurationComponent } from './landing-page-configuration/landing-page-configuration.component';
+import {MatSelect, MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
@@ -62,6 +64,7 @@ import { DefaultHeaderComponent } from './default-header/default-header.componen
     SiteFooterComponent,
     DefaultHeaderComponent,
     AdminGenUserComponent,
+    LandingPageConfigurationComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ import { DefaultHeaderComponent } from './default-header/default-header.componen
       {path: 'splash-page-preview', component: SplashPagePreviewComponent},
       {path: 'sign-in', component: SignInFormComponent},
       {path: 'site-header', component: SiteHeaderComponent},
-      {path: 'admin-panel', component: AdminPanelComponent}
+      {path: 'admin-panel', component: AdminPanelComponent},
+      {path: 'landing-page-component', component: LandingPageConfigurationComponent},
     ]),
     MatToolbarModule,
     MatButtonModule,
@@ -90,6 +94,7 @@ import { DefaultHeaderComponent } from './default-header/default-header.componen
     MatCardModule,
     MatIconModule,
     FormsModule,
+    MatSelectModule,
 
 
   ],
