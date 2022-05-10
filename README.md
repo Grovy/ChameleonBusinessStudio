@@ -3,6 +3,9 @@
 An open source scheduling application usable without an extensive Information
 Technology department.
 
+## Synopsis
+This application will be using Vendia's data services for the data layer implementation. Chameleon Business Studio aspires to adapt to its users, changing itself to “blend into” their needs until it supports their vital information systems. Our project provides an open-source scheduling application template that can be tailored to an individual or organization’s needs. After a brief configuration process, the application is usable “out of the box”, with Vendia providing data-layer hosting, perfect for individuals and organizers with little technical support.
+
 /logout to log out
 see AuthenticationService for getting logged-in user
 If Angular doesn't look like it's working, try rebuilding.
@@ -92,6 +95,12 @@ once the Angular App is built, run spring via
 You can now access the web application via ```http://localhost:8080```
 For a list of application routes, check out [routes.txt](./docs/routes.txt)
 
+## Jira Timeline: Plan for CSC 191
+Sprint 5: Begin Mitigating Data Layer to Vendia's Data Services.
+Sprint 6: Implement Functionality to Appointment Booking Pages
+Sprint 7: Implement Notifications and a Simple Statistics Functionality
+Sprint 8: Data Deletion Implementation
+Sprint 9: Polish Up the Application
 
 ## Misc
 
