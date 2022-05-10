@@ -96,11 +96,11 @@ You can now access the web application via ```http://localhost:8080```
 For a list of application routes, check out [routes.txt](./docs/routes.txt)
 
 ## Jira Timeline: Plan for CSC 191
-Sprint 5: Begin Mitigating Data Layer to Vendia's Data Services.
-Sprint 6: Implement Functionality to Appointment Booking Pages
-Sprint 7: Implement Notifications and a Simple Statistics Functionality
-Sprint 8: Data Deletion Implementation
-Sprint 9: Polish Up the Application
+Sprint 5: Begin Mitigating Data Layer to Vendia's Data Services. </br>
+Sprint 6: Implement Functionality to Appointment Booking Pages </br>
+Sprint 7: Implement Notifications and a Simple Statistics Functionality </br>
+Sprint 8: Data Deletion Implementation </br>
+Sprint 9: Polish Up the Application </br>
 
 ## Misc
 
