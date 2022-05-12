@@ -11,6 +11,20 @@ see AuthenticationService for getting logged-in user
 If Angular doesn't look like it's working, try rebuilding.
 After logging in, you can check the logged in user in /auth/principal
 
+## Application Screenshots
+
+#### Splash Page. This is the default splash page for our application. The user of our application will be able to customize the look of their splash page to their own liking. </br>
+<img src="/ReadmeImages/SplashPage.JPG" width="700" >
+
+#### Booking Page. This page presents the users with available appointments for them to book themselves. 
+<img src="ReadmeImages/bookingPage.JPG" width="700" >
+
+#### Admin Panel. Allows administrators to generate users and assign them specific roles. Classification of users is an integral feature to distinguish permissions between different business roles.
+<img src="ReadmeImages/adminPanel.JPG" height="250" >
+
+#### Splash Page Configuration. Allows the administrator/business owner to customize the splash page by changing the site banner and content. This will replace the look of the splash page demonstrated above.
+<img src="ReadmeImages/AdminConfig.JPG" width="700" >
+
 
 ## Setting up the application
 
