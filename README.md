@@ -115,6 +115,7 @@ Sprint 6: Implement Functionality to Appointment Booking Pages </br>
 Sprint 7: Implement Notifications and a Simple Statistics Functionality </br>
 Sprint 8: Data Deletion Implementation </br>
 Sprint 9: Polish Up the Application </br>
+Sprint 10: Deliver Documentation (User Guide, Maintainance Manual, Test Doc) and Deployment
 
 ## Misc
 
