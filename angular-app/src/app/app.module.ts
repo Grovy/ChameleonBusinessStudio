@@ -35,11 +35,15 @@ import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-pr
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { AdminPanelTestComponent } from './admin-panel-test/admin-panel-test.component';
 import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
 import {MatCardModule} from '@angular/material/card';
 import { DefaultHeaderComponent } from './default-header/default-header.component';
 import { LandingPageConfigurationComponent } from './landing-page-configuration/landing-page-configuration.component';
 import {MatSelect, MatSelectModule} from "@angular/material/select";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatTableModule} from "@angular/material/table";
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -59,6 +63,7 @@ import {MatSelect, MatSelectModule} from "@angular/material/select";
     SetupWizardComponent,
     SignInFormComponent,
     AdminPanelComponent,
+    AdminPanelTestComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
     SiteFooterComponent,
@@ -80,6 +85,7 @@ import {MatSelect, MatSelectModule} from "@angular/material/select";
       {path: 'sign-in', component: SignInFormComponent},
       {path: 'site-header', component: SiteHeaderComponent},
       {path: 'admin-panel', component: AdminPanelComponent},
+      {path: 'admin-panel-test', component: AdminPanelComponent},
       {path: 'landing-page-component', component: LandingPageConfigurationComponent},
     ]),
     MatToolbarModule,
@@ -95,6 +101,9 @@ import {MatSelect, MatSelectModule} from "@angular/material/select";
     MatIconModule,
     FormsModule,
     MatSelectModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatTooltipModule,
 
 
   ],

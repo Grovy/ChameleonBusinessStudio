@@ -6,6 +6,7 @@ import {SplashPagePreviewComponent} from "./splash-page-preview/splash-page-prev
 import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
 import {BookingPageComponent} from "./booking-page/booking-page.component";
 import {AdminPanelComponent} from "./admin-panel/admin-panel.component";
+import {AdminPanelTestComponent} from "./admin-panel-test/admin-panel-test.component";
 import {LandingPageConfigurationComponent} from "./landing-page-configuration/landing-page-configuration.component";
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   {path: 'admin-configuration', component: AdminConfigurationComponent},
   {path: 'booking-page', component: BookingPageComponent},
   {path: 'admin-panel', component: AdminPanelComponent},
+  {path: 'admin-panel-test', component: AdminPanelTestComponent},
   {path: 'landing-page-configuration', component: LandingPageConfigurationComponent},
 
 
