@@ -57,6 +57,7 @@ import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
     AdminGenUserComponent,
+    SiteFooterComponent,
   ],
     imports: [
         BrowserModule,

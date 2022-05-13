@@ -50,7 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/oauth/**", // needed for login
                         "/custom/**/*",
                         "/**/*.ico", // angular icon
-                        "/site-header"
+                        "/site-header",
+                        "/assets/images/**.svg" // svg images
                 ).permitAll()
                 .anyRequest()
                 .authenticated()
