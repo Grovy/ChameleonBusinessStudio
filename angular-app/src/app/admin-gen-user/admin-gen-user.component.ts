@@ -3,7 +3,6 @@ import { Component, OnInit, EventEmitter, Output} from '@angular/core';
 @Component({
   selector: 'admin-gen-user',
   template:`
-//   <p>User has been created</p>
   <ng-content></ng-content>
   `
 })

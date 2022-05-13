@@ -1,12 +1,31 @@
 <div>
     <header id="site-header">
-        <img src="/custom/logo" alt="website logo" style="max-width: 250px"/>
+      <img src="/custom/logo" alt="website logo" style="max-width: 250px"/>
         <h1>{{name}}</h1>
     </header>
     <!-- need some way of only showing nav if logged in -->
     <nav>
-        <a class="button" routerLink="/booking-page"> Booking </a> |
-        <a class="button" routerLink="/admin-configuration"> Admin Config </a> <!-- only show if admin -->
+        <!--<a class="button" routerLink="/booking-page"> Booking </a> |
+        <a class="button" routerLink="/admin-configuration"> Admin Config </a> &lt;!&ndash; only show if admin &ndash;&gt;-->
+      <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
+      <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
+      <button mat-stroked-button class="icon" routerLink="/booking-page">Booking Page</button>
+      <button mat-stroked-button class="icon" routerLink="/admin-configuration">Admin Configuration</button>
     </nav>
 </div>
+
+
+<!--<mat-toolbar color="/custom/color" style="">
+  <mat-toolbar-row>
+    <img src="/custom/logo" alt="website logo" style="max-width: 250px"/>
+    <p class="business-title">{{name}}</p>
+    <span class="example-spacer"></span>
+    <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
+    <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
+    <button mat-stroked-button class="icon" routerLink="/booking-page">Booking Page</button>
+    <button mat-stroked-button class="icon" routerLink="/admin-configuration">Admin Configuration</button>
+
+    <sign-in></sign-in>
+  </mat-toolbar-row>
+</mat-toolbar>-->
 

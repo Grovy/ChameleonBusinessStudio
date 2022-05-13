@@ -51,7 +51,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/custom/**/*",
                         "/**/*.ico", // angular icon
                         "/site-header",
-                        "/assets/images/**.svg" // svg images
+                        "/assets/images/**.svg", // svg images
+                        "/assets/images/**.svg"
                 ).permitAll()
                 .anyRequest()
                 .authenticated()
