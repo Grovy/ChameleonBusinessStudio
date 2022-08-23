@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.compilercharisma'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+sourceCompatibility = "10"
 
 configurations {
     compileOnly {
@@ -60,3 +60,4 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+targetCompatibility = JavaVersion.VERSION_11

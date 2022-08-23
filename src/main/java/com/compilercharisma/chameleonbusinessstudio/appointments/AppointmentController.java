@@ -20,7 +20,6 @@ public class AppointmentController {
     private final PagedResourcesAssembler<AppointmentEntity> asm;
     private final AppointmentModelAssembler modelAssembler;
     
-    @Autowired
     public AppointmentController(
             AppointmentService serv,
             PagedResourcesAssembler<AppointmentEntity> asm,
