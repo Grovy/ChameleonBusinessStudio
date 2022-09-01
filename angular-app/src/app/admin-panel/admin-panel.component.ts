@@ -10,9 +10,9 @@ import {Component, OnInit} from "@angular/core";
 export class AdminPanelComponent implements OnInit
 {
   selectedRole: string = '';
-    stringConfirmation:string;
+    stringConfirmation:string='';
     // selectRole: boolean = false;
-    private userCreationStatus: string;
+    private userCreationStatus: string='';
     userName = '';
     outputString = '';
     email = '';

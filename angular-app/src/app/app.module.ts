@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { SignInComponent } from './signin/signin.component';
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
-
+import {MatIcon} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
@@ -25,7 +25,6 @@ import {MatListModule} from "@angular/material/list";
 import {MatTabsModule} from "@angular/material/tabs";
 import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
 import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
-import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {ReactiveFormsModule} from '@angular/forms'
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -36,7 +35,15 @@ import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-pr
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { AdminPanelTestComponent } from './admin-panel-test/admin-panel-test.component';
 import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
+import {MatCardModule} from '@angular/material/card';
+import { DefaultHeaderComponent } from './default-header/default-header.component';
+import { LandingPageConfigurationComponent } from './landing-page-configuration/landing-page-configuration.component';
+import {MatSelect, MatSelectModule} from "@angular/material/select";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatTableModule} from "@angular/material/table";
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -57,40 +64,51 @@ import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component
     SetupWizardComponent,
     SignInFormComponent,
     AdminPanelComponent,
+    AdminPanelTestComponent,
     SidenavAdminConfigComponent,
     SplashPagePreviewComponent,
+    SiteFooterComponent,
+    DefaultHeaderComponent,
     AdminGenUserComponent,
+    LandingPageConfigurationComponent,
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        FormsModule,
-        HttpClientModule,
-        MatButtonModule,
-        RouterModule.forRoot([
-            {path: '', component: SplashComponent},
-            {path: 'admin-configuration', component: AdminConfigurationComponent},
-            {path: 'booking-page', component: BookingPageComponent},
-            {path: 'splash-page-preview', component: SplashPagePreviewComponent},
-            {path: 'sign-in', component: SignInFormComponent},
-            {path: 'site-header', component: SiteHeaderComponent},
-            {path: 'admin-panel', component: AdminPanelComponent}
-        ]),
-        MatToolbarModule,
-        MatButtonModule,
-        MatSidenavModule,
-        MatListModule,
-        MatTabsModule,
-        MatCardModule,
-        MatIconModule,
-        FlexLayoutModule,
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatDatepickerModule,
-        FormsModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    HttpClientModule,
+    MatButtonModule,
+    RouterModule.forRoot([
+      {path: 'admin-configuration', component: AdminConfigurationComponent},
+      {path: '', component: SplashComponent},
+      {path: 'booking-page', component: BookingPageComponent},
+      {path: 'splash-page-preview', component: SplashPagePreviewComponent},
+      {path: 'sign-in', component: SignInFormComponent},
+      {path: 'site-header', component: SiteHeaderComponent},
+      {path: 'admin-panel', component: AdminPanelComponent},
+      {path: 'admin-panel-test', component: AdminPanelComponent},
+      {path: 'landing-page-component', component: LandingPageConfigurationComponent},
+    ]),
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatTabsModule,
+    FlexLayoutModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    FormsModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatTooltipModule,
+
+
+  ],
+
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,68 @@
+<app-default-header></app-default-header>
+<mat-drawer-container #sideNav class="example-container" mode="side" opened>
+  <mat-drawer mode="side" opened class="example-drawer">
+    <div class="sidenav">
+      <div class="logo">
+        <a href="/" class="simple-text logo-mini">
+
+        </a>
+        <a href="/" class="simple-text logo-normal">
+          Home
+        </a>
+      </div>
+
+      <mat-nav-list>
+        <mat-list-item>Title</mat-list-item>
+        <mat-list-item>Theme</mat-list-item>
+        <mat-list-item>Background Color</mat-list-item>
+        <mat-list-item>About Us Box</mat-list-item>
+        <mat-list-item>Contact Us Box</mat-list-item>
+      </mat-nav-list>
+
+    </div>
+
+
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-3"><strong>Customize Your Landing Page!</strong></h1>
+        <p><strong>Follow the options to the side to get your landing page up and running!</strong></p>
+
+      </div>
+    </div>
+
+    <div>
+      <!-- This will need an API for landing page configurations -->
+      <form >
+        <mat-form-field appearance="fill">
+          <mat-label>Select an option</mat-label>
+          <mat-select>
+            <mat-option>None</mat-option>
+            <mat-option value="option1">Light Theme</mat-option>
+            <mat-option value="option2">Dark Theme</mat-option>
+            <mat-option value="option3">Preset Theme 1</mat-option>
+            <mat-option value="option3">Preset Theme 2</mat-option>
+            <mat-option value="option3">Create New Preset</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <label for="banner-color">Background Color</label>
+        <input id="banner-color" name="banner-color" type="color"/>
+
+        <input type="submit"/>
+      </form>
+    </div>
+
+    <div class="preview">
+      <site-header></site-header>
+      <div class="container text-center">
+        <img src="/custom/splash" />
+      </div>
+
+    </div>
+
+
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -1,12 +1,29 @@
 # Chameleon Business Studio
 
-An open source scheduling application usable without an extensive Information
+An open source scheduling application, usable and maintainable without an extensive Information
 Technology department.
+
+## Synopsis
+Chameleon Business Studio aspires to adapt to its users, changing itself to “blend into” their needs until it supports their vital information systems. Our project provides an open-source scheduling application template that can be tailored to an individual or organization’s needs. After a brief configuration process, the application is usable “out of the box”, with [Vendia](https://www.vendia.net/) providing data-layer hosting, perfect for individuals and organizers with little technical support.
 
 /logout to log out
 see AuthenticationService for getting logged-in user
 If Angular doesn't look like it's working, try rebuilding.
 After logging in, you can check the logged in user in /auth/principal
+
+## Application Screenshots
+
+#### Splash Page. This is the default splash page for our application. The user of our application will be able to customize the look of their splash page to their own liking. </br>
+<img src="/ReadmeImages/SplashPage.JPG" width="700" >
+
+#### Booking Page. This page presents the users with available appointments for them to book themselves. 
+<img src="ReadmeImages/bookingPage.JPG" width="700" >
+
+#### Admin Panel. Allows administrators to generate users and assign them specific roles. Classification of users is an integral feature to distinguish permissions between different business roles.
+<img src="ReadmeImages/adminPanel.JPG" height="250" >
+
+#### Splash Page Configuration. Allows the administrator/business owner to customize the splash page by changing the site banner and content. This will replace the look of the splash page demonstrated above.
+<img src="ReadmeImages/AdminConfig.JPG" width="700" >
 
 
 ## Setting up the application
@@ -92,6 +109,13 @@ once the Angular App is built, run spring via
 You can now access the web application via ```http://localhost:8080```
 For a list of application routes, check out [routes.txt](./docs/routes.txt)
 
+## Jira Timeline: Plan for CSC 191
+Sprint 5: Begin Mitigating Data Layer to Vendia's Data Services. </br>
+Sprint 6: Implement Functionality to Appointment Booking Pages </br>
+Sprint 7: Implement Notifications and a Simple Statistics Functionality </br>
+Sprint 8: Data Deletion Implementation </br>
+Sprint 9: Polish Up the Application </br>
+Sprint 10: Deliver Documentation (User Guide, Maintainance Manual, Test Doc) and Deployment
 
 ## Misc
 
