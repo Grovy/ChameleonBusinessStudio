@@ -1,7 +1,9 @@
 package com.compilercharisma.chameleonbusinessstudio.authentication;
 
-import com.compilercharisma.chameleonbusinessstudio.users.AbstractUser;
-import com.compilercharisma.chameleonbusinessstudio.users.UserService;
+import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
+import com.compilercharisma.chameleonbusinessstudio.exception.NoUserLoggedInException;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
+import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
