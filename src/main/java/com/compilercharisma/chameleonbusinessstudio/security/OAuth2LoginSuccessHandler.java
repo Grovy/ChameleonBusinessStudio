@@ -1,8 +1,8 @@
 package com.compilercharisma.chameleonbusinessstudio.security;
 
 import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
-import com.compilercharisma.chameleonbusinessstudio.users.UserEntity;
-import com.compilercharisma.chameleonbusinessstudio.users.UserService;
+import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
+import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -14,13 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
-Author: Daniel E. Villavicencio Mena
-This class is a custom-made OAuth2 success handler that has two dependencies:
-One on authenticationService and another on userService
-This handler gets called in SecurityConfiguration after a Google User
-successfully authenticates itself using Google.
- */
 @Component
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -33,11 +26,13 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         this.userService = userService;
     }
 
-    /*
-    Business Logic on what to do after a successful Google-sign in
-    Get the OAuth2User from the AuthenticationService, get its details (name, email) and build
-    a new UserEntity from them. If the email is already in our database, then ignore and do not save,
-    else save it on our database
+    /**
+     *
+     * @param request HTTPServlet request to be
+     * @param response
+     * @param authentication
+     * @throws IOException
+     * @throws ServletException
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
