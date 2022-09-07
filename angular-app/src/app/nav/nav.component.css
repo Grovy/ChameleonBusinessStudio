@@ -1,0 +1,21 @@
+mat-accordion{
+    background: salmon;
+}
+
+mat-tab-nav-bar{
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    place-content: center;
+    background: pink;
+    
+}
+
+mat-expansion-panel{
+    background: white;
+    color: white;
+}
+
+
+
+

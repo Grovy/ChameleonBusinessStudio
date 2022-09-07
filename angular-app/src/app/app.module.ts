@@ -22,6 +22,7 @@ import { FormsModule} from "@angular/forms";
 import { HelloComponent } from './hello/hello.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageConfigurationComponent } from './landing-page-configuration/landing-page-configuration.component';
+import { NavComponent } from './nav/nav.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
@@ -31,12 +32,12 @@ import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
 import { SiteFooterComponent } from './site-footer/site-footer.component';
 import { SiteHeaderComponent } from './site-header/site-header.component';
 import { SplashComponent } from './splash/splash.component';
-import { SplashPagePreviewComponent } from './splash-page-preview/splash-page-preview.component';
 
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from "@angular/material/icon";
 import { MatIconModule } from "@angular/material/icon";
@@ -50,6 +51,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @NgModule({
   declarations: [
@@ -66,6 +68,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DefaultHeaderComponent,
     HelloComponent,
     LandingPageConfigurationComponent,
+    NavComponent,
     SetupWizardComponent,
     SidenavAdminConfigComponent,
     SignInComponent,
@@ -73,7 +76,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SiteFooterComponent,
     SiteHeaderComponent,
     SplashComponent,
-    SplashPagePreviewComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -84,6 +86,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HttpClientModule,
     MatCardModule,
     MatButtonModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -101,7 +104,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       {path: 'admin-configuration', component: AdminConfigurationComponent},
       {path: '', component: SplashComponent},
       {path: 'booking-page', component: BookingPageComponent},
-      {path: 'splash-page-preview', component: SplashPagePreviewComponent},
       {path: 'sign-in', component: SignInFormComponent},
       {path: 'site-header', component: SiteHeaderComponent},
       {path: 'admin-panel', component: AdminPanelComponent},

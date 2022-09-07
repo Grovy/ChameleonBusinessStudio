@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SplashPagePreviewComponent } from './splash-page-preview.component';
+import { NavComponent } from './nav.component';
 
-describe('SplashPagePreviewComponent', () => {
-  let component: SplashPagePreviewComponent;
-  let fixture: ComponentFixture<SplashPagePreviewComponent>;
+describe('NavComponent', () => {
+  let component: NavComponent;
+  let fixture: ComponentFixture<NavComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SplashPagePreviewComponent ]
+      declarations: [ NavComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SplashPagePreviewComponent);
+    fixture = TestBed.createComponent(NavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
