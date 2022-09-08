@@ -1,36 +1,37 @@
 
 <div class="jumbotron">
-  <div class="container">
-    <h1 class="display-3"><strong>Customize Your Splash Page!</strong></h1>
-    <p><strong>Follow the options to the side to get your splash page up and running!</strong></p>
+    <div class="container">
+        <h1 class="display-3"><strong>Customize Your Splash Page!</strong></h1>
+        <p><strong>Follow the options to the side to get your splash page up and running!</strong></p>
 
-  </div>
+    </div>
 </div>
 
 <div>
-  <form #form (submit)="form.submit()" action="/api/v1/config" method="post" enctype="multipart/form-data">
-    <label for="org-name">Organization name</label>
-    <input id="org-name" name="org-name" type="text"/>
+    <!--<config-property-setter label="Landing Page" endpoint="landing-page" type="file"></config-property-setter>
+    <config-property-setter label="Organization Name" endpoint="organization-name" type="text"></config-property-setter>-->
+    <form #form (submit)="form.submit()" action="/api/v1/config" method="post" enctype="multipart/form-data">
+        <label for="org-name">Organization name</label>
+        <input id="org-name" name="org-name" type="text"/>
 
-    <label for="splash">Splash page content</label>
-    <input id="splash" name="splash" type="file"/>
+        <label for="splash">Splash page content</label>
+        <input id="splash" name="splash" type="file"/>
 
-    <label for="logo">Logo</label>
-    <input id="logo" name="logo" type="file"/>
+        <label for="logo">Logo</label>
+        <input id="logo" name="logo" type="file"/>
 
-    <label for="banner-color">Banner</label>
-    <input id="banner-color" name="banner-color" type="color"/>
+        <label for="banner-color">Banner</label>
+        <input id="banner-color" name="banner-color" type="color"/>
 
-    <input type="submit"/>
-  </form>
+        <input type="submit"/>
+    </form>
 </div>
 
 <div class="preview">
-  <site-header></site-header>
-  <div class="container text-center">
-    <img src="/custom/splash" />
-  </div>
-
+    <site-header></site-header>
+    <div class="container text-center">
+        <img src="/custom/splash" />
+    </div>
 </div>
 
 
