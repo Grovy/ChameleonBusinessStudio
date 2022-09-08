@@ -11,6 +11,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { AdminPanelTestComponent } from './admin-panel-test/admin-panel-test.component';
 import { AppComponent } from './app.component';
 import { AppointmentComponent} from './appointment/appointment.component';
+import { AppointmentDetailsComponent } from './appointment-details/appointment-details.component';
 import { AppointmentListComponent } from './appointment-list/appointment-list.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -63,6 +64,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AdminPanelTestComponent,
     AppComponent,
     AppointmentComponent,
+    AppointmentDetailsComponent,
     AppointmentListComponent,
     BookingPageComponent,
     DefaultHeaderComponent,
@@ -101,14 +103,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      {path: 'admin-configuration', component: AdminConfigurationComponent},
-      {path: '', component: SplashComponent},
-      {path: 'booking-page', component: BookingPageComponent},
-      {path: 'sign-in', component: SignInFormComponent},
-      {path: 'site-header', component: SiteHeaderComponent},
-      {path: 'admin-panel', component: AdminPanelComponent},
-      {path: 'admin-panel-test', component: AdminPanelComponent},
-      {path: 'landing-page-component', component: LandingPageConfigurationComponent},
+      { path: '', component: SplashComponent },
+      { path: 'admin-configuration', component: AdminConfigurationComponent },
+      { path: 'admin-panel', component: AdminPanelComponent },
+      { path: 'admin-panel-test', component: AdminPanelComponent },
+      { path: 'appointment-details', component: AppointmentDetailsComponent },
+      { path: 'booking-page', component: BookingPageComponent },
+      { path: 'landing-page-component', component: LandingPageConfigurationComponent },
+      { path: 'setup-wizard', component: SetupWizardComponent},
+      { path: 'sign-in', component: SignInFormComponent },
+      { path: 'site-header', component: SiteHeaderComponent },
     ]),
   ],
 
