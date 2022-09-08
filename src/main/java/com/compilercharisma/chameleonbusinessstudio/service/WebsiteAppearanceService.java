@@ -6,6 +6,7 @@ import java.util.Properties;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ByteArrayHelper;
 import com.compilercharisma.chameleonbusinessstudio.config.ProxyConfiguration;
+import com.compilercharisma.chameleonbusinessstudio.repository.IWebsiteConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class WebsiteAppearanceService {
-    
-    private final ApplicationFolder folder;
+    private static final String LANDING_PAGE_CONTENT = "pages.landing.content";
+    private final ApplicationFolder folder; // migrate away from this
+    private final IWebsiteConfigurationRepository repo;
     private final ProxyConfiguration configProxy;
     
     @Autowired
-    public WebsiteAppearanceService(ApplicationFolder folder){
+    public WebsiteAppearanceService(ApplicationFolder folder, IWebsiteConfigurationRepository repo){
         this.folder = folder;
+        this.repo = repo;
         configProxy = new ProxyConfiguration(folder);
     }
     
@@ -141,6 +144,61 @@ public class WebsiteAppearanceService {
      */
     public String getBannerColor(){
         return configProxy.getConfig().getProperty(ProxyConfiguration.BANNER_COLOR, "#ffffff");
+    }
+    
+    /**
+     * Sets & stores the given HTML file as the landing page content.
+     * 
+     * @param file an HTML file, uploaded in a multipart form 
+     */
+    public void setLandingPage(MultipartFile file){
+        System.out.println("Content type: " + file.getContentType());
+        repo.setValue(LANDING_PAGE_CONTENT, file.getOriginalFilename());
+        folder.saveLandingPage(file);
+    }
+    
+    /**
+     * returns the custom landing content, or the default if it hasn't been
+     * configured yet
+     * 
+     * @return the HTML content of the custom splash page
+     */
+    public String getLandingPageContent(){
+        String content = "";
+        if(configProxy.isConfigured()){
+            content = folder.readLandingPage(configProxy.getConfig().getProperty(ProxyConfiguration.SPLASH_NAME));
+            // strip some HTML formatting
+            if(content.contains("<html>")){
+                content = content.substring(
+                        content.indexOf("<html>") + 6, 
+                        content.lastIndexOf("</html>")
+                );
+            }
+            if(content.contains("<body>")){
+                content = content.substring(
+                        content.indexOf("<body>") + 6, 
+                        content.lastIndexOf("</body>")
+                );
+            }
+        }
+        return content;
+    }
+    
+    private String extractHtmlBody(String content){
+        // strip some HTML formatting
+        if(content.contains("<html>")){
+            content = content.substring(
+                    content.indexOf("<html>") + 6, 
+                    content.lastIndexOf("</html>")
+            );
+        }
+        if(content.contains("<body>")){
+            content = content.substring(
+                    content.indexOf("<body>") + 6, 
+                    content.lastIndexOf("</body>")
+            );
+        }
+        return content;
     }
     
     /**

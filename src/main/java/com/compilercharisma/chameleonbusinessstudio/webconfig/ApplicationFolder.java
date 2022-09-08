@@ -1,5 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.webconfig;
 
+import com.compilercharisma.chameleonbusinessstudio.repository.FileSystemWebsiteConfigurationRepository;
+import com.compilercharisma.chameleonbusinessstudio.repository.IWebsiteConfigurationRepository;
 import java.io.*;
 import java.nio.file.*;
 import java.util.Properties;
@@ -21,8 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class ApplicationFolder {
     private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
-    private static final String SPLASH_DIR = "splashes";
+    private static final String LANDING_PAGES_DIR = "landingPages";
     private static final String LOGO_DIR = "logos";
+    private static final String SPLASH_DIR = "splashes";
+    
+    private final IWebsiteConfigurationRepository websiteConfigRepo;
+    
     
     public ApplicationFolder(){
         try {
@@ -31,10 +37,11 @@ public class ApplicationFolder {
             Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
             throw new ExceptionInInitializerError(ex);
         }
+        websiteConfigRepo = new FileSystemWebsiteConfigurationRepository(ROOT);
     }
     
     private void createAbsentFolders() throws IOException{
-        String[] dirs = {SPLASH_DIR, LOGO_DIR};
+        String[] dirs = {SPLASH_DIR, LANDING_PAGES_DIR, LOGO_DIR};
         Path p;
         for(String dir : dirs){
             p = getSubdir(dir);
@@ -48,15 +55,33 @@ public class ApplicationFolder {
         return Paths.get(ROOT.toString(), dirName);
     }
     
+    public void saveLandingPage(MultipartFile file){
+        save(LANDING_PAGES_DIR, file);
+    }
+    
     public void saveSplash(MultipartFile file){
         save(SPLASH_DIR, file);
     }
 
-    // Had to replace the readString() method with lines() method to be compatible with Java 8 - Daniel
     public String readSplash(String fileName){
+        return readFile(Paths.get(getSubdir(SPLASH_DIR).toString(), fileName).toFile());
+    }
+    
+    public String readLandingPage(String fileName){
+        return readFile(Paths.get(getSubdir(LANDING_PAGES_DIR).toString(), fileName).toFile());
+    }
+    
+    /**
+     * Reads the entire contents of the given file and returns it.
+     * 
+     * @param f the file to read
+     * @return the file's text contents
+     */
+    private String readFile(File f){
         Stream<String> content;
         try {
-            content = Files.lines(Paths.get(getSubdir(SPLASH_DIR).toString(), fileName));
+            // Had to replace the readString() method with lines() method to be compatible with Java 8 - Daniel
+            content = Files.lines(f.toPath());
         } catch (IOException ex) {
             Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
@@ -91,24 +116,11 @@ public class ApplicationFolder {
     }
     
     public void saveConfig(Properties config){
-        Path p = Paths.get(ROOT.toString(), "config.properties");
-        try {
-            config.store(new FileOutputStream(p.toFile()), "no comment");
-        } catch (IOException ex) {
-            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
+        websiteConfigRepo.store(config);
     }
     
     public Properties readConfig(){
-        Properties conf = new Properties();
-        try {
-            conf.load(Files.newInputStream(Paths.get(ROOT.toString(), "config.properties")));
-        } catch (IOException ex) {
-            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
-        }
-        return conf;
+        return websiteConfigRepo.load();
     }
     
     public boolean fileExists(String fileName){

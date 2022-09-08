@@ -62,6 +62,13 @@ public class CustomController {
         return serv.getLogo();
     }
     
+    @GetMapping("/landing-page")
+    public Map<String, Object> getLandingPageContent(){
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("content", serv.getLandingPageContent());
+        return json;
+    }
+    
     /**
      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color 
      * @return {
