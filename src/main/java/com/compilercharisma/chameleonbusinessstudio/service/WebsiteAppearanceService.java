@@ -19,6 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class WebsiteAppearanceService {
     private static final String LANDING_PAGE_CONTENT = "pages.landing.content";
+    private static final String SPLASH_PAGE_CONTENT = "pages.splash.content";
+    private static final String BANNER_COLOR = "banner.color";
+    private static final String ORG_NAME = "organization.name";
+    private static final String LOGO_NAME = "logo.filename";
+    
     private final ApplicationFolder folder; // migrate away from this
     private final IWebsiteConfigurationRepository repo;
     private final ProxyConfiguration configProxy;
@@ -37,9 +42,7 @@ public class WebsiteAppearanceService {
      * @param organizationName the new organization name 
      */
     public void setOrganizationName(String organizationName){
-        configProxy.getConfig().setProperty(
-                ProxyConfiguration.ORG_NAME, organizationName
-        );
+        configProxy.getConfig().setProperty(ORG_NAME, organizationName);
         configProxy.save();
     }
     
@@ -50,8 +53,7 @@ public class WebsiteAppearanceService {
      * @return the name of the organization that owns this application 
      */
     public String getOrganizationName(){
-        return configProxy.getConfig().getProperty(
-                ProxyConfiguration.ORG_NAME, "Chameleon Business Studio"
+        return configProxy.getConfig().getProperty(ORG_NAME, "Chameleon Business Studio"
         );
     }
     
@@ -62,9 +64,7 @@ public class WebsiteAppearanceService {
      */
     public void setSplashPageContent(MultipartFile file){
         folder.saveSplash(file);
-        configProxy.getConfig().setProperty(
-                ProxyConfiguration.SPLASH_NAME, file.getOriginalFilename()
-        );
+        configProxy.getConfig().setProperty(SPLASH_PAGE_CONTENT, file.getOriginalFilename());
         configProxy.save();
     }
     
@@ -75,21 +75,9 @@ public class WebsiteAppearanceService {
      */
     public String getSplashPageContent(){
         String content = "";
-        if(configProxy.isConfigured()){
-            content = folder.readSplash(configProxy.getConfig().getProperty(ProxyConfiguration.SPLASH_NAME));
-            // strip some HTML formatting
-            if(content.contains("<html>")){
-                content = content.substring(
-                        content.indexOf("<html>") + 6, 
-                        content.lastIndexOf("</html>")
-                );
-            }
-            if(content.contains("<body>")){
-                content = content.substring(
-                        content.indexOf("<body>") + 6, 
-                        content.lastIndexOf("</body>")
-                );
-            }
+        if(repo.isConfigured(SPLASH_PAGE_CONTENT)){
+            content = folder.readLandingPage(repo.getValueFor(SPLASH_PAGE_CONTENT).get());
+            content = extractHtmlBody(content);
         }
         return content;
     }
@@ -101,9 +89,7 @@ public class WebsiteAppearanceService {
      */
     public void setLogo(MultipartFile file){
         folder.saveLogo(file);
-        configProxy.getConfig().setProperty(
-                ProxyConfiguration.LOGO_NAME, file.getOriginalFilename()
-        );
+        configProxy.getConfig().setProperty(LOGO_NAME, file.getOriginalFilename());
         configProxy.save();
     }
     
@@ -116,9 +102,9 @@ public class WebsiteAppearanceService {
 
         byte[] bytes = new byte[]{};
         
-        if(configProxy.isConfigured()){
+        if(repo.isConfigured(LOGO_NAME)){
             try {
-                InputStream inputStream = folder.readLogo(configProxy.getConfig().getProperty(ProxyConfiguration.LOGO_NAME));
+                InputStream inputStream = folder.readLogo(configProxy.getConfig().getProperty(LOGO_NAME));
                 ByteArrayHelper byteArrayHelper = new ByteArrayHelper(inputStream);
                 bytes = byteArrayHelper.toByteArray();
             } catch(Exception ex){
@@ -133,7 +119,7 @@ public class WebsiteAppearanceService {
      * @param color the CSS color string to use for the website banner 
      */
     public void setBannerColor(String color){
-        configProxy.getConfig().setProperty(ProxyConfiguration.BANNER_COLOR, color);
+        configProxy.getConfig().setProperty(BANNER_COLOR, color);
         configProxy.save();
     }
     
@@ -143,7 +129,7 @@ public class WebsiteAppearanceService {
      * @return the CSS color to use for the website banner
      */
     public String getBannerColor(){
-        return configProxy.getConfig().getProperty(ProxyConfiguration.BANNER_COLOR, "#ffffff");
+        return configProxy.getConfig().getProperty(BANNER_COLOR, "#ffffff");
     }
     
     /**
@@ -152,7 +138,6 @@ public class WebsiteAppearanceService {
      * @param file an HTML file, uploaded in a multipart form 
      */
     public void setLandingPage(MultipartFile file){
-        System.out.println("Content type: " + file.getContentType());
         repo.setValue(LANDING_PAGE_CONTENT, file.getOriginalFilename());
         folder.saveLandingPage(file);
     }
@@ -161,25 +146,13 @@ public class WebsiteAppearanceService {
      * returns the custom landing content, or the default if it hasn't been
      * configured yet
      * 
-     * @return the HTML content of the custom splash page
+     * @return the HTML content of the custom landing page
      */
     public String getLandingPageContent(){
         String content = "";
-        if(configProxy.isConfigured()){
-            content = folder.readLandingPage(configProxy.getConfig().getProperty(ProxyConfiguration.SPLASH_NAME));
-            // strip some HTML formatting
-            if(content.contains("<html>")){
-                content = content.substring(
-                        content.indexOf("<html>") + 6, 
-                        content.lastIndexOf("</html>")
-                );
-            }
-            if(content.contains("<body>")){
-                content = content.substring(
-                        content.indexOf("<body>") + 6, 
-                        content.lastIndexOf("</body>")
-                );
-            }
+        if(repo.isConfigured(LANDING_PAGE_CONTENT)){
+            content = folder.readLandingPage(repo.getValueFor(LANDING_PAGE_CONTENT).get());
+            content = extractHtmlBody(content);
         }
         return content;
     }

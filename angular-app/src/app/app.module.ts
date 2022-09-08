@@ -16,6 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './booking-page/booking-page.component';
+import { ConfigPropertySetterComponent} from './config-property-setter/config-property-setter.component';
 import { DefaultHeaderComponent } from './default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { FormsModule} from "@angular/forms";
@@ -65,6 +66,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AppointmentComponent,
     AppointmentListComponent,
     BookingPageComponent,
+    ConfigPropertySetterComponent,
     DefaultHeaderComponent,
     HelloComponent,
     LandingPageConfigurationComponent,

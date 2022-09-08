@@ -61,6 +61,16 @@ public interface IWebsiteConfigurationRepository {
     }
     
     /**
+     * Checks if a website configuration property has been set.
+     * 
+     * @param property the property to check
+     * @return whether the property has been configured
+     */
+    public default boolean isConfigured(String property){
+        return getValueFor(property).isPresent();
+    }
+    
+    /**
      * Use this method to set a configured property of the website.
      * 
      * @param property the name of the property to set

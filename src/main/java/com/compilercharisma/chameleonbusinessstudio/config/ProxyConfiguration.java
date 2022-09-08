@@ -16,10 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ProxyConfiguration {
-    public static final String ORG_NAME = "organization.name";
-    public static final String SPLASH_NAME = "splash.filename";
-    public static final String LOGO_NAME = "logo.filename";
-    public static final String BANNER_COLOR = "banner.color";
     
     private Properties config;
     private final ApplicationFolder folder;
@@ -30,9 +26,6 @@ public class ProxyConfiguration {
         this.folder = folder;
     }
     
-    public boolean isConfigured(){
-        return fileExists(); // check for null values in config file?
-    }
     
     public void setConfig(Properties config){
         this.config = config;

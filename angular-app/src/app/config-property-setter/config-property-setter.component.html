@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label for="value">{{this.label}}</label>
+    <input id="value" [type]="type" name="value" formControlName="value"/>
+    <button type="submit">Submit changes</button>
+</form>
