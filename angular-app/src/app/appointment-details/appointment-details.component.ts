@@ -92,20 +92,11 @@ export class AppointmentDetailsComponent {
   displayedColumns: string[] = ['id', 'service', 'client-name', 'date', 'start-time', 'end-time'];
   dataSource = AppointmentList;
   selectedAppt = selectedAppointment;
-  name = "";
 
   constructor() { }
 
   setSelectedAppt(findID: number) {
     this.selectedAppt = AppointmentList.find( ({id}) => id === findID );
-  }
-
-  setName(p: string) {
-    this.name = p;
-  }
-
-  testFunction(test: string) {
-    console.log("You clicked on: " + test);
   }
 
   getSelectedAppt() {
