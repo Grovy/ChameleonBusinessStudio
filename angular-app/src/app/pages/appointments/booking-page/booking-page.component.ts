@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Appointment, AppointmentPage} from '../appointment/model';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { IAppointment } from 'src/app/models/interfaces/IAppointment';
+import { IAppointmentPage } from 'src/app/models/interfaces/IAppointmentPage';
 
 /*
 The booking page is currently responsible for rendering a list of available
@@ -21,7 +22,7 @@ export class BookingPageComponent implements OnInit {
     page: number = 0;
     sortAttr: string = 'startTime';
     sortDir: string = 'asc';
-    appointments: Appointment[];
+    appointments: IAppointment[];
     hasNextPage: boolean = false;
     hasPrevPage: boolean = false;
     
@@ -60,7 +61,7 @@ export class BookingPageComponent implements OnInit {
             ["sort", `${this.sortAttr},${this.sortDir}`]
         ].map((pair)=>pair.join('=')).join('&');
         const url = `/api/v1/appointments/available?${params}`;
-        this.http.get<AppointmentPage>(url).subscribe((data)=>{
+        this.http.get<IAppointmentPage>(url).subscribe((data)=>{
             this.appointments = data._embedded.appointmentEntities;
             this.hasNextPage = 'next' in data._links;
             this.hasPrevPage = 'prev' in data._links;
