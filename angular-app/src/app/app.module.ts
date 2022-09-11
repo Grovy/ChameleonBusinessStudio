@@ -3,37 +3,36 @@
 */
 import { NgModule } from '@angular/core';
 
-import { AdminConfigContainerComponent } from "./admin-config-container/admin-config-container.component";
-import { AdminConfigurationComponent } from './admin-configuration/admin-configuration.component';
-import { AdminConfigurationFormComponent } from './admin-configuration-form/admin-configuration-form.component';
-import { AdminGenUserComponent } from './admin-gen-user/admin-gen-user.component';
-import { AdminPanelComponent } from './admin-panel/admin-panel.component';
-import { AdminPanelTestComponent } from './admin-panel-test/admin-panel-test.component';
+import { AdminConfigContainerComponent } from "./pages/admin-configuration/admin-config-container/admin-config-container.component";
+import { AdminConfigurationComponent } from './pages/admin-configuration/admin-configuration/admin-configuration.component';
+import { AdminConfigurationFormComponent } from './pages/admin-configuration/admin-configuration-form/admin-configuration-form.component';
+import { AdminGenUserComponent } from './pages/admin-panel/admin-gen-user/admin-gen-user.component';
+import { AdminPanelComponent } from './pages/admin-panel/admin-panel/admin-panel.component';
+import { AdminPanelTestComponent } from './pages/admin-panel/admin-panel-test/admin-panel-test.component';
 import { AppComponent } from './app.component';
-import { AppointmentComponent} from './appointment/appointment.component';
-import { AppointmentDetailsComponent } from './appointment-details/appointment-details.component';
-import { AppointmentListComponent } from './appointment-list/appointment-list.component';
+import { AppointmentComponent} from './pages/appointments/appointment/appointment.component';
+import { AppointmentDetailsComponent } from './pages/appointments/appointment-details/appointment-details.component';
+import { AppointmentListComponent } from './pages/appointments/appointment-list/appointment-list.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { BookingPageComponent} from './booking-page/booking-page.component';
-import { ConfigPropertySetterComponent} from './config-property-setter/config-property-setter.component';
-import { DefaultHeaderComponent } from './default-header/default-header.component';
+import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
+import { ConfigPropertySetterComponent} from './pages/admin-configuration/config-property-setter/config-property-setter.component';
+import { DefaultHeaderComponent } from './theme/default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { FormsModule} from "@angular/forms";
-import { HelloComponent } from './hello/hello.component';
 import { HttpClientModule } from '@angular/common/http';
-import { LandingPageConfigurationComponent } from './landing-page-configuration/landing-page-configuration.component';
-import { NavComponent } from './nav/nav.component';
+import { LandingPageConfigurationComponent } from './pages/admin-configuration/landing-page-configuration/landing-page-configuration.component';
+import { NavComponent } from './pages/nav/nav.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
-import { SetupWizardComponent } from './setup-wizard/setup-wizard.component';
-import { SidenavAdminConfigComponent } from './sidenav-admin-config/sidenav-admin-config.component';
-import { SignInComponent } from './signin/signin.component';
-import { SignInFormComponent } from './sign-in-form/sign-in-form.component';
-import { SiteFooterComponent } from './site-footer/site-footer.component';
-import { SiteHeaderComponent } from './site-header/site-header.component';
-import { SplashComponent } from './splash/splash.component';
+import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
+import { SidenavAdminConfigComponent } from './pages/admin-configuration/sidenav-admin-config/sidenav-admin-config.component';
+import { SignInComponent } from './pages/auth/signin/signin.component';
+import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
+import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
+import { SiteHeaderComponent } from './theme/site-header/site-header.component';
+import { SplashComponent } from './pages/dashboard/splash/splash.component';
 
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
@@ -70,7 +69,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     BookingPageComponent,
     ConfigPropertySetterComponent,
     DefaultHeaderComponent,
-    HelloComponent,
     LandingPageConfigurationComponent,
     NavComponent,
     SetupWizardComponent,

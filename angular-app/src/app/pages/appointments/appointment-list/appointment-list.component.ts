@@ -1,5 +1,5 @@
-import {Component, Input, SimpleChanges} from '@angular/core';
-import {Appointment} from '../appointment/model';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { IAppointment } from 'src/app/models/interfaces/IAppointment';
 
 /*
 This component is currently responsible for rendering a list of appointments. As
@@ -13,7 +13,7 @@ component.
     styleUrls: ['./appointment-list.component.css']
 })
 export class AppointmentListComponent {
-    @Input() appointments: Appointment[];
+    @Input() appointments: IAppointment[];
 
     constructor(){
         this.appointments = [];
