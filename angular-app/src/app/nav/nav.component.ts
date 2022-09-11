@@ -39,6 +39,10 @@ export class NavComponent {
         label: 'Landing Page Configuration',
         link: './landing-page-configuration',
         index: 5,
+      }, {
+        label: 'Appointment Details',
+        link: './appointment-details',
+        index: 6,
       }
     ]
   }
