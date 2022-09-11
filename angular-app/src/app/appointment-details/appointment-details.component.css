@@ -1,0 +1,51 @@
+.left-side{
+    width: 70%;
+    height: 100%;
+}
+
+.right-side{
+    width: 30%;;
+    height: 100;
+}
+
+.header{
+    margin-left: 10px;
+}
+
+.main-container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.element-row:hover {
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+mat-card{
+    margin-top: 10px;
+    width: 300px;
+    height: 350px;
+    background: cornflowerblue;
+}
+
+.service-container{
+    background: aqua;
+}
+
+table{
+    width: 90%;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.mat-form-field {
+    font-size: 12px;
+    width: 100%;
+}
+
+.pointer {
+    cursor: pointer;
+}
+  
