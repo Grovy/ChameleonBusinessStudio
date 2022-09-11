@@ -20,4 +20,14 @@ public class AppointmentTagEntity {
     @Getter
     @Column(nullable=false)
     private String value;
+    
+    
+    public AppointmentTagEntity(){
+    
+    }
+    
+    public AppointmentTagEntity(String name, String value){
+        this.name = name;
+        this.value = value;
+    }
 }
