@@ -4,6 +4,8 @@
 /admin-configuration   | GET    | HTML         |
 /api/v1                |        |              |
     /appointments      |        |              |
+        /              | POST   |              | accepts an AppointmentEntity
+        /              | PUT    |              | accepts an AppointmentEntity
         /available     | GET    | appt[]       | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
     /config            | POST   |              |
         /landing-page  | POST   |              |

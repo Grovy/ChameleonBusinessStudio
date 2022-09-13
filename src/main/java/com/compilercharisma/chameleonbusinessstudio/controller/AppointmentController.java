@@ -1,36 +1,46 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import java.time.*;
-
+import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentModelAssembler;
+import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
+import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
+
+import java.net.URI;
+import java.time.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
- *
+ * This controller handles routes associated with appointments.
+ * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @RestController
 @RequestMapping("/api/v1/appointments")
 public class AppointmentController {
-    
-    private final AppointmentService serv;
+    private final AppointmentService appointments;
+    private final AuthenticationService authentication;
     private final PagedResourcesAssembler<AppointmentEntity> asm;
     private final AppointmentModelAssembler modelAssembler;
     
     @Autowired
     public AppointmentController(
-            AppointmentService serv,
+            AppointmentService appointments,
+            AuthenticationService authentication,
             PagedResourcesAssembler<AppointmentEntity> asm,
             AppointmentModelAssembler modelAssembler
     ){
-        this.serv = serv;
+        this.appointments = appointments;
+        this.authentication = authentication;
         this.asm = asm;
         this.modelAssembler = modelAssembler;
     }
@@ -54,11 +64,59 @@ public class AppointmentController {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime later = now.plusDays(days);
         
-        Page<AppointmentEntity> entities = serv.getAvailableAppointments(now, later, page);
+        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
         
         return ResponseEntity
                 .ok()
                 .contentType(MediaTypes.HAL_JSON)
                 .body(asm.toModel(entities, modelAssembler));
+    }
+    
+    /**
+     * Creates and stores a new appointment, if it is valid.
+     * 
+     * @param appointment the appointment to create
+     * @return a 201 Created At response if successful
+     */
+    @PostMapping
+    public ResponseEntity create(@ModelAttribute AppointmentEntity appointment){
+        if(!appointments.isAppointmentValid(appointment) && appointment.getId() == 0){
+            return ResponseEntity.badRequest().body(appointment);
+        }
+        
+        AbstractUser postedBy = authentication.getLoggedInUser();
+        if(!Role.ADMIN.equals(postedBy.getAsEntity().getRole())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        appointments.createAppointment(appointment);
+        
+        URI at = ServletUriComponentsBuilder
+                .fromCurrentContextPath() // relative to application root
+                .pathSegment("api", "v1", "appointments")
+                .build()
+                .toUri();
+        
+        return ResponseEntity.created(at).build();
+    }
+    
+    @PutMapping
+    public ResponseEntity update(@ModelAttribute AppointmentEntity appointment){
+        if(!appointments.isAppointmentValid(appointment)){
+            return ResponseEntity.badRequest().body(appointment);
+        }
+        
+        AbstractUser postedBy = authentication.getLoggedInUser();
+        if(!Role.ADMIN.equals(postedBy.getAsEntity().getRole())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        if(appointment.getId() == 0){ // new appointment
+            appointments.createAppointment(appointment);
+        } else { // updating an old appointment
+            appointments.updateAppointment(appointment);
+        }
+        
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

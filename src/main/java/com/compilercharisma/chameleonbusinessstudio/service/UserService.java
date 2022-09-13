@@ -26,7 +26,7 @@ public class UserService {
                 .buildUser()
                 .withEmail(email)
                 .withDisplayName(email) // default to their email as name
-                .withRole("admin")
+                .withRole(Role.ADMIN)
                 .build();
         
         return new Admin(repo.save(user));
@@ -45,15 +45,15 @@ public class UserService {
         UserEntity e = repo.findUserByEmail(email).orElseThrow(()->{
             return new UserNotRegisteredException(String.format("No registered user with email %s", email));
         });
-        // don't like hard-coding strings like this. Probably use some enum-ish class instead
+        
         switch(e.getRole()){
-            case "admin":
+            case Role.ADMIN:
                 return new Admin(e);
-            case "organizer":
+            case Role.ORGANIZER:
                 return new Organizer(e);
-            case "participant":
+            case Role.PARTICIPANT:
                 return new Participant(e);
-            case "talent":
+            case Role.TALENT:
                 return new Talent(e);
             default:
                 throw new UnsupportedOperationException(String.format("no data class for role \"%s\"!", e.getRole()));

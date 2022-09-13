@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentTagEntity;
+import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentValidator;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -28,10 +29,12 @@ import org.springframework.stereotype.Service;
 public class AppointmentService implements ApplicationListener<ApplicationReadyEvent>{
     
     private final AppointmentRepository repo;
+    private final AppointmentValidator validator;
     
     @Autowired
-    public AppointmentService(AppointmentRepository repo){
+    public AppointmentService(AppointmentRepository repo, AppointmentValidator validator){
         this.repo = repo;
+        this.validator = validator;
     }
     
     /**
@@ -96,6 +99,21 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
     
     public Page<AppointmentEntity> getAvailableAppointments(LocalDateTime startTime, LocalDateTime endTime, Pageable page){
         return repo.findAll(occursWithin(startTime, endTime).and(isAvailable()), page);
+    }
+    
+    public void updateAppointment(AppointmentEntity appt){
+        // this might also send notifications to users subscribed to the appointment
+        repo.save(appt);
+    }
+    
+    /**
+     * Checks if the given appointment is valid, and thus can be stored.
+     * 
+     * @param e the appointment to validate
+     * @return whether or not the appointment is valid
+     */
+    public boolean isAppointmentValid(AppointmentEntity e){
+        return validator.isValid(e);
     }
     
     private void registerUser(AppointmentEntity appt, String email){
