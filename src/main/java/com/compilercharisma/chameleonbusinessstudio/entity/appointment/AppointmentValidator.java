@@ -18,6 +18,6 @@ public class AppointmentValidator {
                 && !e.getLocation().trim().isEmpty()
                 && e.getDescription() != null
                 && e.getTotalSlots() > 0
-                && !e.getTags().stream().anyMatch(tag -> tag.getName() == null || tag.getName().trim().isEmpty());
+                && !e.getTags().stream().anyMatch(tag -> tag == null || tag.trim().isEmpty());
     }
 }

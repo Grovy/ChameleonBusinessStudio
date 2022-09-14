@@ -83,10 +83,10 @@ public class AppointmentValidatorTester {
     
     @ParameterizedTest
     @ValueSource(strings={"", "\n", "\t", "\r\n"})
-    public void tagNamesMustBeReadable(String name){
+    public void tagsMustBeReadable(String tag){
         AppointmentEntity e = aValidEntity();
-        Set<AppointmentTagEntity> tags = e.getTags();
-        tags.add(new AppointmentTagEntity(name, "bar"));
+        Set<String> tags = e.getTags();
+        tags.add(tag);
         e.setTags(tags);
         boolean result = sut.isValid(e);
         Assertions.assertFalse(result);
