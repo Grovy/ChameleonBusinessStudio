@@ -1,6 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
+import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentModelAssembler;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
@@ -37,8 +37,7 @@ public class AppointmentController {
             AppointmentService appointments,
             AuthenticationService authentication,
             PagedResourcesAssembler<AppointmentEntity> asm,
-            AppointmentModelAssembler modelAssembler
-    ){
+            AppointmentModelAssembler modelAssembler){
         this.appointments = appointments;
         this.authentication = authentication;
         this.asm = asm;

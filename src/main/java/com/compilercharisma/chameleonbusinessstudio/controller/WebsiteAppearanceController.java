@@ -33,8 +33,7 @@ public class WebsiteAppearanceController {
             @RequestParam("org-name") String organizationName,
             @RequestParam("splash") MultipartFile splash,
             @RequestParam("logo") MultipartFile logo,
-            @RequestParam("banner-color") String bannerColor
-    ){
+            @RequestParam("banner-color") String bannerColor){
         // need to do this way so the files get saved
         // serv.setConfig won't do that
         serv.setOrganizationName(organizationName);

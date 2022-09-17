@@ -1,6 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.config;
 
-import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
+import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
