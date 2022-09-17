@@ -28,8 +28,7 @@ appointment_entity_tags
 | Field   | Type         | Null | Key | Default | Extra |
 +---------+--------------+------+-----+---------+-------+
 | appt_id | int          | NO   | PRI | NULL    |       |
-| name    | varchar(255) | NO   | PRI | NULL    |       |
-| value   | varchar(255) | NO   | PRI | NULL    |       |
+| tags    | varchar(255) | NO   | PRI | NULL    |       |
 +---------+--------------+------+-----+---------+-------+
 
 appointment_entity_registered_users

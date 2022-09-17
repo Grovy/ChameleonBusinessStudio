@@ -3,10 +3,8 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import static com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentSpecifications.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentTagEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentValidator;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +67,7 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
             appt.setTotalSlots(i % 10 + 1);
             if(i % 5 == 0){
                 for(int j = 0; j <= i / 5; ++j){
-                    addTagValue(appt, "Tag " + j, "Value " + j);
+                    addTag(appt, "Tag " + j);
                 }
             }
             if(i % 3 == 0){
@@ -131,50 +129,26 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
     }
     
     /**
-     * Adds the given value to the given tag for this appointment
+     * Adds the given tag to this appointment
      * 
      * @param appt
      * @param tag the tag key
-     * @param value the value to add to the set of values for the tag 
      */
-    public void addTagValue(AppointmentEntity appt, String tag, String value){
-        AppointmentTagEntity e = new AppointmentTagEntity();
-        e.setName(tag);
-        e.setValue(value);
-        appt.getTags().add(e);
+    public void addTag(AppointmentEntity appt, String tag){
+        Set<String> copyOfOldTags = appt.getTags();
+        copyOfOldTags.add(tag);
+        appt.setTags(copyOfOldTags);
     }
     
     /**
-     * @param appt
-     * @param tag the tag to get values for
-     * @return a copy of the values associated with the given tag
+     * Checks if the given appointment has the given tag attached to it.
+     * 
+     * @param appt the appointment to check
+     * @param tag the tag to look for
+     * @return whether the given appointment has the given tag
      */
-    public Set<String> getValuesForTag(AppointmentEntity appt, String tag){
-        return appt.getTags().stream().filter((e)->{
-            return e.getName().equals(tag);
-        }).map((e)->{
-            return e.getValue();
-        }).collect(Collectors.toSet());
-    }
-    
-    public Set<String> getTagKeys(AppointmentEntity appt){
-        return appt.getTags().stream().map((ate)->ate.getName()).collect(Collectors.toSet());
-    }
-    
-    public Map<String, Set<String>> getTagMapping(AppointmentEntity appt){
-        Map<String, Set<String>> ret = new HashMap<>();
-        getTagKeys(appt).forEach((t)->ret.put(t, getValuesForTag(appt, t)));
-        return ret;
-    }
-    
-    public boolean hasAnyValueForTag(AppointmentEntity appt, String tag){
-        return getTagKeys(appt).contains(tag);
-    }
-    
-    public boolean hasValueForTag(AppointmentEntity appt, String tag, String value){
-        return appt.getTags().stream().anyMatch((ate)->{
-            return ate.getName().equals(tag) && ate.getValue().equals(value);
-        });
+    public boolean hasTag(AppointmentEntity appt, String tag){
+        return appt.getTags().contains(tag);
     }
     
     public boolean isUserRegistered(AppointmentEntity appt, String email){
