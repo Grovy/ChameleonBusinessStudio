@@ -27,20 +27,20 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api/v1/appointments")
 public class AppointmentController {
+
     private final AppointmentService appointments;
     private final AuthenticationService authentication;
-    private final PagedResourcesAssembler<AppointmentEntity> asm;
+//    private final PagedResourcesAssembler<AppointmentEntity> asm;
     private final AppointmentModelAssembler modelAssembler;
-    
-    @Autowired
+
     public AppointmentController(
             AppointmentService appointments,
             AuthenticationService authentication,
-            PagedResourcesAssembler<AppointmentEntity> asm,
+//            PagedResourcesAssembler<AppointmentEntity> asm,
             AppointmentModelAssembler modelAssembler){
         this.appointments = appointments;
         this.authentication = authentication;
-        this.asm = asm;
+//        this.asm = asm;
         this.modelAssembler = modelAssembler;
     }
     
@@ -54,22 +54,22 @@ public class AppointmentController {
      * 
      * @return 
      */
-    // https://stackoverflow.com/a/63966321
-    @GetMapping(path="available")
-    public ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>> getAvailableInDays(
-            @RequestParam(required=false, defaultValue="30") int days,
-            Pageable page
-    ){
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime later = now.plusDays(days);
-        
-        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
-        
-        return ResponseEntity
-                .ok()
-                .contentType(MediaTypes.HAL_JSON)
-                .body(asm.toModel(entities, modelAssembler));
-    }
+//    // https://stackoverflow.com/a/63966321
+//    @GetMapping(path="available")
+//    public ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>> getAvailableInDays(
+//            @RequestParam(required=false, defaultValue="30") int days,
+//            Pageable page
+//    ){
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime later = now.plusDays(days);
+//
+//        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
+//
+//        return ResponseEntity
+//                .ok()
+//                .contentType(MediaTypes.HAL_JSON)
+//                .body(asm.toModel(entities, modelAssembler));
+//    }
     
     /**
      * Creates and stores a new appointment, if it is valid.

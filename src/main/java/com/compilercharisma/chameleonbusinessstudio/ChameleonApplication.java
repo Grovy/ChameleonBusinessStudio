@@ -1,6 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,10 +15,10 @@ public class ChameleonApplication {
     }
 
     @Bean
-    public HttpGraphQlClient httpGraphQlClient(){
+    public HttpGraphQlClient httpGraphQlClient(VendiaConfig vendiaConfig) {
         return HttpGraphQlClient.builder()
-                .url("${services.vendia.baseUrl}")
-                .header(HttpHeaders.AUTHORIZATION, "${API_KEY}")
+                .url(vendiaConfig.getBaseUrl())
+                .header(HttpHeaders.AUTHORIZATION, vendiaConfig.getApiKey())
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .header(HttpHeaders.ACCEPT, "application/json")
                 .build();

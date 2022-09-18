@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.dto;
 
 import com.compilercharisma.chameleonbusinessstudio.enumeration.Gender;
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements Serializable {
 
     private String _id;
