@@ -31,6 +31,12 @@ public class UserController {
        return response;
     }
 
+    /**
+     * Create a user in Vendia
+     *
+     * @param user the user to be created
+     * @return {@link User}
+     */
     @PostMapping("/createUser")
     public Mono<User> createVendiaUser(@RequestBody User user){
         log.info("Creating a user in Vendia share...");
