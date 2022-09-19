@@ -1,5 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(path="/api/v2/users")
+@RequestMapping(path="/api/users")
 @Slf4j
 public class UserController {
     
@@ -28,6 +29,14 @@ public class UserController {
        var response = userService.getAllUsers();
        log.info("Finished fetching all users from Vendia!");
        return response;
+    }
+
+    @PostMapping("/createUser")
+    public Mono<User> createVendiaUser(@RequestBody User user){
+        log.info("Creating a user in Vendia share...");
+        var response = userService.createUser(user);
+        log.info("Finished creating a user in Vendia!");
+        return response;
     }
 
     @PostMapping("/admin")

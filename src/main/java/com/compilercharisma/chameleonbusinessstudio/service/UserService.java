@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
@@ -31,7 +32,33 @@ public class UserService {
     }
 
     /**
+     * Creates a user in Vendia Share
+     *
+     * @param user the user that will be created in Vendia
+     * @return {@link User}
+     */
+    public Mono<User> createUser(User user){
+        String createUserQuery = """
+            mutation {
+                add_User(input :{age: %s, email: "%s", firstName: "%s", gender: %s, lastName: "%s", role: %s}) {
+                          result {
+                            age
+                            email
+                            firstName
+                            gender
+                            lastName
+                            role
+                          }
+                        }
+                      }""".formatted(user.getAge(), user.getEmail(),
+                user.getFirstName(), user.getGender(),
+                user.getLastName(), user.getRole());
+        return vendiaClient.executeRequest(createUserQuery, "add_User").toEntity(User.class);
+    }
+
+    /**
      * This method gets all the users from the Vendia
+     *
      * @return {@link UserResponse}
      */
     public Mono<UserResponse> getAllUsers() {
@@ -49,7 +76,7 @@ public class UserService {
                   }
                 }
                 """;
-        return vendiaClient.fetchDataFromVendia(getAllUsersQuery, "list_UserItems")
+        return vendiaClient.executeRequest(getAllUsersQuery, "list_UserItems")
                 .toEntity(UserResponse.class);
     }
     
@@ -88,4 +115,5 @@ public class UserService {
     public boolean isRegistered(String email){
         return userRepository.findUserByEmail(email).isPresent();
     }
+
 }
