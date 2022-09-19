@@ -20,7 +20,7 @@ public class VendiaClient {
      * @param queryName the name of the GraphQl query
      * @return {@link org.springframework.graphql.client.GraphQlClient.RetrieveSpec}
      */
-    public GraphQlClient.RetrieveSpec fetchDataFromVendia(String graphQlQuery, String queryName) {
+    public GraphQlClient.RetrieveSpec executeRequest(String graphQlQuery, String queryName) {
         return httpGraphQlClient.document(graphQlQuery).retrieve(queryName);
     }
 }
