@@ -1,6 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import com.compilercharisma.chameleonbusinessstudio.authentication.AuthenticationService;
+import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.exception.NoUserLoggedInException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;

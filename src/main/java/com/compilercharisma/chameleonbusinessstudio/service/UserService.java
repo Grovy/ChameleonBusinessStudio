@@ -1,24 +1,23 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.*;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
-/**
- *
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 @Service
 public class UserService {
     
-    private final UserRepository repo;
+    private final UserRepository userRepository;
+    private final VendiaClient vendiaClient;
 
-    @Autowired
-    public UserService(UserRepository repo){
-        this.repo = repo;
+    public UserService(UserRepository userRepository, VendiaClient vendiaClient){
+        this.userRepository = userRepository;
+        this.vendiaClient = vendiaClient;
     }
     
     public Admin createAdmin(String email){
@@ -28,12 +27,34 @@ public class UserService {
                 .withDisplayName(email) // default to their email as name
                 .withRole(Role.ADMIN)
                 .build();
-        
-        return new Admin(repo.save(user));
+        return new Admin(userRepository.save(user));
+    }
+
+    /**
+     * This method gets all the users from the Vendia
+     * @return {@link UserResponse}
+     */
+    public Mono<UserResponse> getAllUsers() {
+        String getAllUsersQuery = """
+                query {
+                  list_UserItems {
+                    _UserItems {
+                      _id
+                      email
+                      age
+                      firstName
+                      gender
+                      lastName
+                    }
+                  }
+                }
+                """;
+        return vendiaClient.fetchDataFromVendia(getAllUsersQuery, "list_UserItems")
+                .toEntity(UserResponse.class);
     }
     
     /**
-     * note that this method throws a NoSuchElementException if no user
+     * Note that this method throws a NoSuchElementException if no user
      * exits with the given email.
      * 
      * @param email the email of the user to get
@@ -42,7 +63,7 @@ public class UserService {
      * actual type returned 
      */
     public AbstractUser get(String email){
-        UserEntity e = repo.findUserByEmail(email).orElseThrow(()->{
+        UserEntity e = userRepository.findUserByEmail(email).orElseThrow(()->{
             return new UserNotRegisteredException(String.format("No registered user with email %s", email));
         });
         
@@ -61,10 +82,10 @@ public class UserService {
     }
 
     public void registerUser(UserEntity userEntity){
-        repo.save(userEntity);
+        userRepository.save(userEntity);
     }
     
     public boolean isRegistered(String email){
-        return repo.findUserByEmail(email).isPresent();
+        return userRepository.findUserByEmail(email).isPresent();
     }
 }
