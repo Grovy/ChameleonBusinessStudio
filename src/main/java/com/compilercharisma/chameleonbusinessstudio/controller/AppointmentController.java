@@ -9,7 +9,8 @@ import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-
+import java.time.*;
+import java.util.HashSet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -85,7 +86,7 @@ public class AppointmentController {
         }
         
         AbstractUser postedBy = authentication.getLoggedInUser();
-        if(!Role.ADMIN.equals(postedBy.getAsEntity().getRole())){
+        if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         
@@ -107,7 +108,7 @@ public class AppointmentController {
         }
         
         AbstractUser postedBy = authentication.getLoggedInUser();
-        if(!Role.ADMIN.equals(postedBy.getAsEntity().getRole())){
+        if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         
@@ -118,5 +119,13 @@ public class AppointmentController {
         }
         
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    
+    private boolean isRoleAllowedToCreateAppointments(String role){
+        HashSet<String> hs = new HashSet<>();
+        hs.add(Role.ADMIN);
+        hs.add(Role.ORGANIZER);
+        hs.add(Role.TALENT);
+        return hs.contains(role);
     }
 }

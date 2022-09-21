@@ -12,10 +12,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 /**
- * This class contains all the raw data that represents an appointment
- * don't put business logic in this class, 
- * as some methods might be called by JPA,
- * and business logic belongs in the service.
+ * This class contains all the raw data that represents an appointment.
+ * Don't put business logic in this class, as some methods might be called by 
+ * JPA, and business logic belongs in the service.
  * 
  * Using Collections with OnDelete: https://stackoverflow.com/a/62848296
  * 
@@ -23,7 +22,6 @@ import org.hibernate.annotations.OnDeleteAction;
  */
 @Entity
 public class AppointmentEntity implements Serializable {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Setter
@@ -49,7 +47,7 @@ public class AppointmentEntity implements Serializable {
     @Setter
     @Getter
     @Column(nullable=false)
-    private String location;
+    private String location = "online"; // default to online appointment
     
     @Setter
     @Getter
@@ -74,12 +72,11 @@ public class AppointmentEntity implements Serializable {
     @Setter
     @Getter
     @Column(nullable=false)
-    @Embedded
     @ElementCollection
     @CollectionTable(joinColumns = @JoinColumn(name = "appt_id"))
     @JoinColumn(name = "appt_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<AppointmentTagEntity> tags = new HashSet<>();
+    private Set<String> tags = new HashSet<>();
     
     @Setter
     @Getter
@@ -116,8 +113,8 @@ public class AppointmentEntity implements Serializable {
         }
         
         sb.append("* tags: \n");
-        tags.forEach((e)->{
-            sb.append(String.format("\t%s = %s%n", e.getName(), e.getValue()));
+        tags.forEach((t)->{
+            sb.append(String.format("\t%s%n", t));
         });
         
         sb.append("* registeredUsers: \n");

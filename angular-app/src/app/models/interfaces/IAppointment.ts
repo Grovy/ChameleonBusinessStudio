@@ -1,5 +1,3 @@
-import { IAppointmentTag } from './IAppointmentTag';
-
 export interface IAppointment {
     id?: number;
     date?: string;
@@ -10,7 +8,7 @@ export interface IAppointment {
     description: string;
     restrictions?: string;
     totalSlots?: number;
-    tags?: IAppointmentTag[];
+    tags?: string[];
     registeredUsers: string[];
     canceled?: boolean;
 }
