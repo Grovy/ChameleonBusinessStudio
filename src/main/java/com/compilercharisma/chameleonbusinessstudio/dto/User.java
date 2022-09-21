@@ -1,6 +1,5 @@
 package com.compilercharisma.chameleonbusinessstudio.dto;
 
-import com.compilercharisma.chameleonbusinessstudio.enumeration.Gender;
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -19,8 +18,6 @@ public class User implements Serializable {
 
     private String _id;
 
-    private Integer age;
-
     private String firstName;
 
     private String lastName;
@@ -28,7 +25,5 @@ public class User implements Serializable {
     private String email;
 
     private UserRole role;
-
-    private Gender gender;
 
 }

@@ -8,12 +8,14 @@ import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 
 import java.net.URI;
-import java.time.*;
+import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,21 +47,20 @@ public class AppointmentController {
     }
     
     /**
+     * page is 0-indexed
+     *      *  attr is the name of one of AppointmentEntity's attributes
+     *      *  by is either asc or desc
      * 
      * @param days
      * @param page size={size}&page={page}&sort={attr},{by}
-     *  page is 0-indexed
-     *  attr is the name of one of AppointmentEntity's attributes
-     *  by is either asc or desc
-     * 
+     *
      * @return 
      */
-//    // https://stackoverflow.com/a/63966321
+//     https://stackoverflow.com/a/63966321
 //    @GetMapping(path="available")
 //    public ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>> getAvailableInDays(
 //            @RequestParam(required=false, defaultValue="30") int days,
-//            Pageable page
-//    ){
+//            Pageable page){
 //        LocalDateTime now = LocalDateTime.now();
 //        LocalDateTime later = now.plusDays(days);
 //
