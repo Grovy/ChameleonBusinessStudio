@@ -45,6 +45,19 @@ public class UserController {
         return response;
     }
 
+    @PostMapping("/updateUser")
+    public Mono<User> updateVendiaUser(@RequestBody User user){
+        log.info("Updating user");
+        var response = userService.updateUser(user);
+        log.info("Finished updating user");
+        return response;
+    }
+
+    /**
+     *
+     * @param email
+     * @return
+     */
     @PostMapping("/admin")
     public @ResponseBody String createAdmin(@RequestParam(name="email") String email){
         boolean success = true;
