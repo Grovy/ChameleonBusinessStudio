@@ -10,6 +10,8 @@ import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Collection;
+
 @Service
 public class UserService {
     
@@ -38,22 +40,28 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> createUser(User user){
-        String createUserQuery = """
-            mutation {
-                add_User(input :{age: %s, email: "%s", firstName: "%s", gender: %s, lastName: "%s", role: %s}) {
-                          result {
-                            age
-                            email
-                            firstName
-                            gender
-                            lastName
-                            role
-                          }
-                        }
-                      }""".formatted(user.getAge(), user.getEmail(),
-                user.getFirstName(), user.getGender(),
-                user.getLastName(), user.getRole());
-        return vendiaClient.executeRequest(createUserQuery, "add_User").toEntity(User.class);
+        return isUserRegistered(user.getEmail())
+                .map(b -> {
+                    if(b) {
+                        return "The user is already registered with this email";
+                    } else {
+                        String createUserQuery = """
+                            mutation {
+                                add_User(input :{ email: "%s", firstName: "%s", lastName: "%s", role: %s}) {
+                                          result {
+                                            age
+                                            email
+                                            firstName
+                                            gender
+                                            lastName
+                                            role
+                                  }
+                                }
+                              }""".formatted(user.getEmail(), user.getFirstName(),
+                                user.getLastName(), user.getRole());
+                        vendiaClient.executeRequest(createUserQuery, "add_User");
+                    }
+                }).doFinally();
     }
 
     /**
@@ -114,6 +122,25 @@ public class UserService {
     
     public boolean isRegistered(String email){
         return userRepository.findUserByEmail(email).isPresent();
+    }
+
+    private Mono<Boolean> isUserRegistered(String email) {
+        var query = """
+                query {
+                  list_UserItems(filter: {email: {eq: "%s"}}) {
+                    _UserItems {
+                      _id
+                      email
+                      firstName
+                      lastName
+                      role
+                    }
+                  }
+                }
+                """.formatted(email);
+        return vendiaClient.executeRequest(query, "list_UserItems")
+                .toEntityList(User.class)
+                .map(Collection::isEmpty);
     }
 
 }
