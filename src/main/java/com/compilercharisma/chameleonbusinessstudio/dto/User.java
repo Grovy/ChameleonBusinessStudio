@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,13 +19,15 @@ public class User implements Serializable {
 
     private String _id;
 
+    private Integer age;
+
     private String firstName;
 
     private String lastName;
 
     private String email;
 
-    private List<UserRole> roles;
+    private UserRole role;
 
     private Gender gender;
 
