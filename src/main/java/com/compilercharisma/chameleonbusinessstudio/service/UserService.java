@@ -7,6 +7,7 @@ import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredE
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.*;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+import org.springframework.graphql.client.GraphQlClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -139,6 +140,25 @@ public class UserService {
     
     public boolean isRegistered(String email){
         return userRepository.findUserByEmail(email).isPresent();
+    }
+
+    /**
+     * This deletes a user from the Vendia database
+     * Needs to go from user to _id ideally.
+     * @param user The user to be deleted.
+     * @return {@link UserResponse}
+     */
+    public Mono<UserResponse> deleteUser(User user)
+    {
+        String deleteUserMutation = """
+                mutation {
+                  remove_User(id: "%s") {
+                    transaction {
+                      _id
+                    }
+                  }
+                }""".formatted(user.get_id());
+        return vendiaClient.executeRequest(deleteUserMutation, "remove_User").toEntity(UserResponse.class);
     }
 
 }

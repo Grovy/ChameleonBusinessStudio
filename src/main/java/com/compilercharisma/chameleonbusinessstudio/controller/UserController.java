@@ -4,6 +4,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.graphql.client.GraphQlClient;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -45,11 +46,30 @@ public class UserController {
         return response;
     }
 
+    /**
+     * Updates a user in Vendia
+     * @param user the user being edited
+     * @return {@link User}
+     */
     @PostMapping("/updateUser")
     public Mono<User> updateVendiaUser(@RequestBody User user){
         log.info("Updating user");
         var response = userService.updateUser(user);
         log.info("Finished updating user");
+        return response;
+    }
+
+    /**
+     * Deletes a given user from Vendia
+     * @param user the user being removed
+     * @return {@link UserResponse}
+     */
+    @PostMapping("/deleteUser")
+    public Mono<UserResponse> deleteVendiaUser(@RequestBody User user)
+    {
+        log.info("Deleting User");
+        var response = userService.deleteUser(user);
+        log.info("Finished deleting user");
         return response;
     }
 
