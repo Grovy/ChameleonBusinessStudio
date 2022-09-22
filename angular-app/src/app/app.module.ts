@@ -34,7 +34,8 @@ import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.comp
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
-
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
@@ -54,6 +55,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
 
 
 
@@ -82,6 +84,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SiteFooterComponent,
     SiteHeaderComponent,
     SplashComponent,
+    CalenderViewComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -118,7 +121,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+      {path: 'calender-view',component:CalenderViewComponent},
     ]),
+    CalendarModule.forRoot({
+        provide:DateAdapter,
+        useFactory:adapterFactory,
+    }),
   ],
 
   providers: [],
