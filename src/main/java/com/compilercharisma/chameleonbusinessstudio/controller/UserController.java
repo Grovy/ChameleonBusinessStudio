@@ -4,6 +4,8 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -24,11 +26,11 @@ public class UserController {
      * @return {@link UserResponse}
      */
     @GetMapping("/getAll")
-    public Mono<UserResponse> fetchAllUsersFromVendia() {
-       log.info("Fetching all users from Vendia Share...");
-       var response = userService.getAllUsers();
-       log.info("Finished fetching all users from Vendia!");
-       return response;
+    public Mono<ResponseEntity<UserResponse>> fetchAllUsersFromVendia() {
+        log.info("Retrieving all users in Vendia...");
+        return userService.getAllUsers()
+                .map(r -> new ResponseEntity<>(r, HttpStatus.ACCEPTED))
+                .doOnNext(r -> log.info("Finished retrieving all users from Vendia!"));
     }
 
     /**
@@ -38,14 +40,12 @@ public class UserController {
      * @return {@link User}
      */
     @PostMapping("/createUser")
-    public Mono<User> createVendiaUser(@RequestBody User user){
-        log.info("Creating a user in Vendia share...");
-        var response = userService.createUser(user);
-        log.info("Finished creating a user in Vendia!");
-        return response;
+    public Mono<ResponseEntity<String>> createVendiaUser(@RequestBody User user){
+        return userService.createUser(user)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User created in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
     }
-
-
 
     @PostMapping("/admin")
     public @ResponseBody String createAdmin(@RequestParam(name="email") String email){
