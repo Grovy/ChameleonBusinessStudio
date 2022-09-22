@@ -56,9 +56,10 @@
       </form>
     </mat-step>
 
+    <!--Step 3: Contact Us Info-->
     <mat-step [stepControl]="contactUsGroup">
       <form [formGroup]="contactUsGroup"></form>
-        <ng-template matStepLabel>Contact Us box information.</ng-template>
+        <ng-template matStepLabel>Contact Us Box Information.</ng-template>
           <mat-card class="background-card">
             <mat-card-content>
               Fill out information you want in your contact us box.<Br>
@@ -76,6 +77,29 @@
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
         </div>
+    </mat-step>
+
+    <!--Step 4: About Us Info-->
+    <mat-step [stepControl]="aboutUsGroup">
+      <form [formGroup]="aboutUsGroup"></form>
+      <ng-template matStepLabel>About Us Box Information.</ng-template>
+      <mat-card class="background-card">
+        <mat-card-content>
+          Fill out information you want in your about us box.<Br>
+          Example: History / Services / Location
+        </mat-card-content>
+      </mat-card>
+      <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Input About Us information.</mat-label>
+          <textarea matInput placeholder=""></textarea>
+        </mat-form-field>
+      </form>
+
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
     </mat-step>
 
     <mat-step>

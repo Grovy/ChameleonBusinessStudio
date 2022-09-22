@@ -19,11 +19,13 @@ export class LandingPageConfigurationComponent {
   selected = '';
   backgroundImage: string;
   contactUsContent: string;
+  aboutUsContent: string;
 
   isLinear = false;
   layoutFormGroup: FormGroup;
   backgroundImageGroup: FormGroup;
   contactUsGroup: FormGroup;
+  aboutUsGroup: FormGroup;
 
   constructor(private _formBuilder: FormBuilder) { }
 
@@ -40,6 +42,10 @@ export class LandingPageConfigurationComponent {
 
     this.contactUsGroup = this._formBuilder.group({
       contactUsForm: ['', Validators.required]
+    })
+
+    this.aboutUsGroup = this._formBuilder.group({
+      aboutUsForm: ['', Validators.required]
     })
   }
 
