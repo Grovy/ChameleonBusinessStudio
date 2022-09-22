@@ -13,7 +13,7 @@
         </mat-card>
 
         <mat-form-field>
-          
+
           <mat-label>Splash Page Layout</mat-label>
           <mat-select [(value)]="selected">
             <mat-option>Layout 1</mat-option>
@@ -39,7 +39,7 @@
               Upload a large image with high resolution to be your background for your custom splash page.
             </mat-card-content>
           </mat-card>
-        
+
           <input matInput formControlName="background" required>
           <input type="file" class="splash-file-input" #splashFileUpload>
 
@@ -56,6 +56,27 @@
       </form>
     </mat-step>
 
+    <mat-step [stepControl]="contactUsGroup">
+      <form [formGroup]="contactUsGroup"></form>
+        <ng-template matStepLabel>Contact Us box information.</ng-template>
+          <mat-card class="background-card">
+            <mat-card-content>
+              Fill out information you want in your contact us box.<Br>
+              Example: Business Hours / Point of Contact / Location
+            </mat-card-content>
+          </mat-card>
+          <form class="example-form">
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Input Contact Us information.</mat-label>
+              <textarea matInput placeholder=""></textarea>
+            </mat-form-field>
+          </form>
+
+      <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
 
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
@@ -68,7 +89,7 @@
   </mat-horizontal-stepper>
 
   <div class="preview-container">
-    <mat-card class="background-container"> 
+    <mat-card class="background-container">
       <mat-card-title class="background-container-title">Preview the Splash Screen Background</mat-card-title>
       <mat-card-content>
         <div class="background-box">

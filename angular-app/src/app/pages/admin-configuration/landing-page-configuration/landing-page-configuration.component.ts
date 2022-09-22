@@ -18,12 +18,13 @@ export class LandingPageConfigurationComponent {
   layoutOption: string;
   selected = '';
   backgroundImage: string;
-  
+  contactUsContent: string;
 
   isLinear = false;
   layoutFormGroup: FormGroup;
   backgroundImageGroup: FormGroup;
-  
+  contactUsGroup: FormGroup;
+
   constructor(private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
@@ -35,6 +36,10 @@ export class LandingPageConfigurationComponent {
       background: ['', Validators.required],
       avatar: [null],
       name: ['']
+    })
+
+    this.contactUsGroup = this._formBuilder.group({
+      contactUsForm: ['', Validators.required]
     })
   }
 
