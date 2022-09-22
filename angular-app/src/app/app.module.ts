@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
 import { ConfigPropertySetterComponent} from './pages/admin-configuration/config-property-setter/config-property-setter.component';
+import { CustomBannerDirective } from './theme/directives/custom-banner.directive';
 import { DefaultHeaderComponent } from './theme/default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { FormsModule} from "@angular/forms";
@@ -48,10 +49,12 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSelect, MatSelectModule } from "@angular/material/select";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSliderModule } from '@angular/material/slider';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 @NgModule({
@@ -68,6 +71,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AppointmentListComponent,
     BookingPageComponent,
     ConfigPropertySetterComponent,
+    CustomBannerDirective,
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
     NavComponent,
@@ -95,6 +99,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,
+    MatStepperModule,
     MatListModule,
     MatPaginatorModule,
     MatTableModule,
