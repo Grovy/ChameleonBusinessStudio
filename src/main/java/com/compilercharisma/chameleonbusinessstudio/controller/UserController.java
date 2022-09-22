@@ -25,7 +25,7 @@ public class UserController {
      *
      * @return {@link UserResponse}
      */
-    @GetMapping("/getAll")
+    @GetMapping("/getAllUsers")
     public Mono<ResponseEntity<UserResponse>> fetchAllUsersFromVendia() {
         log.info("Retrieving all users in Vendia...");
         return userService.getAllUsers()
@@ -47,6 +47,37 @@ public class UserController {
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
+    /**
+     * Updates a user in Vendia
+     * @param user the user being edited
+     * @return {@link User}
+     */
+    @PutMapping("/updateUser")
+    public Mono<ResponseEntity<User>> updateVendiaUser(@RequestBody User user){
+        return userService.updateUser(user)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User updated in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
+    }
+
+    /**
+     * Deletes a given user from Vendia
+     * @param user the user being removed
+     * @return {@link UserResponse}
+     */
+    @DeleteMapping("/deleteUser")
+    public Mono<ResponseEntity<UserResponse>> deleteVendiaUser(@RequestBody User user) {
+        return userService.deleteUser(user)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User updated in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
+    }
+
+    /**
+     *
+     * @param email
+     * @return
+     */
     @PostMapping("/admin")
     public @ResponseBody String createAdmin(@RequestParam(name="email") String email){
         boolean success = true;

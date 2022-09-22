@@ -37,9 +37,28 @@ public class UserService {
      * @param user the user that will be created in Vendia
      * @return {@link User}
      */
-    public Mono<String> createUser(User user){
+    public Mono<String> createUser(User user) {
         return vendiaClient.isUserRegistered(user.getEmail())
                 .map(b -> b ? "User is already registered" : vendiaClient.createUser(user).toString());
+    }
+
+    /**
+     * Edits a users info in Vendia Share
+     * @param user the user whose info will be edited in Vendia
+     * @return {@link User}
+     */
+    public Mono<User> updateUser(User user){
+        return vendiaClient.updateUser(user);
+    }
+
+    /**
+     * This deletes a user from the Vendia database
+     * Needs to go from user to _id ideally.
+     * @param user The user to be deleted.
+     * @return {@link UserResponse}
+     */
+    public Mono<UserResponse> deleteUser(User user) {
+        return vendiaClient.deleteUser(user);
     }
 
     /**

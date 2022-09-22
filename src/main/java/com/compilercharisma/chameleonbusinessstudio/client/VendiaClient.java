@@ -26,9 +26,7 @@ public class VendiaClient {
                     _UserItems {
                       _id
                       email
-                      age
                       firstName
-                      gender
                       lastName
                     }
                   }
@@ -85,6 +83,68 @@ public class VendiaClient {
                 """.formatted(email);
         return getEntity(query, UserResponse.class)
                 .map(r -> !r.getUsers().isEmpty());
+    }
+
+    /**
+     * Edits a users info in Vendia Share
+     * @param user the user whose info will be edited in Vendia
+     * @return {@link User}
+     */
+    public Mono<User> updateUser(User user){
+        String updateUserMutation = """
+                mutation {
+                   update_User(
+                     id: "%s"
+                     input: {firstName: "%s", lastName: "%s", role: %s, email: "%s"}
+                   ) {
+                     result {
+                       firstName
+                       email
+                       lastName
+                       role
+                     }
+                   }
+                 }
+                """.formatted(user.get_id(), user.getFirstName(),
+                user.getLastName(),
+                user.getRole(), user.getEmail());
+        return sendEntity(updateUserMutation, "update_User", User.class);
+    }
+
+    /**
+     * This deletes a user from the Vendia database
+     * Needs to go from user to _id ideally.
+     *
+     * @param user The user to be deleted.
+     * @return {@link UserResponse}
+     */
+    public Mono<UserResponse> deleteUser(User user) {
+        String deleteUserMutation = """
+                mutation {
+                  remove_User(id: "%s") {
+                    transaction {
+                      _id
+                    }
+                  }
+                }""".formatted(user.get_id());
+        return getEntity(deleteUserMutation, UserResponse.class);
+    }
+
+    private Mono<UserResponse> getUserId(String email) {
+        var query = """
+                query {
+                  list_UserItems(filter: {email: {eq: "%s"}}) {
+                    _UserItems {
+                      _id
+                      email
+                      firstName
+                      lastName
+                      role
+                    }
+                  }
+                }
+                """.formatted(email);
+        return getEntity(query, UserResponse.class);
     }
 
     private <T> Mono<T> getEntity(String graphQlQuery, final Class<T> responseClass) {
