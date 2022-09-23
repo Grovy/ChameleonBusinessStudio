@@ -1,24 +1,25 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.*;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.client.GraphQlClient;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
-/**
- *
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 @Service
 public class UserService {
     
-    private final UserRepository repo;
+    private final UserRepository userRepository;
+    private final VendiaClient vendiaClient;
 
-    @Autowired
-    public UserService(UserRepository repo){
-        this.repo = repo;
+    public UserService(UserRepository userRepository, VendiaClient vendiaClient){
+        this.userRepository = userRepository;
+        this.vendiaClient = vendiaClient;
     }
     
     public Admin createAdmin(String email){
@@ -28,12 +29,85 @@ public class UserService {
                 .withDisplayName(email) // default to their email as name
                 .withRole(Role.ADMIN)
                 .build();
-        
-        return new Admin(repo.save(user));
+        return new Admin(userRepository.save(user));
+    }
+
+    /**
+     * Creates a user in Vendia Share
+     *
+     * @param user the user that will be created in Vendia
+     * @return {@link User}
+     */
+    public Mono<User> createUser(User user){
+        String createUserQuery = """
+            mutation {
+                add_User(input :{email: "%s", firstName: "%s", lastName: "%s", role: %s}) {
+                          result {
+                            email
+                            firstName
+                            lastName
+                            role
+                          }
+                        }
+                      }""".formatted(user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(), user.getRole());
+        return vendiaClient.executeRequest(createUserQuery, "add_User").toEntity(User.class);
+    }
+
+    /**
+     * Edits a users info in Vendia Share
+     * @param user the user whose info will be edited in Vendia
+     * @return {@link User}
+     */
+    public Mono<User> updateUser(User user)
+    {
+        String updateUserMutation = """
+                mutation {
+                   update_User(
+                     id: "%s"
+                     input: {firstName: "%s", lastName: "%s", role: %s, email: "%s"}
+                   ) {
+                     result {
+                       firstName
+                       email
+                       lastName
+                       role
+                     }
+                   }
+                 }
+                """.formatted(user.get_id(), user.getFirstName(),
+                user.getLastName(),
+                user.getRole(), user.getEmail());
+        return vendiaClient.executeRequest(updateUserMutation, "update_User").toEntity(User.class);
+    }
+
+    /**
+     * This method gets all the users from the Vendia
+     *
+     * @return {@link UserResponse}
+     */
+    public Mono<UserResponse> getAllUsers() {
+        String getAllUsersQuery = """
+                query {
+                  list_UserItems {
+                    _UserItems {
+                      _id
+                      email
+                      age
+                      firstName
+                      gender
+                      lastName
+                    }
+                  }
+                }
+                """;
+        return vendiaClient.executeRequest(getAllUsersQuery, "list_UserItems")
+                .toEntity(UserResponse.class);
     }
     
     /**
-     * note that this method throws a NoSuchElementException if no user
+     * Note that this method throws a NoSuchElementException if no user
      * exits with the given email.
      * 
      * @param email the email of the user to get
@@ -42,7 +116,7 @@ public class UserService {
      * actual type returned 
      */
     public AbstractUser get(String email){
-        UserEntity e = repo.findUserByEmail(email).orElseThrow(()->{
+        UserEntity e = userRepository.findUserByEmail(email).orElseThrow(()->{
             return new UserNotRegisteredException(String.format("No registered user with email %s", email));
         });
         
@@ -61,10 +135,30 @@ public class UserService {
     }
 
     public void registerUser(UserEntity userEntity){
-        repo.save(userEntity);
+        userRepository.save(userEntity);
     }
     
     public boolean isRegistered(String email){
-        return repo.findUserByEmail(email).isPresent();
+        return userRepository.findUserByEmail(email).isPresent();
     }
+
+    /**
+     * This deletes a user from the Vendia database
+     * Needs to go from user to _id ideally.
+     * @param user The user to be deleted.
+     * @return {@link UserResponse}
+     */
+    public Mono<UserResponse> deleteUser(User user)
+    {
+        String deleteUserMutation = """
+                mutation {
+                  remove_User(id: "%s") {
+                    transaction {
+                      _id
+                    }
+                  }
+                }""".formatted(user.get_id());
+        return vendiaClient.executeRequest(deleteUserMutation, "remove_User").toEntity(UserResponse.class);
+    }
+
 }

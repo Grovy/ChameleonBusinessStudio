@@ -1,33 +1,88 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.graphql.client.GraphQlClient;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
-/**
- * This class handles CRUD operations associated with users.
- * We most likely won't need this class for the final product, but it is nice to
- * have for testing
- * 
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 @RestController
-@RequestMapping(path="/api/v1/users")
+@RequestMapping(path="/api/users")
+@Slf4j
 public class UserController {
     
-    private final UserService serv;
-    
-    @Autowired
-    public UserController(UserService serv){
-        this.serv = serv;
+    private final UserService userService;
+
+    public UserController(UserService userService){
+        this.userService = userService;
     }
-    
-    // curl -X POST localhost:8080/api/v1/users/admin?email=johndoe@gmail.com
+
+    /**
+     * This endpoint fetches all users from Vendia Share
+     *
+     * @return {@link UserResponse}
+     */
+    @GetMapping("/getAll")
+    public Mono<UserResponse> fetchAllUsersFromVendia() {
+       log.info("Fetching all users from Vendia Share...");
+       var response = userService.getAllUsers();
+       log.info("Finished fetching all users from Vendia!");
+       return response;
+    }
+
+    /**
+     * Create a user in Vendia
+     *
+     * @param user the user to be created
+     * @return {@link User}
+     */
+    @PostMapping("/createUser")
+    public Mono<User> createVendiaUser(@RequestBody User user){
+        log.info("Creating a user in Vendia share...");
+        var response = userService.createUser(user);
+        log.info("Finished creating a user in Vendia!");
+        return response;
+    }
+
+    /**
+     * Updates a user in Vendia
+     * @param user the user being edited
+     * @return {@link User}
+     */
+    @PostMapping("/updateUser")
+    public Mono<User> updateVendiaUser(@RequestBody User user){
+        log.info("Updating user");
+        var response = userService.updateUser(user);
+        log.info("Finished updating user");
+        return response;
+    }
+
+    /**
+     * Deletes a given user from Vendia
+     * @param user the user being removed
+     * @return {@link UserResponse}
+     */
+    @PostMapping("/deleteUser")
+    public Mono<UserResponse> deleteVendiaUser(@RequestBody User user)
+    {
+        log.info("Deleting User");
+        var response = userService.deleteUser(user);
+        log.info("Finished deleting user");
+        return response;
+    }
+
+    /**
+     *
+     * @param email
+     * @return
+     */
     @PostMapping("/admin")
     public @ResponseBody String createAdmin(@RequestParam(name="email") String email){
         boolean success = true;
         try {
-            serv.createAdmin(email);
+            userService.createAdmin(email);
         } catch(Exception ex){
             ex.printStackTrace();
             success = false;

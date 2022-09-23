@@ -1,110 +1,109 @@
-.example-container {
-  position: absolute;
+.preview-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.splash-file-input{
+  display: none;
+}
+
+.banner-color-card{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.background-box {
+  width: 13rem;
+  height: 13rem;
+  margin-left: 3rem;
+  outline: 3px solid gray;
+  background-size: cover;
+  overflow: hidden;
+  align-self: center;
+  justify-self: center;
+}
+
+.background-image{
   width: 100%;
   height: 100%;
-  border: 1px solid #555;
-  background: #eee;
+  object-fit: contain;
+  overflow: hidden;
 }
 
-.example-drawer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  background: crimson;
-  margin: auto;
+.background-container{
+  margin-top: 10px;
+  margin-right: 20px;
+  width: 20rem;
+  height: 27rem;
+  background: lightblue;
 }
 
-.the-content {
-
-  background-color: yellow;
+.background-container-title{
+  text-align: center;
+  background: gainsboro;
+  margin-bottom: 3rem;
 }
 
-mat-toolbar {
-  display: flex;
-  color: #eeeeee;
-  background-color: #555555;
-  height: 100px
+.splash-container-title{
+  text-align: center;
+  background: gainsboro;
+  margin-bottom: 3rem;
 }
 
-mat-toolbar-row {
-  color: #eeeeee;
-  height: 100px;
-  background-color: green;
+.banner-container{
+  width: 63.25rem;
+  height: 15rem;
+  background: cadetblue;
+  margin-top: 1.50rem;
+  margin-bottom: 2rem;
+  position: inherit;
 }
 
-.title-center {
-  margin: 0 auto;
+.banner-container-title{
+  text-align: center;
+  background: gainsboro;
+  margin-bottom: 3rem;
 }
 
-.example-action-button {
-  margin-top: 8px;
-  margin-right: 8px;
+.banner-box{
+  width: 60rem;
+  height: 10rem;
+  outline: 3px solid gray;
+  position: center;
+  justify-self: center;
+  align-self: center;
+  margin-left: 2rem;;
 }
 
-.sidenav {
-  background: lightgrey;
-  height: 100%;
-  width: 300px;
-  display: block;
-  margin-right: 15px;
-  border-radius: 1px;
+/* The banner  */
 
+.business-title{
+  font-size: 32px;
+  margin: 15px;
 }
 
-.logo {
-  position: relative;
-  padding: 0.5rem 0.7rem;
-  z-index: 4;
+.example-spacer{
+  flex: 1 1 auto;
 }
 
-.jumbotron {
-  font-family: 'Poppins', serif;
-  padding-top: 10px;
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-  background-color: bisque;
+.banner{
+  background: green;
+  padding: 15px;
 }
 
-.container {
-  margin-top: 2%;
-}
-
-.row {
+.example-form {
+  min-width: 200px;
+  max-width: 800px;
+  width: 100%;
   margin-top: 15px;
-  margin-bottom: 10px;
 }
 
-body {
-  text-align: center;
-}
-
-* {
-  text-align: center;
-}
-
-.preview {
-  border: 10px black;
-  border-top-style: solid;
-  border-right-style: dotted;
-  border-bottom-style: solid;
-  border-left-style: solid;
-  width:1000px;
-  height:1000px;
-}
-
-.container text-center {
-  border: 10px black;
-
-}
-
-img{
-  max-width: 100%;
-  max-height: 100%;
-  opacity: 0.6;
-  display: block; /* remove extra space below image */
-}
-
-#primaryContainer {
-  float: right;
+.example-full-width {
+  width: 100%;
 }
