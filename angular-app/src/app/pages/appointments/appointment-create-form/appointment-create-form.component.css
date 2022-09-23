@@ -1,0 +1,14 @@
+#card {
+    background-color: cornflowerblue;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.field-wrapper {
+    background-color: white;
+    flex-grow: 1;
+}
