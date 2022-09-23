@@ -1,68 +1,129 @@
-<app-default-header></app-default-header>
-<mat-drawer-container #sideNav class="example-container" mode="side" opened>
-  <mat-drawer mode="side" opened class="example-drawer">
-    <div class="sidenav">
-      <div class="logo">
-        <a href="/" class="simple-text logo-mini">
+<body>
+  <app-default-header></app-default-header>
 
-        </a>
-        <a href="/" class="simple-text logo-normal">
-          Home
-        </a>
-      </div>
+  <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
+    <!--Step 1: Select your splash page layout-->
+    <mat-step [stepControl]="layoutFormGroup">
+      <form [formGroup]="layoutFormGroup">
+        <ng-template matStepLabel>Choose your banner color</ng-template>
+        <mat-card class="banner-color-card">
+          <mat-card-content>
+            Your banner will be displayed a the top of every page in your app. Choose a color you'd like to represent.
+          </mat-card-content>
+        </mat-card>
 
-      <mat-nav-list>
-        <mat-list-item>Title</mat-list-item>
-        <mat-list-item>Theme</mat-list-item>
-        <mat-list-item>Background Color</mat-list-item>
-        <mat-list-item>About Us Box</mat-list-item>
-        <mat-list-item>Contact Us Box</mat-list-item>
-      </mat-nav-list>
+        <mat-form-field>
 
-    </div>
-
-
-  </mat-drawer>
-
-  <mat-drawer-content>
-    <div class="jumbotron">
-      <div class="container">
-        <h1 class="display-3"><strong>Customize Your Landing Page!</strong></h1>
-        <p><strong>Follow the options to the side to get your landing page up and running!</strong></p>
-
-      </div>
-    </div>
-
-    <div>
-      <!-- This will need an API for landing page configurations -->
-      <form >
-        <mat-form-field appearance="fill">
-          <mat-label>Select an option</mat-label>
-          <mat-select>
-            <mat-option>None</mat-option>
-            <mat-option value="option1">Light Theme</mat-option>
-            <mat-option value="option2">Dark Theme</mat-option>
-            <mat-option value="option3">Preset Theme 1</mat-option>
-            <mat-option value="option3">Preset Theme 2</mat-option>
-            <mat-option value="option3">Create New Preset</mat-option>
+          <mat-label>Splash Page Layout</mat-label>
+          <mat-select [(value)]="selected">
+            <mat-option>Layout 1</mat-option>
+            <mat-option>Layout 2</mat-option>
+            <mat-option>Layout 3</mat-option>
+            <mat-option>Layout 4</mat-option>
           </mat-select>
         </mat-form-field>
-
-        <label for="banner-color">Background Color</label>
-        <input id="banner-color" name="banner-color" type="color"/>
-
-        <input type="submit"/>
+        <div>
+          <button mat-button matStepperNext>Set Color</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
       </form>
-    </div>
+    </mat-step>
 
-    <div class="preview">
-      <site-header></site-header>
-      <div class="container text-center">
-        <img src="/custom/splash" />
+    <!--Step 2: Choose background image-->
+    <mat-step [stepControl]="backgroundImageGroup">
+      <form [formGroup]="backgroundImageGroup">
+        <ng-template matStepLabel>Upload your splash page background</ng-template>
+
+          <mat-card class="background-card">
+            <mat-card-content>
+              Upload a large image with high resolution to be your background for your custom splash page.
+            </mat-card-content>
+          </mat-card>
+
+          <input matInput formControlName="background" required>
+          <input type="file" class="splash-file-input" #splashFileUpload>
+
+          <div class="splash-file-upload" >
+            <button mat-mini-fab color="primary" class="splash-upload-btn">
+              <mat-icon>attach_file</mat-icon>
+            </button>
+          </div>
+
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Step 3: Contact Us Info-->
+    <mat-step [stepControl]="contactUsGroup">
+      <form [formGroup]="contactUsGroup"></form>
+        <ng-template matStepLabel>Contact Us Box Information.</ng-template>
+          <mat-card class="background-card">
+            <mat-card-content>
+              Fill out information you want in your contact us box.<Br>
+              Example: Business Hours / Point of Contact / Location
+            </mat-card-content>
+          </mat-card>
+          <form class="example-form">
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Input Contact Us information.</mat-label>
+              <textarea matInput placeholder=""></textarea>
+            </mat-form-field>
+          </form>
+
+      <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
+
+    <!--Step 4: About Us Info-->
+    <mat-step [stepControl]="aboutUsGroup">
+      <form [formGroup]="aboutUsGroup"></form>
+      <ng-template matStepLabel>About Us Box Information.</ng-template>
+      <mat-card class="background-card">
+        <mat-card-content>
+          Fill out information you want in your about us box.<Br>
+          Example: History / Services / Location
+        </mat-card-content>
+      </mat-card>
+      <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Input About Us information.</mat-label>
+          <textarea matInput placeholder=""></textarea>
+        </mat-form-field>
+      </form>
+
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
       </div>
+    </mat-step>
 
-    </div>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      You are now done.
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+  <div class="preview-container">
+    <mat-card class="background-container">
+      <mat-card-title class="background-container-title">Preview the Splash Screen Background</mat-card-title>
+      <mat-card-content>
+        <div class="background-box">
+          <div class="background-image-preview" *ngIf="backgroundImage && backgroundImage !== ''">
+              <img class="background-image" [src]="backgroundImage" [alt]="backgroundImageGroup.value.name">
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
 
-  </mat-drawer-content>
-</mat-drawer-container>
+</body>

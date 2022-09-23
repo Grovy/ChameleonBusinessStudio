@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
 import { ConfigPropertySetterComponent} from './pages/admin-configuration/config-property-setter/config-property-setter.component';
+import { CustomBannerDirective } from './theme/directives/custom-banner.directive';
 import { DefaultHeaderComponent } from './theme/default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { FormsModule} from "@angular/forms";
@@ -33,7 +34,8 @@ import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.comp
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
-
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
@@ -48,10 +50,13 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSelect, MatSelectModule } from "@angular/material/select";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSliderModule } from '@angular/material/slider';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
+
 
 
 @NgModule({
@@ -68,6 +73,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AppointmentListComponent,
     BookingPageComponent,
     ConfigPropertySetterComponent,
+    CustomBannerDirective,
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
     NavComponent,
@@ -78,6 +84,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SiteFooterComponent,
     SiteHeaderComponent,
     SplashComponent,
+    CalenderViewComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -95,6 +102,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,
+    MatStepperModule,
     MatListModule,
     MatPaginatorModule,
     MatTableModule,
@@ -113,7 +121,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+      {path: 'calender-view',component:CalenderViewComponent},
     ]),
+    CalendarModule.forRoot({
+        provide:DateAdapter,
+        useFactory:adapterFactory,
+    }),
   ],
 
   providers: [],
