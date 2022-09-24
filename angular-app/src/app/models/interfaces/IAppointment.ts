@@ -1,3 +1,5 @@
+import { IUser } from "./IUser";
+
 export interface IAppointment {
     id?: number;
     date?: string;
@@ -9,6 +11,6 @@ export interface IAppointment {
     restrictions?: string;
     totalSlots?: number;
     tags?: string[];
-    registeredUsers: string[];
+    registeredUsers: string[] | IUser[];
     canceled?: boolean;
 }
