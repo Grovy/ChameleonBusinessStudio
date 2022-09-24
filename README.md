@@ -4,7 +4,7 @@ An open source scheduling application, usable and maintainable without an extens
 Technology department.
 
 ## Synopsis
-Chameleon Business Studio aspires to adapt to its users, changing itself to “blend into” their needs until it supports their vital information systems. Our project provides an open-source scheduling application template that can be tailored to an individual or organization’s needs. After a brief configuration process, the application is usable “out of the box”, with [Vendia](https://www.vendia.net/) providing data-layer hosting, perfect for individuals and organizers with little technical support.
+Chameleon Business Studio aspires to adapt to its users, changing itself to “blend into�? their needs until it supports their vital information systems. Our project provides an open-source scheduling application template that can be tailored to an individual or organization’s needs. After a brief configuration process, the application is usable “out of the box�?, with [Vendia](https://www.vendia.net/) providing data-layer hosting, perfect for individuals and organizers with little technical support.
 
 /logout to log out
 see AuthenticationService for getting logged-in user
