@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AppointmentValidator {
     public boolean isValid(AppointmentEntity e){
-        return e.getStartTime() != null
+        return e.getTitle() != null && !e.getTitle().trim().isEmpty()
+                && e.getStartTime() != null
                 && e.getEndTime() != null
                 && e.getStartTime().isBefore(e.getEndTime())
                 && e.getLocation() != null
