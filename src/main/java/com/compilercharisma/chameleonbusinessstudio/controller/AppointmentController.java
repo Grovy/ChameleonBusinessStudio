@@ -74,13 +74,15 @@ public class AppointmentController {
     
     /**
      * Creates and stores a new appointment, if it is valid.
+     * Note that using RequestBody means it works as an API endpoint, but might 
+     * not handle a form submission.
      * 
      * @param appointment the appointment to create
      * @return a 201 Created At response if successful
      */
     @PostMapping
-    public ResponseEntity create(@ModelAttribute AppointmentEntity appointment){
-        if(!appointments.isAppointmentValid(appointment) && appointment.getId() == 0){
+    public ResponseEntity create(@RequestBody AppointmentEntity appointment){
+        if(!appointments.isAppointmentValid(appointment) || appointment.getId() != 0){
             return ResponseEntity.badRequest().body(appointment);
         }
         
@@ -97,11 +99,13 @@ public class AppointmentController {
                 .build()
                 .toUri();
         
+        System.out.println(appointment.getStartTime().toString());
+        System.out.println(appointment.getEndTime().toString());
         return ResponseEntity.created(at).build();
     }
     
     @PutMapping
-    public ResponseEntity update(@ModelAttribute AppointmentEntity appointment){
+    public ResponseEntity update(@RequestBody AppointmentEntity appointment){
         if(!appointments.isAppointmentValid(appointment)){
             return ResponseEntity.badRequest().body(appointment);
         }
