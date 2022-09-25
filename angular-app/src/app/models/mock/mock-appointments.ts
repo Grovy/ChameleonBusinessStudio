@@ -1,4 +1,9 @@
 import { IAppointment } from "../interfaces/IAppointment";
+import { IUser, UserRole } from '../interfaces/IUser';
+import { MockParticipantList } from "./mock-users";
+
+const participants: IUser[] = MockParticipantList;
+const barber = { email: 'danielr@chameleon.com', role: UserRole.TALENT};
 
 export const MockAppointmentList: IAppointment[] = [
     {
@@ -9,7 +14,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel", 
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut (Premium)",
-      registeredUsers: ['Matt Crow'],
+      registeredUsers: [participants[0], barber],
     }, {
       id: 2, 
       date: "09/01/2022",
@@ -18,7 +23,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel", 
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut",
-      registeredUsers: ['Nero Tandel'],
+      registeredUsers: [participants[5], barber],
     }, {
       id: 3, 
       date: "09/01/2022",
@@ -27,7 +32,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel", 
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut",
-      registeredUsers: ['Ariel Carmargo'],
+      registeredUsers: [participants[4], barber],
     }, {
       id: 4, 
       date: "09/02/2022",
@@ -36,7 +41,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel", 
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut",
-      registeredUsers: ['Daniel Villavicencio'],
+      registeredUsers: [participants[1], barber],
     }, {
       id: 5, 
       date: "09/04/2022",
@@ -45,7 +50,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel", 
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut with Hot Towel",
-      registeredUsers: ['Dave Kaercher'],
+      registeredUsers: [participants[6], barber],
     }, {
       id: 6, 
       date: "09/05/2022",
@@ -54,7 +59,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel", 
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut with Beard Trim",
-      registeredUsers: ['Rojan Maharjan'],
+      registeredUsers: [participants[3], barber],
     }
 ];
 
