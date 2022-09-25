@@ -149,8 +149,9 @@ public class VendiaClient {
                 .document(graphQlQuery)
                 .retrieve("list_UserItems")
                 .toEntity(responseClass)
-                .doOnSubscribe(s -> log.info("Executing query to Vendia..."))
-                .doOnNext(n -> log.info("Finished executing query to Vendia"));
+                .doOnSubscribe(s -> log.info("Executing query to Vendia"))
+                .doOnNext(n -> log.info("Finished executing query to Vendia"))
+                .doOnError(e -> log.error("Something unexpected happened when connecting to Vendia"));
     }
 
     public <T> Mono<T> sendEntity(final String graphQlQuery, final String queryName, final Class<T> responseClass) {
