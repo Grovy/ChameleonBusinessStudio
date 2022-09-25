@@ -2,11 +2,13 @@ package com.compilercharisma.chameleonbusinessstudio.client;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 public class VendiaClient {
 
     private final HttpGraphQlClient httpGraphQlClient;
@@ -26,7 +28,7 @@ public class VendiaClient {
                     _UserItems {
                       _id
                       email
-                      firstName
+                      displayName
                       lastName
                     }
                   }
@@ -46,8 +48,7 @@ public class VendiaClient {
                 mutation {
                     add_User(input :{ 
                     email: "%s", 
-                    firstName: "%s",
-                    lastName: "%s",
+                    displayName: "%s",
                     role: %s}) {
                           result {
                             email
@@ -57,7 +58,7 @@ public class VendiaClient {
                       }
                     }
                   }"""
-                .formatted(user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole());
+                .formatted(user.getEmail(), user.getDisplayName(), user.getRole());
         return sendEntity(query, "add_User", User.class);
     }
 
@@ -74,8 +75,7 @@ public class VendiaClient {
                     _UserItems {
                       _id
                       email
-                      firstName
-                      lastName
+                      displayName
                       role
                     }
                   }
@@ -95,7 +95,7 @@ public class VendiaClient {
                 mutation {
                    update_User(
                      id: "%s"
-                     input: {firstName: "%s", lastName: "%s", role: %s, email: "%s"}
+                     input: {displayName: "%s", role: %s, email: "%s"}
                    ) {
                      result {
                        firstName
@@ -105,9 +105,7 @@ public class VendiaClient {
                      }
                    }
                  }
-                """.formatted(user.get_id(), user.getFirstName(),
-                user.getLastName(),
-                user.getRole(), user.getEmail());
+                """.formatted(user.get_id(), user.getDisplayName(), user.getRole(), user.getEmail());
         return sendEntity(updateUserMutation, "update_User", User.class);
     }
 
@@ -137,8 +135,7 @@ public class VendiaClient {
                     _UserItems {
                       _id
                       email
-                      firstName
-                      lastName
+                      displayName
                       role
                     }
                   }
@@ -151,7 +148,9 @@ public class VendiaClient {
         return httpGraphQlClient
                 .document(graphQlQuery)
                 .retrieve("list_UserItems")
-                .toEntity(responseClass);
+                .toEntity(responseClass)
+                .doOnSubscribe(s -> log.info("Executing query to Vendia..."))
+                .doOnNext(n -> log.info("Finished executing query to Vendia"));
     }
 
     public <T> Mono<T> sendEntity(final String graphQlQuery, final String queryName, final Class<T> responseClass) {

@@ -1,6 +1,5 @@
 package com.compilercharisma.chameleonbusinessstudio.dto;
 
-import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,16 +15,26 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User implements Serializable {
+public class Appointment implements Serializable {
 
     private String _id;
 
-    private String displayName;
+    private String title;
 
-    private String email;
+    private LocalDateTime startTime;
 
-    private UserRole role;
+    private LocalDateTime endTime;
 
-    private List<String> appointments;
+    private String location;
+
+    private String description;
+
+    private String restrictions;
+
+    private Boolean cancelled;
+
+    private Integer totalSlots;
+
+    private List<String> participants;
 
 }
