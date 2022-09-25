@@ -21,7 +21,7 @@ public class UserController {
     }
 
     /**
-     * This endpoint fetches all users from Vendia Share
+     * Get all users from Vendia
      *
      * @return {@link UserResponse}
      */
@@ -37,12 +37,13 @@ public class UserController {
      * Create a user in Vendia
      *
      * @param user the user to be created
-     * @return {@link User}
+     * @return The {@link User} that was created
      */
     @PostMapping("/createUser")
     public Mono<ResponseEntity<String>> createVendiaUser(@RequestBody User user){
         return userService.createUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .onErrorMap(e -> new Exception("Error creating user in Vendia"))
                 .doOnNext(u -> log.info("User created in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
@@ -50,7 +51,7 @@ public class UserController {
     /**
      * Updates a user in Vendia
      * @param user the user being edited
-     * @return {@link User}
+     * @return The {@link User} that was created
      */
     @PutMapping("/updateUser")
     public Mono<ResponseEntity<User>> updateVendiaUser(@RequestBody User user){
@@ -63,33 +64,14 @@ public class UserController {
     /**
      * Deletes a given user from Vendia
      * @param user the user being removed
-     * @return {@link UserResponse}
+     * @return Id of the deleted user
      */
     @DeleteMapping("/deleteUser")
-    public Mono<ResponseEntity<UserResponse>> deleteVendiaUser(@RequestBody User user) {
+    public Mono<ResponseEntity<String>> deleteVendiaUser(@RequestBody User user) {
         return userService.deleteUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User updated in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
-    /**
-     *
-     * @param email
-     * @return
-     */
-    @PostMapping("/admin")
-    public @ResponseBody String createAdmin(@RequestParam(name="email") String email){
-        boolean success = true;
-        try {
-            userService.createAdmin(email);
-        } catch(Exception ex){
-            ex.printStackTrace();
-            success = false;
-        }
-        
-        return (success) 
-                ? String.format("created %s as an admin", email)
-                : String.format("failed to create %s as an admin", email);
-    }
 }
