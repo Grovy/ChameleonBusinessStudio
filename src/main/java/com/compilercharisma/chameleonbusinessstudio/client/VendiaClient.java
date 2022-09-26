@@ -25,7 +25,9 @@ public record VendiaClient(HttpGraphQlClient httpGraphQlClient) {
                 .execute()
                 .map(response -> response.field(path).toEntity(responseClass))
                 .onErrorResume(error ->
-                        Mono.error(new ExternalServiceException("Invalid input", HttpStatus.BAD_REQUEST)));
+                        Mono.error(new ExternalServiceException("Something unexpected happened " +
+                                "when executing a query. Check the syntax!",
+                                HttpStatus.BAD_REQUEST)));
     }
 
 }

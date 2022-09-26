@@ -3,10 +3,12 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
+@Slf4j
 public class UserRepository {
 
     private final VendiaClient vendiaClient;
@@ -32,21 +34,22 @@ public class UserRepository {
                     }
                   }
                 }""";
-        return vendiaClient.executeQuery(query, "list_UserItems._UserItems", UserResponse.class);
+        return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
     }
 
     public Mono<User> createUser(User user) {
         var query = """
-               add_User(input: {appointments: [], displayName: %s, email: %s, role: %s}) {
-                    result {
-                      _id
-                      role
-                      email
-                      displayName
-                      appointments
+                mutation {
+                    add_User(input: {appointments: [], displayName: "%s", email: "%s", role: %s}) {
+                      result {
+                        _id
+                        appointments
+                        displayName
+                        email
+                        role
+                      }
                     }
                   }
-                }
                 """.formatted(user.getDisplayName(), user.getEmail(), user.getRole());
         return vendiaClient.executeQuery(query, "add_User.result", User.class);
     }
@@ -57,17 +60,21 @@ public class UserRepository {
      * @param email email of the user
      * @return The first occurrence of {@link User}
      */
-    public Mono<User> findId(String email) {
+    public Mono<UserResponse> findId(String email) {
         var query = """
                 query {
                   list_UserItems(filter: {email: {eq: "%s"}}) {
                     _UserItems {
                       _id
+                      displayName
+                      email
+                      role
+                      appointments
                     }
                   }
                 }
                 """.formatted(email);
-        return vendiaClient.executeQuery(query, "list_UserItems._UserItems[0]", User.class);
+        return vendiaClient.executeQuery(query, "list_UserItems._UserItems", UserResponse.class);
     }
 
     /**
@@ -89,7 +96,7 @@ public class UserRepository {
                   }
                 }
                 """.formatted(email);
-        return vendiaClient.executeQuery(query, "list_UserItems._UserItems", UserResponse.class)
+        return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class)
                 .map(r -> !r.getUsers().isEmpty());
     }
 
@@ -134,6 +141,7 @@ public class UserRepository {
                     }
                   }
                 }""".formatted(id);
-        return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , String.class);
+        return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , String.class)
+                .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
     }
 }

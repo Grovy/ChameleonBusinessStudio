@@ -21,31 +21,32 @@ public class UserController {
     }
 
     /**
-     * Get all users from Vendia
+     * Gets all users from Vendia
      *
      * @return {@link UserResponse}
      */
     @GetMapping("/getAllUsers")
     public Mono<ResponseEntity<UserResponse>> fetchAllUsersFromVendia() {
-        log.info("Retrieving all users in Vendia...");
+        log.info("Retrieving all users from Vendia...");
         return userService.getAllUsers()
                 .map(r -> new ResponseEntity<>(r, HttpStatus.ACCEPTED))
-                .doOnNext(r -> log.info("Finished retrieving all users from Vendia!"));
+                .doOnNext(r -> log.info("Finished retrieving all users from Vendia!"))
+                .doOnError(e -> log.error("Could not retrieve users from Vendia"));
     }
 
     /**
-     * Create a user in Vendia
+     * Creates a user in Vendia
      *
      * @param user the user to be created
      * @return The {@link User} that was created
      */
     @PostMapping("/createUser")
-    public Mono<ResponseEntity<String>> createVendiaUser(@RequestBody User user){
+    public Mono<ResponseEntity<User>> createVendiaUser(@RequestBody User user){
+        log.info("Creating user in Vendia with parameters [{}]", user);
         return userService.createUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
-                .onErrorMap(e -> new Exception("Error creating user in Vendia"))
                 .doOnNext(u -> log.info("User created in Vendia share!"))
-                .doOnError(u -> log.error("Something unexpected happened!"));
+                .onErrorMap(e -> new Exception("Error creating user in Vendia"));
     }
 
     /**
@@ -55,6 +56,7 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     public Mono<ResponseEntity<User>> updateVendiaUser(@RequestBody User user){
+        log.info("Updating user in Vendia with parameters [{}]", user);
         return userService.updateUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User updated in Vendia share!"))
@@ -62,12 +64,13 @@ public class UserController {
     }
 
     /**
-     * Deletes a given user from Vendia
+     * Deletes user in Vendia
      * @param user the user being removed
      * @return Id of the deleted user
      */
     @DeleteMapping("/deleteUser")
     public Mono<ResponseEntity<String>> deleteVendiaUser(@RequestBody User user) {
+        log.info("Deleting user in Vendia with email [{}]", user.getEmail());
         return userService.deleteUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User updated in Vendia share!"))

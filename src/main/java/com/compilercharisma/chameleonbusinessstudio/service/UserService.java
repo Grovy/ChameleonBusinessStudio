@@ -1,13 +1,10 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
-import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
-import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.user.*;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -21,7 +18,7 @@ public class UserService {
     }
 
     /**
-     * This method gets all the users from the Vendia
+     * This method gets all the users in Vendia
      *
      * @return {@link UserResponse}
      */
@@ -36,29 +33,33 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> createUser(User user) {
-        return userRepository.isUserRegistered(user.getEmail())
-                .filter(isRegistered -> isRegistered)
+        return Mono.just(user)
+                .filterWhen(u -> userRepository.isUserRegistered(u.getEmail()).map(b -> !b))
+                .switchIfEmpty(Mono.error(new ExternalServiceException("User already exists with given email", HttpStatus.BAD_REQUEST)))
                 .flatMap(u -> userRepository.createUser(user));
     }
 
     /**
-     * Edits a users info in Vendia Share
+     * Edits a user's info in Vendia
+     *
      * @param user the user whose info will be edited in Vendia
      * @return {@link User}
      */
     public Mono<User> updateUser(User user){
         return userRepository.findId(user.getEmail())
+                .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.updateUser(user, u.get_id()));
     }
 
     /**
-     * This deletes a user from the Vendia database
-     * Needs to go from user to _id ideally.
+     * Deletes a user from Vendia
+     *
      * @param user The user to be deleted.
      * @return {@link UserResponse}
      */
     public Mono<String> deleteUser(User user) {
         return userRepository.findId(user.getEmail())
+                .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
     }
 
