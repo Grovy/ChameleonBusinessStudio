@@ -1,3 +1,9 @@
+.next-button {
+  background: #ff4081;
+  color:white;
+  margin-left: 12px;
+}
+
 .preview-container{
   display: flex;
   flex-wrap: wrap;
@@ -17,16 +23,44 @@
   display: none;
 }
 
+.logo-upload-btn{
+  margin-bottom: 20px;
+}
+
+.preview-and-save-card {
+  height: 7rem;
+  width: 27rem;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.save-image{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+.splash-upload-btn{
+  margin-bottom: 20px;
+}
+
 .card-title{
   font-weight: 1000;
   font-family: 'Lato';
-  background: green;
 }
 
 .card-image-container {
-  width: 10rem;
+  width: 7rem;
   height: auto;
-  background: gray;
+  display: flex;
+  align-items: center;
+}
+
+.paintbrush {
+  object-fit: contain;
+  overflow: hidden;
+  height: 100%;
 }
 
 .card-content-container {
@@ -40,11 +74,29 @@
   width: 27rem;
   height: 7rem;
   display: flex;
+  align-items: center;
 }
 
 .logo-card{
   margin-top: 10px;
   margin-bottom: 20px;
+  width: 27rem;
+  height: 7rem;
+  display: flex;
+}
+
+.logo-image {
+  object-fit: contain;
+  overflow: hidden;
+  height: 100%;
+}
+
+.company-name-card {
+  height: 7rem;
+  width: 27rem;
+  height: auto;
+  display: flex;
+  align-items: center;
 }
 
 .logo-box {

@@ -3,9 +3,7 @@
 */
 import { NgModule } from '@angular/core';
 
-import { AdminConfigContainerComponent } from "./pages/admin-configuration/admin-config-container/admin-config-container.component";
 import { AdminConfigurationComponent } from './pages/admin-configuration/admin-configuration/admin-configuration.component';
-import { AdminConfigurationFormComponent } from './pages/admin-configuration/admin-configuration-form/admin-configuration-form.component';
 import { AdminGenUserComponent } from './pages/admin-panel/admin-gen-user/admin-gen-user.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel/admin-panel.component';
 import { AdminPanelTestComponent } from './pages/admin-panel/admin-panel-test/admin-panel-test.component';
@@ -18,7 +16,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
-import { ConfigPropertySetterComponent} from './pages/admin-configuration/config-property-setter/config-property-setter.component';
 import { CustomBannerDirective } from './theme/directives/custom-banner.directive';
 import { DefaultHeaderComponent } from './theme/default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
@@ -29,7 +26,6 @@ import { NavComponent } from './pages/nav/nav.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
-import { SidenavAdminConfigComponent } from './pages/admin-configuration/sidenav-admin-config/sidenav-admin-config.component';
 import { SignInComponent } from './pages/auth/signin/signin.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
@@ -64,9 +60,7 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
 
 @NgModule({
   declarations: [
-    AdminConfigContainerComponent,
     AdminConfigurationComponent,
-    AdminConfigurationFormComponent,
     AdminGenUserComponent,
     AdminPanelComponent,
     AdminPanelTestComponent,
@@ -76,13 +70,11 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
     AppointmentDetailsComponent,
     AppointmentListComponent,
     BookingPageComponent,
-    ConfigPropertySetterComponent,
     CustomBannerDirective,
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
     NavComponent,
     SetupWizardComponent,
-    SidenavAdminConfigComponent,
     SignInComponent,
     SignInFormComponent,
     SiteFooterComponent,

@@ -1,7 +1,9 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
 
 type RGB = `rgb(${number}, ${number}, ${number})`;
 type HEX = `#${string}`;
@@ -13,6 +15,12 @@ type Color = HEX | RGB;
   styleUrls: ['./admin-configuration.component.css']
 })
 export class AdminConfigurationComponent {
+  // Image paths
+  bannerColorImage: string = 'assets/images/paintbrush.png';
+  logoCardImage: string = 'assets/images/upload-logo.svg';
+  companyNameImage: string = 'assets/images/type-company-name.svg';
+  previewAndSaveImage: string = 'assets/images/admin-config-check.svg';
+
   logoFileName: string;
   splashFileName: string;
   bannerColor = '';
@@ -24,7 +32,11 @@ export class AdminConfigurationComponent {
   orgNameFormGroup: FormGroup;
   lastFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, private http: HttpClient, private _snackBar: MatSnackBar) { }
+  constructor(
+    private _formBuilder: FormBuilder, 
+    private http: HttpClient, 
+    private _snackBar: MatSnackBar,
+  ) { }
 
   ngOnInit(): void {
     this.bannerFormGroup = this._formBuilder.group({
@@ -86,7 +98,6 @@ export class AdminConfigurationComponent {
     }
 
     reader.readAsDataURL(logoFile);
-
   }
 
   showPreviewSplash(event) {
@@ -104,11 +115,10 @@ export class AdminConfigurationComponent {
     }
 
     reader.readAsDataURL(splashFile);
-
   }
 
   openSnackBar() {
     this._snackBar.open(
-      "This is an experimental snackbar notification!", "Close");
+      "Configuration saved!", "Close");
   }
 }

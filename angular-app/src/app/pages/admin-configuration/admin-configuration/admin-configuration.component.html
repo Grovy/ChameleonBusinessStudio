@@ -11,9 +11,11 @@
       <form [formGroup]="bannerFormGroup">
         <ng-template matStepLabel>Choose your banner color</ng-template>
 
-        <!--Dismissible Card-->
+        <!--Banner Color Instruction Card-->
         <mat-card class="banner-color-card">
-          <div class="card-image-container"></div>
+          <div class="card-image-container">
+            <img class="paintbrush" [src]=bannerColorImage alt="my-image">
+          </div>
           <div class="card-content-container">
             <p class="card-title">Choose your banner color</p>
             Your banner will be displayed a the top of every page in your app. Choose a color you'd like to represent.
@@ -21,11 +23,11 @@
         </mat-card>
 
         <mat-form-field>
-          <input matInput type="color" placeholder="Choose your banner color" formControlName="banner_color" (change)="onColorSelected($event) "required>
+          <input matInput type="color" placeholder="Choose your banner color" formControlName="banner_color" (change)="onColorSelected($event)" required>
         </mat-form-field>
         <div>
-          <button mat-button matStepperNext>Set Color</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-raised-button>Set Color</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
     </mat-step>
@@ -35,10 +37,15 @@
       <form [formGroup]="logoFormGroup">
         <ng-template matStepLabel>Upload your Company Logo</ng-template>
 
+          <!--Company Logo Instruction Card-->
           <mat-card class="logo-card">
-            <mat-card-content>
-              Upload a small image to be used as your company logo. It will be displayed on your banner.
-            </mat-card-content>
+            <div class="card-image-container">
+              <img class="logo-image" [src]=logoCardImage alt="logo-image">
+            </div>
+            <div class="card-content-container">
+              <p class="card-title">Upload your logo</p>
+              Upload a small image that will be used as your company logo. It will be displayed on your banner
+            </div>
           </mat-card>
         
           <input matInput formControlName="logo" required>
@@ -51,8 +58,8 @@
           </div>
           
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
     </mat-step>
@@ -62,11 +69,16 @@
       <form [formGroup]="splashFormGroup">
         <ng-template matStepLabel>Upload your splash page background</ng-template>
 
-          <mat-card class="background-card">
-            <mat-card-content>
-              Upload a large image with high resolution to be your background for your custom splash page.
-            </mat-card-content>
-          </mat-card>
+        <!--Background Image Instruction Card (reusing logo card code since they share same svg image)-->
+        <mat-card class="logo-card">
+          <div class="card-image-container">
+            <img class="logo-image" [src]=logoCardImage alt="logo-image">
+          </div>
+          <div class="card-content-container">
+            <p class="card-title">Upload your splash page background</p>
+            Upload a large image that will be displayed as the background of your splash page.
+          </div>
+        </mat-card>
         
           <input matInput formControlName="splash" required>
           <input type="file" class="splash-file-input" (change)="showPreviewSplash($event)" #splashFileUpload>
@@ -78,8 +90,8 @@
           </div>
 
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
     </mat-step>
@@ -88,11 +100,24 @@
     <mat-step [stepControl]="orgNameFormGroup">
       <form [formGroup]="orgNameFormGroup">
         <ng-template matStepLabel>Type your Company</ng-template>
+
+        <!--Company Name/Banner Text Instruction Card-->
+        <mat-card class="company-name-card">
+          <div class="card-image-container">
+            <img class="company-name" [src]=companyNameImage alt="company-image">
+          </div>
+          <div class="card-content-container">
+            <p class="card-title">Enter your company name</p>
+            Enter a name that will display on your banner. This will be displayed throughout the website.
+          </div>
+        </mat-card>
+
         <mat-form-field>
           <input matInput placeholder="Company Name" formControlName="org_name" required>
         </mat-form-field>
         <div>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
     </mat-step>
@@ -101,19 +126,20 @@
     <mat-step [stepControl]="lastFormGroup">
       <form [formGroup]="lastFormGroup">
         <ng-template matStepLabel>Preview and Save</ng-template>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button-raised type="submit" (click)="openSnackBar()" control>Save</button>
+
+          <mat-card class="preview-and-save-card">
+            <div class="card-image-container">
+              <img class="save-image" [src]=previewAndSaveImage alt="preview-and-save-image">
+            </div>
+            <div class="card-content-container">
+              <p class="card-title">Preview and Save</p>
+              All fields in this form are required. Check to make sure you have uploaded all fields, then click save to save your configuration!
+            </div>
+          </mat-card>
+
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button type="submit" (click)="openSnackBar()" class="next-button" control>Save</button>
       </form>
-    </mat-step>
-
-
-    <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
-      You are now done.
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
-      </div>
     </mat-step>
   </mat-horizontal-stepper>
 
