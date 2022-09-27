@@ -73,7 +73,7 @@ public class UserController {
         log.info("Deleting user in Vendia with email [{}]", user.getEmail());
         return userService.deleteUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
-                .doOnNext(u -> log.info("User updated in Vendia share!"))
+                .doOnNext(u -> log.info("User deleted in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 

@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-@Repository
 @Slf4j
+@Repository
 public class UserRepository {
 
     private final VendiaClient vendiaClient;
@@ -37,6 +37,12 @@ public class UserRepository {
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
     }
 
+    /**
+     * Creates a user in Vendia
+     *
+     * @param user the user that will be created
+     * @return The {@link User} that was created
+     */
     public Mono<User> createUser(User user) {
         var query = """
                 mutation {
@@ -74,7 +80,7 @@ public class UserRepository {
                   }
                 }
                 """.formatted(email);
-        return vendiaClient.executeQuery(query, "list_UserItems._UserItems", UserResponse.class);
+        return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
     }
 
     /**
