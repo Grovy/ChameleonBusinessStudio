@@ -1,51 +1,187 @@
-.example-container {
-  position: absolute;
+.preview-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.logo-file-input{
+  display: none;
+}
+
+.splash-file-input{
+  display: none;
+}
+
+.card-title{
+  font-weight: 1000;
+  font-family: 'Lato';
+  background: green;
+}
+
+.card-image-container {
+  width: 10rem;
+  height: auto;
+  background: gray;
+}
+
+.card-content-container {
+  margin-left: 1rem;
+  font-family: 'Lato';
+}
+
+.banner-color-card{
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 27rem;
+  height: 7rem;
+  display: flex;
+}
+
+.logo-card{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.logo-box {
+  width: 16rem;
+  height: 16rem;
+  margin-left: 1.125rem;
+  outline: 3px solid gray;
+  background: white;
+  background-size: cover;
+  overflow: hidden;
+  align-self: center;
+  justify-self: center;
+}
+
+.logo-image{
   width: 100%;
   height: 100%;
-  border: 1px solid #555;
-  background: #eee;
+  object-fit: contain;
+  overflow: hidden;
 }
 
-.example-drawer {
+.logo-container-outline{
+  background: lightgray;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 200px;
-  background: crimson;
-  margin: auto;
+  margin-top: 10px;
+  margin-right: 20px;
+  width: 21rem;
+  height: 28rem;
 }
 
-.the-content {
-
-  background-color: yellow;
+.logo-container{
+  margin-top: 10px;
+  margin-right: 20px;
+  width: 22rem;
+  height: 27rem;
+  background: grey;
 }
 
-p {
-  color: #000000;
-  background-color: green;
-  padding: 5px
-
+.logo-container-title{
+  text-align: center;
+  font-family: 'Lato';
+  font-size: 32px;
+  color: white;
+  margin-bottom: 3rem;
 }
 
-mat-toolbar {
+.splash-container-outline{
+  background: lightgray;
   display: flex;
-  color: #eeeeee;
-  background-color: #555555;
-  height: 100px
+  align-items: center;
+  margin-top: 10px;
+  margin-right: 20px;
+  width: 41rem;
+  height: 28rem;
 }
 
-mat-toolbar-row {
-  color: #eeeeee;
-  height: 100px;
-  background-color: green;
+.splash-container{
+  margin-top: 10px;
+  width: 40rem;
+  height: 27rem;
+  background: grey;
 }
 
-.title-center {
-  margin: 0 auto;
+.splash-container-title{
+  text-align: center;
+  font-family: 'Lato';
+  font-size: 32px;
+  color:white;
+  margin-bottom: 3rem;
 }
 
-.example-action-button {
-  margin-top: 8px;
-  margin-right: 8px;
+.splash-box {
+  width: 28rem;
+  height: 16rem;
+  margin-left: 6rem;
+  outline: 3px solid gray;
+  background: white;
+  background-size: cover;
+  overflow: hidden;
 }
 
+.splash-image{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+.banner-container-outline{
+  width: 65.25rem;
+  height: 16rem;
+  background: lightgray;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.banner-container{
+  width: 63.25rem;
+  height: 15rem;
+  background: grey;
+  margin-top: 1.50rem;
+  margin-bottom: 2rem;
+  position: inherit;
+}
+
+.banner-container-title{
+  text-align: center;
+  font-family: 'Lato';
+  font-size: 32px;
+  color:white;
+  margin-bottom: 3rem;
+}
+
+.banner-box{
+  width: 60rem;
+  height: 10rem;
+  outline: 3px solid gray;
+  position: center;
+  justify-self: center;
+  align-self: center;
+  margin-left: 2rem;;
+}
+
+/* The banner  */
+
+.business-title{
+  font-size: 32px;
+  margin: 15px;
+}
+
+.example-spacer{
+  flex: 1 1 auto;
+}
+
+.banner{
+  background: green;
+  padding: 15px;
+}

@@ -52,6 +52,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelect, MatSelectModule } from "@angular/material/select";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -105,6 +106,7 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,
+    MatSnackBarModule,
     MatStepperModule,
     MatListModule,
     MatPaginatorModule,
@@ -121,11 +123,11 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
       { path: 'booking-page', component: BookingPageComponent },
+      { path: 'calender-view',component: CalenderViewComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
-      {path: 'calender-view',component:CalenderViewComponent},
     ]),
     CalendarModule.forRoot({
         provide:DateAdapter,
