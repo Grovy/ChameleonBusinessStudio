@@ -16,8 +16,6 @@ public class SecurityConfiguration {
             ServerHttpSecurity security) throws Exception {
         return security
                 .authorizeExchange()
-                .pathMatchers("/api/users/**")
-                .permitAll()
                 .and()
                 .oauth2Login()
                 .and()
