@@ -1,7 +1,5 @@
 package com.compilercharisma.chameleonbusinessstudio.service
 
-import com.compilercharisma.chameleonbusinessstudio.dto.User
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository
 import reactor.core.publisher.Mono
 import spock.lang.Specification
