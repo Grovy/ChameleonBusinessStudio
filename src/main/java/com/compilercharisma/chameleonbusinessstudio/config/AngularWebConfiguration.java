@@ -2,8 +2,9 @@ package com.compilercharisma.chameleonbusinessstudio.config;
 
 import com.compilercharisma.chameleonbusinessstudio.angular.AngularResourceResolver;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.ResourceHandlerRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 /**
  * https://stackoverflow.com/a/46854105
@@ -13,10 +14,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * problem by changing the default behavior for handling requests to routes not
  * associated with a Spring Boot controller.
  * 
+ * https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-config-static-resources
+ * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Configuration
-public class AngularWebConfiguration implements WebMvcConfigurer {
+@EnableWebFlux
+public class AngularWebConfiguration implements WebFluxConfigurer {
 
     /**
      * Configures Spring Boot with out custom static resource handler

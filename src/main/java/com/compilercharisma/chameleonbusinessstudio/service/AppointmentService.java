@@ -114,14 +114,14 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
         return validator.isValid(e);
     }
     
-    private void registerUser(AppointmentEntity appt, String email){
+    public void registerUser(AppointmentEntity appt, String email){
         if(!isSlotAvailable(appt)){
             throw new UnsupportedOperationException(String.format("Cannot register \"%s\" in appointment#%d: no slots available", email, appt.getId()));
         }
         Set<String> oldReg = appt.getRegisteredUsers();
         oldReg.add(email);
         appt.setRegisteredUsers(oldReg);
-        // don't save yet
+        repo.save(appt);
     }
     
     private boolean isSlotAvailable(AppointmentEntity appt){
