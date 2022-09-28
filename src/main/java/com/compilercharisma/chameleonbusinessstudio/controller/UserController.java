@@ -4,7 +4,8 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.graphql.client.GraphQlClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -24,12 +25,12 @@ public class UserController {
      *
      * @return {@link UserResponse}
      */
-    @GetMapping("/getAll")
-    public Mono<UserResponse> fetchAllUsersFromVendia() {
-       log.info("Fetching all users from Vendia Share...");
-       var response = userService.getAllUsers();
-       log.info("Finished fetching all users from Vendia!");
-       return response;
+    @GetMapping("/getAllUsers")
+    public Mono<ResponseEntity<UserResponse>> fetchAllUsersFromVendia() {
+        log.info("Retrieving all users in Vendia...");
+        return userService.getAllUsers()
+                .map(r -> new ResponseEntity<>(r, HttpStatus.ACCEPTED))
+                .doOnNext(r -> log.info("Finished retrieving all users from Vendia!"));
     }
 
     /**
@@ -39,11 +40,11 @@ public class UserController {
      * @return {@link User}
      */
     @PostMapping("/createUser")
-    public Mono<User> createVendiaUser(@RequestBody User user){
-        log.info("Creating a user in Vendia share...");
-        var response = userService.createUser(user);
-        log.info("Finished creating a user in Vendia!");
-        return response;
+    public Mono<ResponseEntity<String>> createVendiaUser(@RequestBody User user){
+        return userService.createUser(user)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User created in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
     /**
@@ -51,12 +52,12 @@ public class UserController {
      * @param user the user being edited
      * @return {@link User}
      */
-    @PostMapping("/updateUser")
-    public Mono<User> updateVendiaUser(@RequestBody User user){
-        log.info("Updating user");
-        var response = userService.updateUser(user);
-        log.info("Finished updating user");
-        return response;
+    @PutMapping("/updateUser")
+    public Mono<ResponseEntity<User>> updateVendiaUser(@RequestBody User user){
+        return userService.updateUser(user)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User updated in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
     /**
@@ -64,13 +65,12 @@ public class UserController {
      * @param user the user being removed
      * @return {@link UserResponse}
      */
-    @PostMapping("/deleteUser")
-    public Mono<UserResponse> deleteVendiaUser(@RequestBody User user)
-    {
-        log.info("Deleting User");
-        var response = userService.deleteUser(user);
-        log.info("Finished deleting user");
-        return response;
+    @DeleteMapping("/deleteUser")
+    public Mono<ResponseEntity<UserResponse>> deleteVendiaUser(@RequestBody User user) {
+        return userService.deleteUser(user)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User updated in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
     /**

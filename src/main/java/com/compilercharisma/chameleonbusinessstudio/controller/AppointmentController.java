@@ -11,6 +11,15 @@ import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.*;
+import java.util.HashSet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import java.util.HashSet;
 
 import org.springframework.data.domain.*;
@@ -46,15 +55,30 @@ public class AppointmentController {
     }
     
     /**
+     * page is 0-indexed
+     *      *  attr is the name of one of AppointmentEntity's attributes
+     *      *  by is either asc or desc
      * 
      * @param days
      * @param page size={size}&page={page}&sort={attr},{by}
-     *  page is 0-indexed
-     *  attr is the name of one of AppointmentEntity's attributes
-     *  by is either asc or desc
-     * 
+     *
      * @return 
      */
+//     https://stackoverflow.com/a/63966321
+//    @GetMapping(path="available")
+//    public ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>> getAvailableInDays(
+//            @RequestParam(required=false, defaultValue="30") int days,
+//            Pageable page){
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime later = now.plusDays(days);
+//
+//        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
+//
+//        return ResponseEntity
+//                .ok()
+//                .contentType(MediaTypes.HAL_JSON)
+//                .body(asm.toModel(entities, modelAssembler));
+//    }
     // https://stackoverflow.com/a/63966321
     @GetMapping(path="available")
     public Mono<ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>>> getAvailableInDays(
@@ -74,7 +98,6 @@ public class AppointmentController {
                 .body(asm.toModel(entities, modelAssembler));
          */
     }
-    
     /**
      * Creates and stores a new appointment, if it is valid.
      * Note that using RequestBody means it works as an API endpoint, but might 
