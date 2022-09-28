@@ -1,6 +1,9 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
+
+import reactor.core.publisher.Mono;
+
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentModelAssembler;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
@@ -17,6 +20,10 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import java.util.HashSet;
+
+import org.springframework.data.domain.*;
+import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,18 +40,18 @@ public class AppointmentController {
 
     private final AppointmentService appointments;
     private final AuthenticationService authentication;
-//    private final PagedResourcesAssembler<AppointmentEntity> asm;
-    private final AppointmentModelAssembler modelAssembler;
+    //private final PagedResourcesAssembler<AppointmentEntity> asm;
+    //private final AppointmentModelAssembler modelAssembler;
 
     public AppointmentController(
             AppointmentService appointments,
             AuthenticationService authentication,
-//            PagedResourcesAssembler<AppointmentEntity> asm,
+            //PagedResourcesAssembler<AppointmentEntity> asm,
             AppointmentModelAssembler modelAssembler){
         this.appointments = appointments;
         this.authentication = authentication;
-//        this.asm = asm;
-        this.modelAssembler = modelAssembler;
+        //this.asm = asm;
+        //this.modelAssembler = modelAssembler;
     }
     
     /**
@@ -72,7 +79,25 @@ public class AppointmentController {
 //                .contentType(MediaTypes.HAL_JSON)
 //                .body(asm.toModel(entities, modelAssembler));
 //    }
-    
+    // https://stackoverflow.com/a/63966321
+    @GetMapping(path="available")
+    public Mono<ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>>> getAvailableInDays(
+            @RequestParam(required=false, defaultValue="30") int days,
+            Pageable page
+    ){
+        throw new UnsupportedOperationException("Need to reimplement paging");
+        /*
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime later = now.plusDays(days);
+
+        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaTypes.HAL_JSON)
+                .body(asm.toModel(entities, modelAssembler));
+         */
+    }
     /**
      * Creates and stores a new appointment, if it is valid.
      * Note that using RequestBody means it works as an API endpoint, but might 
@@ -82,14 +107,14 @@ public class AppointmentController {
      * @return a 201 Created At response if successful
      */
     @PostMapping
-    public ResponseEntity create(@RequestBody AppointmentEntity appointment){
+    public Mono<ResponseEntity<?>> create(@RequestBody AppointmentEntity appointment){
         if(!appointments.isAppointmentValid(appointment) || appointment.getId() != 0){
-            return ResponseEntity.badRequest().body(appointment);
+            return Mono.just(ResponseEntity.badRequest().body(appointment));
         }
         
         AbstractUser postedBy = authentication.getLoggedInUser();
         if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
         }
         
         appointments.createAppointment(appointment);
@@ -100,20 +125,18 @@ public class AppointmentController {
                 .build()
                 .toUri();
         
-        System.out.println(appointment.getStartTime().toString());
-        System.out.println(appointment.getEndTime().toString());
-        return ResponseEntity.created(at).build();
+        return Mono.just(ResponseEntity.created(at).build());
     }
     
     @PutMapping
-    public ResponseEntity update(@RequestBody AppointmentEntity appointment){
+    public Mono<ResponseEntity<?>> update(@RequestBody AppointmentEntity appointment){
         if(!appointments.isAppointmentValid(appointment)){
-            return ResponseEntity.badRequest().body(appointment);
+            return Mono.just(ResponseEntity.badRequest().body(appointment));
         }
         
         AbstractUser postedBy = authentication.getLoggedInUser();
         if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
         }
         
         if(appointment.getId() == 0){ // new appointment
@@ -122,7 +145,27 @@ public class AppointmentController {
             appointments.updateAppointment(appointment);
         }
         
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return Mono.just(ResponseEntity.status(HttpStatus.ACCEPTED).build());
+    }
+
+    /**
+     * Books the currently logged in user for the given appointment.
+     * @param appointment the appointment to book the logged-in user for.
+     * @return either a bad request or an OK response containing the updated 
+     *  appointment
+     */
+    @PostMapping("/book-me")
+    public Mono<ResponseEntity<AppointmentEntity>> bookMe(@RequestBody AppointmentEntity appointment){
+        if(!appointments.isAppointmentValid(appointment)){
+            return Mono.just(ResponseEntity.badRequest().body(appointment));
+        }
+
+        var postedBy = authentication.getLoggedInUser().getAsEntity();
+        if(!appointments.isUserRegistered(appointment, postedBy.getEmail())){
+            appointments.registerUser(appointment, postedBy.getEmail());
+        }
+
+        return Mono.just(ResponseEntity.ok().body(appointment));
     }
     
     private boolean isRoleAllowedToCreateAppointments(String role){
