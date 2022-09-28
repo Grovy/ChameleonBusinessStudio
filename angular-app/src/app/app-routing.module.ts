@@ -3,6 +3,7 @@ import { AdminPanelComponent} from "./pages/admin-panel/admin-panel/admin-panel.
 import { AdminPanelTestComponent } from "./pages/admin-panel/admin-panel-test/admin-panel-test.component";
 import { AppointmentDetailsComponent } from './pages/appointments/appointment-details/appointment-details.component';
 import { BookingPageComponent} from "./pages/appointments/booking-page/booking-page.component";
+import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
 import { LandingPageConfigurationComponent } from "./pages/admin-configuration/landing-page-configuration/landing-page-configuration.component";
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'admin-panel', component: AdminPanelComponent },
   { path: 'admin-panel-test', component: AdminPanelTestComponent },
   { path: 'appointment-details', component: AppointmentDetailsComponent },
+  { path: 'calender-view',component: CalenderViewComponent },
   { path: 'booking-page', component: BookingPageComponent },
   { path: 'landing-page-configuration', component: LandingPageConfigurationComponent },
   { path: 'setup-wizard', component: SetupWizardComponent },
