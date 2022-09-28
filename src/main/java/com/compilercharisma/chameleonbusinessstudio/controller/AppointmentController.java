@@ -1,6 +1,6 @@
 //package com.compilercharisma.chameleonbusinessstudio.controller;
 //
-////import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
+//import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 //
 //import reactor.core.publisher.Mono;
 //
@@ -11,6 +11,15 @@
 //import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 //
 //import java.net.URI;
+//import java.time.LocalDateTime;
+//import java.time.*;
+//import java.util.HashSet;
+//import org.springframework.data.domain.Page;
+//import org.springframework.data.domain.Pageable;
+//import org.springframework.data.web.PagedResourcesAssembler;
+//import org.springframework.hateoas.EntityModel;
+//import org.springframework.hateoas.MediaTypes;
+//import org.springframework.hateoas.PagedModel;
 //import java.util.HashSet;
 //
 //import org.springframework.data.domain.*;
@@ -30,13 +39,13 @@
 //public class AppointmentController {
 //
 //    private final AppointmentService appointments;
-////    private final AuthenticationService authentication;
+//    private final AuthenticationService authentication;
 //    //private final PagedResourcesAssembler<AppointmentEntity> asm;
 //    //private final AppointmentModelAssembler modelAssembler;
 //
 //    public AppointmentController(
 //            AppointmentService appointments,
-////            AuthenticationService authentication,
+//            AuthenticationService authentication,
 //            //PagedResourcesAssembler<AppointmentEntity> asm,
 //            AppointmentModelAssembler modelAssembler){
 //        this.appointments = appointments;
@@ -46,12 +55,12 @@
 //    }
 //
 //    /**
+//     * page is 0-indexed
+//     *      *  attr is the name of one of AppointmentEntity's attributes
+//     *      *  by is either asc or desc
 //     *
 //     * @param days
 //     * @param page size={size}&page={page}&sort={attr},{by}
-//     *  page is 0-indexed
-//     *  attr is the name of one of AppointmentEntity's attributes
-//     *  by is either asc or desc
 //     *
 //     * @return
 //     */
@@ -59,7 +68,8 @@
 //    @GetMapping(path="available")
 //    public Mono<ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>>> getAvailableInDays(
 //            @RequestParam(required=false, defaultValue="30") int days,
-//            Pageable page){
+//            Pageable page
+//    ){
 //        throw new UnsupportedOperationException("Need to reimplement paging");
 //        /*
 //        LocalDateTime now = LocalDateTime.now();
@@ -73,7 +83,6 @@
 //                .body(asm.toModel(entities, modelAssembler));
 //         */
 //    }
-//
 //    /**
 //     * Creates and stores a new appointment, if it is valid.
 //     * Note that using RequestBody means it works as an API endpoint, but might
