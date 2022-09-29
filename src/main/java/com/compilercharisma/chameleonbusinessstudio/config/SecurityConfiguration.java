@@ -1,7 +1,9 @@
 package com.compilercharisma.chameleonbusinessstudio.config;
 
+import com.compilercharisma.chameleonbusinessstudio.authorization.UserAuthorizationManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -13,15 +15,16 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity security) {
+            ServerHttpSecurity security, UserAuthorizationManager userAuthorizationManager) {
         return security
-                .authorizeExchange()
-                .and()
                 .oauth2Login()
                 .and()
                 .logout()
                 .and()
                 .authorizeExchange()
+                .pathMatchers(HttpMethod.POST, "/api/users/createUser")
+                .permitAll()
+                .pathMatchers(HttpMethod.GET, "/api/users/**").access(userAuthorizationManager)
                 .pathMatchers(
                         "/",
                         "/index",
@@ -44,5 +47,6 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable().build(); // not sure what this does
     }
+
 
 }
