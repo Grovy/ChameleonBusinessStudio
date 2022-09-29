@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
+import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 
 import reactor.core.publisher.Mono;
 
@@ -26,6 +27,7 @@ import org.springframework.data.domain.*;
 import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -40,16 +42,19 @@ public class AppointmentController {
 
     private final AppointmentService appointments;
     private final AuthenticationService authentication;
+    private final UserService users;
     //private final PagedResourcesAssembler<AppointmentEntity> asm;
     //private final AppointmentModelAssembler modelAssembler;
 
     public AppointmentController(
             AppointmentService appointments,
             AuthenticationService authentication,
+            UserService users,
             //PagedResourcesAssembler<AppointmentEntity> asm,
             AppointmentModelAssembler modelAssembler){
         this.appointments = appointments;
         this.authentication = authentication;
+        this.users = users;
         //this.asm = asm;
         //this.modelAssembler = modelAssembler;
     }
@@ -107,7 +112,7 @@ public class AppointmentController {
      * @return a 201 Created At response if successful
      */
     @PostMapping
-    public Mono<ResponseEntity<?>> create(@RequestBody AppointmentEntity appointment){
+    public Mono<ResponseEntity<AppointmentEntity>> create(@RequestBody AppointmentEntity appointment){
         if(!appointments.isAppointmentValid(appointment) || appointment.getId() != 0){
             return Mono.just(ResponseEntity.badRequest().body(appointment));
         }
@@ -125,14 +130,12 @@ public class AppointmentController {
                 .build()
                 .toUri();
         
-        return Mono.just(ResponseEntity.created(at).build());
+        return Mono.just(ResponseEntity.created(at).body(appointment));
     }
     
     @PutMapping
-    public Mono<ResponseEntity<?>> update(@RequestBody AppointmentEntity appointment){
-        if(!appointments.isAppointmentValid(appointment)){
-            return Mono.just(ResponseEntity.badRequest().body(appointment));
-        }
+    public Mono<ResponseEntity<AppointmentEntity>> update(@RequestBody AppointmentEntity appointment){
+        appointments.validateAppointment(appointment);
         
         AbstractUser postedBy = authentication.getLoggedInUser();
         if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
@@ -145,19 +148,28 @@ public class AppointmentController {
             appointments.updateAppointment(appointment);
         }
         
-        return Mono.just(ResponseEntity.status(HttpStatus.ACCEPTED).build());
+        return Mono.just(ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment));
     }
 
     /**
      * Books the currently logged in user for the given appointment.
-     * @param appointment the appointment to book the logged-in user for.
+     * @param appointmentId the ID of theappointment to book the logged-in user 
+     *  for.
      * @return either a bad request or an OK response containing the updated 
      *  appointment
      */
-    @PostMapping("/book-me")
-    public Mono<ResponseEntity<AppointmentEntity>> bookMe(@RequestBody AppointmentEntity appointment){
-        if(!appointments.isAppointmentValid(appointment)){
-            return Mono.just(ResponseEntity.badRequest().body(appointment));
+    @PostMapping("/book-me/{appointment-id}")
+    public Mono<ResponseEntity<AppointmentEntity>> bookMe(
+            @PathVariable("appointment-id") int appointmentId
+    ){
+        var appointmentMaybe = appointments.getAppointmentById(appointmentId);
+        if(appointmentMaybe.isEmpty()){
+            return Mono.error(new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
+        }
+        
+        var appointment = appointmentMaybe.get();
+        if(!appointments.isSlotAvailable(appointment)){
+            return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
         }
 
         var postedBy = authentication.getLoggedInUser().getAsEntity();
@@ -165,14 +177,80 @@ public class AppointmentController {
             appointments.registerUser(appointment, postedBy.getEmail());
         }
 
-        return Mono.just(ResponseEntity.ok().body(appointment));
+        return Mono.just(ResponseEntity.ok(appointment));
+    }
+
+    /**
+     * POST /api/v1/appointments/123?email=foo.bar@baz.qux
+     * Books a user for an appointment.
+     * 
+     * @param appointmentId the ID of the appointment to book the given email 
+     *  for
+     * @param email the email of the user to book an appointment for
+     * @return either an OK response with the updated appointment as its body, 
+     *  or one of several error responses
+     */
+    @PostMapping("/book-them/{appointment-id}")
+    public Mono<ResponseEntity<AppointmentEntity>> bookThem(
+            @PathVariable("appointment-id") int appointmentId,
+            @RequestParam("email") String email
+    ){
+        if(email == null){
+            return Mono.error(new IllegalArgumentException("Email cannot be null"));
+        }
+        if(!isValidEmail(email)){
+            return Mono.error(new IllegalArgumentException("Invalid email: " + email));
+        }
+        if(!users.isRegistered(email)){
+            return Mono.error(new IllegalArgumentException("Email is not registered as a user: " + email));
+        }
+
+        var appointmentMaybe = appointments.getAppointmentById(appointmentId);
+        if(appointmentMaybe.isEmpty()){
+            return Mono.error(new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
+        }
+
+        // check if logged in user is allowed to book
+        var postedBy = authentication.getLoggedInUser().getAsEntity();
+        if(!isRoleAllowedToBookOtherPeople(postedBy.getRole())){
+            var msg = String.format(
+                "Users with role \"%s\" are not allowed to book appointments for other users",
+                postedBy.getRole()
+            );
+            return Mono.error(new AccessDeniedException(msg));
+        }
+        
+        var appointment = appointmentMaybe.get();
+        if(!appointments.isSlotAvailable(appointment)){
+            return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
+        }
+
+        if(!appointments.isUserRegistered(appointment, email)){
+            appointments.registerUser(appointment, email);
+        }
+
+        return Mono.just(ResponseEntity.ok(appointment));
     }
     
     private boolean isRoleAllowedToCreateAppointments(String role){
-        HashSet<String> hs = new HashSet<>();
+        var hs = new HashSet<>();
         hs.add(Role.ADMIN);
         hs.add(Role.ORGANIZER);
         hs.add(Role.TALENT);
         return hs.contains(role);
+    }
+
+    private boolean isRoleAllowedToBookOtherPeople(String role){
+        var hs = new HashSet<>();
+        hs.add(Role.ADMIN);
+        hs.add(Role.ORGANIZER);
+        hs.add(Role.TALENT);
+        return hs.contains(role);
+    }
+
+    private boolean isValidEmail(String email){
+        var isValid = true;
+        // how to validate properly?
+        return isValid;
     }
 }
