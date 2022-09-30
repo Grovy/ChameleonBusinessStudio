@@ -6,10 +6,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentModelAssembler;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.Participant;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
@@ -23,7 +21,6 @@ public class AppointmentControllerTester {
     private final AppointmentService appointments = Mockito.mock(AppointmentService.class);
     private final AuthenticationService authentication = Mockito.mock(AuthenticationService.class);
     private final UserService users = Mockito.mock(UserService.class);
-    private final AppointmentModelAssembler modelAssembler = Mockito.mock(AppointmentModelAssembler.class);
     private final AppointmentController sut;
     private final AppointmentEntity appointment = new AppointmentEntity();
     private final UserEntity user = new UserEntity();
@@ -32,8 +29,7 @@ public class AppointmentControllerTester {
         sut = new AppointmentController(
             appointments,
             authentication,
-            users,
-            modelAssembler
+            users
         );
     }
 

@@ -6,25 +6,20 @@ import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import reactor.core.publisher.Mono;
 
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentModelAssembler;
+import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentResourceAssembler;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.*;
 import java.util.HashSet;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
-import java.util.HashSet;
-
-import org.springframework.data.domain.*;
-import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -43,20 +38,15 @@ public class AppointmentController {
     private final AppointmentService appointments;
     private final AuthenticationService authentication;
     private final UserService users;
-    //private final PagedResourcesAssembler<AppointmentEntity> asm;
-    //private final AppointmentModelAssembler modelAssembler;
 
     public AppointmentController(
             AppointmentService appointments,
             AuthenticationService authentication,
-            UserService users,
-            //PagedResourcesAssembler<AppointmentEntity> asm,
-            AppointmentModelAssembler modelAssembler){
+            UserService users
+    ){
         this.appointments = appointments;
         this.authentication = authentication;
         this.users = users;
-        //this.asm = asm;
-        //this.modelAssembler = modelAssembler;
     }
     
     /**
@@ -69,40 +59,29 @@ public class AppointmentController {
      *
      * @return 
      */
-//     https://stackoverflow.com/a/63966321
-//    @GetMapping(path="available")
-//    public ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>> getAvailableInDays(
-//            @RequestParam(required=false, defaultValue="30") int days,
-//            Pageable page){
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime later = now.plusDays(days);
-//
-//        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
-//
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaTypes.HAL_JSON)
-//                .body(asm.toModel(entities, modelAssembler));
-//    }
-    // https://stackoverflow.com/a/63966321
+    //https://stackoverflow.com/a/63966321
     @GetMapping(path="available")
     public Mono<ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>>> getAvailableInDays(
             @RequestParam(required=false, defaultValue="30") int days,
-            Pageable page
-    ){
-        throw new UnsupportedOperationException("Need to reimplement paging");
+            Pageable page){
+
+
         /*
+        This method is currently broken because WebFlux messes up resource
+        assemblers. Matt has spent nearly 3 hours trying to fix this, but has
+        found nothing. Consider changing this method to resemble the
+        myAppointments(Pageable pageable) method and updating the Angular app to
+        expect data in the new format.
+        */
+
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime later = now.plusDays(days);
-
-        Page<AppointmentEntity> entities = appointments.getAvailableAppointments(now, later, page);
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaTypes.HAL_JSON)
-                .body(asm.toModel(entities, modelAssembler));
-         */
+        
+        return Mono.just(appointments.getAvailableAppointments(now, later, page))
+            .map(AppointmentResourceAssembler::toModel)
+            .map(pm -> ResponseEntity.ok().contentType(MediaTypes.HAL_JSON).body(pm));
     }
+    
     /**
      * Creates and stores a new appointment, if it is valid.
      * Note that using RequestBody means it works as an API endpoint, but might 
@@ -131,6 +110,22 @@ public class AppointmentController {
                 .toUri();
         
         return Mono.just(ResponseEntity.created(at).body(appointment));
+    }
+
+    /**
+     * GET /api/v1/appointments/mine
+     * 
+     * Gets appointments the currently logged in user is booked for, sorted and
+     * filtered by the given pagination options.
+     * 
+     * @param pageable pagination options
+     * @return a mono containing some of the user's booked appointments
+     */
+    @GetMapping("mine")
+    public Mono<ResponseEntity<Page<AppointmentEntity>>> myAppointments(Pageable pageable){
+        return authentication.getLoggedInUserReactive()
+            .map(user -> appointments.getAppointmentsForUser(user.getEmail(), pageable))
+            .map(page -> ResponseEntity.ok(page));
     }
     
     @PutMapping

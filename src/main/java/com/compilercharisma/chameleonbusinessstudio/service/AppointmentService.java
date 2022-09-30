@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -92,6 +93,22 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
      */
     public Optional<AppointmentEntity> getAppointmentById(int appointmentId){
         return repo.findById(appointmentId);
+    }
+
+    // todo
+    public Page<AppointmentEntity> getAppointmentsForUser(String email, Pageable pageable){
+        var appts = new ArrayList<AppointmentEntity>();
+        appts.add(new AppointmentEntity());
+        appts.add(new AppointmentEntity());
+        appts.add(new AppointmentEntity());
+        for(int i = 0; i < appts.size(); i++){
+            appts.get(i).setTitle("Fake appointment #" + i);
+            appts.get(i).getRegisteredUsers().add(email);
+        }
+
+        var page = new PageImpl<AppointmentEntity>(appts, pageable, appts.size());
+
+        return page;
     }
     
     public List<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime){

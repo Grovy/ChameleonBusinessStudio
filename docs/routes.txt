@@ -8,7 +8,8 @@
         /                             | PUT    |              | accepts an AppointmentEntity
         /available                    | GET    | appt[]       | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
         /book-me/{id}                 | POST   | appt         | books current user
-        /book-them/{id}?email={email} | POST   | appt         | 
+        /book-them/{id}?email={email} | POST   | appt         |
+        /mine                         | GET    | appt-page    | supports pagination. See resource-examples folder 
     /config                           | POST   |              |
         /landing-page                 | POST   |              |
     /users/admin                      | POST   |              | likely will be removed

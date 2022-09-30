@@ -1,0 +1,74 @@
+{
+    "content": [
+        {
+            "id": 0,
+            "startTime": null,
+            "endTime": null,
+            "title": "Fake appointment #0",
+            "location": "online",
+            "description": "",
+            "restrictions": "",
+            "totalSlots": 1,
+            "tags": [],
+            "registeredUsers": [
+                "mattcrow19@gmail.com"
+            ],
+            "canceled": false
+        },
+        {
+            "id": 0,
+            "startTime": null,
+            "endTime": null,
+            "title": "Fake appointment #1",
+            "location": "online",
+            "description": "",
+            "restrictions": "",
+            "totalSlots": 1,
+            "tags": [],
+            "registeredUsers": [
+                "mattcrow19@gmail.com"
+            ],
+            "canceled": false
+        },
+        {
+            "id": 0,
+            "startTime": null,
+            "endTime": null,
+            "title": "Fake appointment #2",
+            "location": "online",
+            "description": "",
+            "restrictions": "",
+            "totalSlots": 1,
+            "tags": [],
+            "registeredUsers": [
+                "mattcrow19@gmail.com"
+            ],
+            "canceled": false
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": true
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 20,
+        "paged": true,
+        "unpaged": false
+    },
+    "totalElements": 3,
+    "totalPages": 1,
+    "last": true,
+    "size": 20,
+    "number": 0,
+    "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+    },
+    "numberOfElements": 3,
+    "first": true,
+    "empty": false
+}

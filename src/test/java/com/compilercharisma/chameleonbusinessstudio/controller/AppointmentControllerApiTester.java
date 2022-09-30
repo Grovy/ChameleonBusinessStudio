@@ -22,7 +22,6 @@ import com.compilercharisma.chameleonbusinessstudio.ChameleonApplication;
 import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfig;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentModelAssembler;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.Participant;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
@@ -49,9 +48,6 @@ public class AppointmentControllerApiTester {
 
     @MockBean
     private UserService users;
-
-    @MockBean
-    private AppointmentModelAssembler assemblerMock;
 
     @MockBean
     private VendiaConfig vendia;
