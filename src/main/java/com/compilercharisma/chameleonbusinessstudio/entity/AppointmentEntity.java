@@ -72,7 +72,7 @@ public class AppointmentEntity implements Serializable {
     @Setter
     @Getter
     @Column(nullable=false)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER) // https://stackoverflow.com/a/11746720
     @CollectionTable(joinColumns = @JoinColumn(name = "appt_id"))
     @JoinColumn(name = "appt_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -81,7 +81,7 @@ public class AppointmentEntity implements Serializable {
     @Setter
     @Getter
     @Column(nullable=false)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER) // "load these with the initial DB query, not later"
     @CollectionTable(joinColumns = @JoinColumn(name = "appt_id"))
     @JoinColumn(name = "appt_id")
     @OnDelete(action = OnDeleteAction.CASCADE)

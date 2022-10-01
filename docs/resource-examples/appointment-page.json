@@ -1,74 +1,104 @@
 {
     "content": [
         {
-            "id": 0,
-            "startTime": null,
-            "endTime": null,
-            "title": "Fake appointment #0",
-            "location": "online",
+            "id": 455,
+            "startTime": [
+                2022,
+                10,
+                2,
+                14,
+                50
+            ],
+            "endTime": [
+                2022,
+                10,
+                2,
+                16,
+                50
+            ],
+            "title": "Appt. #41",
+            "location": "820 J Street",
             "description": "",
             "restrictions": "",
-            "totalSlots": 1,
+            "totalSlots": 2,
             "tags": [],
-            "registeredUsers": [
-                "mattcrow19@gmail.com"
-            ],
+            "registeredUsers": [],
             "canceled": false
         },
         {
-            "id": 0,
-            "startTime": null,
-            "endTime": null,
-            "title": "Fake appointment #1",
-            "location": "online",
+            "id": 457,
+            "startTime": [
+                2022,
+                10,
+                4,
+                16,
+                50
+            ],
+            "endTime": [
+                2022,
+                10,
+                4,
+                20,
+                50
+            ],
+            "title": "Appt. #43",
+            "location": "860 J Street",
             "description": "",
             "restrictions": "",
-            "totalSlots": 1,
+            "totalSlots": 4,
             "tags": [],
-            "registeredUsers": [
-                "mattcrow19@gmail.com"
-            ],
+            "registeredUsers": [],
             "canceled": false
         },
         {
-            "id": 0,
-            "startTime": null,
-            "endTime": null,
-            "title": "Fake appointment #2",
-            "location": "online",
+            "id": 458,
+            "startTime": [
+                2022,
+                10,
+                5,
+                13,
+                50
+            ],
+            "endTime": [
+                2022,
+                10,
+                5,
+                14,
+                50
+            ],
+            "title": "Appt. #44",
+            "location": "880 J Street",
             "description": "",
             "restrictions": "",
-            "totalSlots": 1,
+            "totalSlots": 5,
             "tags": [],
-            "registeredUsers": [
-                "mattcrow19@gmail.com"
-            ],
+            "registeredUsers": [],
             "canceled": false
         }
     ],
     "pageable": {
         "sort": {
-            "empty": true,
-            "sorted": false,
-            "unsorted": true
+            "empty": false,
+            "sorted": true,
+            "unsorted": false
         },
         "offset": 0,
         "pageNumber": 0,
-        "pageSize": 20,
-        "paged": true,
-        "unpaged": false
+        "pageSize": 3,
+        "unpaged": false,
+        "paged": true
     },
-    "totalElements": 3,
-    "totalPages": 1,
-    "last": true,
-    "size": 20,
+    "last": false,
+    "totalPages": 3,
+    "totalElements": 7,
+    "size": 3,
     "number": 0,
     "sort": {
-        "empty": true,
-        "sorted": false,
-        "unsorted": true
+        "empty": false,
+        "sorted": true,
+        "unsorted": false
     },
-    "numberOfElements": 3,
     "first": true,
+    "numberOfElements": 3,
     "empty": false
 }
