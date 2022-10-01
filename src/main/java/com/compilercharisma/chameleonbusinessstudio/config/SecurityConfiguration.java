@@ -13,7 +13,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity security) throws Exception {
+            ServerHttpSecurity security) {
         return security
                 .authorizeExchange()
                 .and()

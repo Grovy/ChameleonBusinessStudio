@@ -1,12 +1,203 @@
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
 
-<app-default-header></app-default-header>
-<mat-drawer-container #sideNav class="example-container" mode="side" opened>
-  <mat-drawer mode="side" opened class="example-drawer">
-    <app-sidenav-admin-config></app-sidenav-admin-config>
-  </mat-drawer>
+<body>
+  <app-default-header></app-default-header>
 
-  <mat-drawer-content>
-    <app-admin-config-container></app-admin-config-container>
-  </mat-drawer-content>
-</mat-drawer-container>
+  <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
+    <!--Step 1: Choose banner color-->
+    <mat-step [stepControl]="bannerFormGroup">
+      <form [formGroup]="bannerFormGroup">
+        <ng-template matStepLabel>Choose your banner color</ng-template>
 
+        <!--Banner Color Instruction Card-->
+        <mat-card class="banner-color-card">
+          <div class="card-image-container">
+            <img class="paintbrush" [src]=bannerColorImage alt="my-image">
+          </div>
+          <div class="card-content-container">
+            <p class="card-title">Choose your banner color</p>
+            Your banner will be displayed a the top of every page in your app. Choose a color you'd like to represent.
+          </div>
+        </mat-card>
+
+        <mat-form-field>
+          <input matInput type="color" placeholder="Choose your banner color" formControlName="banner_color" (change)="onColorSelected($event)" required>
+        </mat-form-field>
+        <div>
+          <button mat-raised-button>Set Color</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Step 2: Choose logo-->
+    <mat-step [stepControl]="logoFormGroup">
+      <form [formGroup]="logoFormGroup">
+        <ng-template matStepLabel>Upload your Company Logo</ng-template>
+
+          <!--Company Logo Instruction Card-->
+          <mat-card class="logo-card">
+            <div class="card-image-container">
+              <img class="logo-image" [src]=logoCardImage alt="logo-image">
+            </div>
+            <div class="card-content-container">
+              <p class="card-title">Upload your logo</p>
+              Upload a small image that will be used as your company logo. It will be displayed on your banner
+            </div>
+          </mat-card>
+        
+          <input matInput formControlName="logo" required>
+          <input type="file" class="logo-file-input" (change)="showPreviewLogo($event)" #logoFileUpload>
+
+          <div class="logo-file-upload">
+            <button mat-mini-fab color="primary" class="logo-upload-btn" (click)="logoFileUpload.click()">
+              <mat-icon>attach_file</mat-icon>
+            </button>
+          </div>
+          
+        <div>
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Step 3: Choose background image-->
+    <mat-step [stepControl]="splashFormGroup">
+      <form [formGroup]="splashFormGroup">
+        <ng-template matStepLabel>Upload your splash page background</ng-template>
+
+        <!--Background Image Instruction Card (reusing logo card code since they share same svg image)-->
+        <mat-card class="logo-card">
+          <div class="card-image-container">
+            <img class="logo-image" [src]=logoCardImage alt="logo-image">
+          </div>
+          <div class="card-content-container">
+            <p class="card-title">Upload your splash page background</p>
+            Upload a large image that will be displayed as the background of your splash page.
+          </div>
+        </mat-card>
+        
+          <input matInput formControlName="splash" required>
+          <input type="file" class="splash-file-input" (change)="showPreviewSplash($event)" #splashFileUpload>
+
+          <div class="splash-file-upload" >
+            <button mat-mini-fab color="primary" class="splash-upload-btn" (click)="splashFileUpload.click()">
+              <mat-icon>attach_file</mat-icon>
+            </button>
+          </div>
+
+        <div>
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Step 4: Type banner text-->
+    <mat-step [stepControl]="orgNameFormGroup">
+      <form [formGroup]="orgNameFormGroup">
+        <ng-template matStepLabel>Type your Company</ng-template>
+
+        <!--Company Name/Banner Text Instruction Card-->
+        <mat-card class="company-name-card">
+          <div class="card-image-container">
+            <img class="company-name" [src]=companyNameImage alt="company-image">
+          </div>
+          <div class="card-content-container">
+            <p class="card-title">Enter your company name</p>
+            Enter a name that will display on your banner. This will be displayed throughout the website.
+          </div>
+        </mat-card>
+
+        <mat-form-field>
+          <input matInput placeholder="Company Name" formControlName="org_name" required>
+        </mat-form-field>
+        <div>
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext class="next-button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!--Step 4: Submit Form-->
+    <mat-step [stepControl]="lastFormGroup">
+      <form [formGroup]="lastFormGroup">
+        <ng-template matStepLabel>Preview and Save</ng-template>
+
+          <mat-card class="preview-and-save-card">
+            <div class="card-image-container">
+              <img class="save-image" [src]=previewAndSaveImage alt="preview-and-save-image">
+            </div>
+            <div class="card-content-container">
+              <p class="card-title">Preview and Save</p>
+              All fields in this form are required. Check to make sure you have uploaded all fields, then click save to save your configuration!
+            </div>
+          </mat-card>
+
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button type="submit" (click)="openSnackBar()" class="next-button" control>Save</button>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+
+<!-- Container that contains the part of the page where the configurations are previewed. -->
+<div class="preview-container">
+  <!--Preview your logo before sending to server-->
+  <mat-card class="logo-container-outline">
+    <mat-card class="logo-container"> 
+      <mat-card-title class="logo-container-title">Preview the Logo</mat-card-title>
+      <mat-card-content>
+        <div class="logo-box">
+          <div class="logo-image-preview" *ngIf="logoFileName && logoFileName !== ''">
+              <img class="logo-image" [src]="logoFileName" [alt]="logoFormGroup.value.name">
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-card>
+  
+
+  <!--Preview your splash page image before sending to server-->
+  <mat-card class="splash-container-outline">
+    <mat-card class="splash-container">
+      <mat-card-title class="splash-container-title">Preview the Splash Page Background</mat-card-title>
+      <div class="break"></div>
+      <mat-card-content>
+        <div class="splash-box">
+          <div class="splash-image-preview" *ngIf="splashFileName && splashFileName !== ''">
+              <img class="splash-image" [src]="splashFileName" [alt]="splashFormGroup.value.name">
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-card>
+  
+
+  <div class="break"></div>
+
+  <mat-card class="banner-container-outline">
+    <mat-card class="banner-container">
+      <mat-card-title class="banner-container-title">Preview the Banner</mat-card-title>
+      <mat-card-content>
+        <div class="banner-box">
+          <!--The code for the actual banner, copied from `default-header.html` and customized-->
+          <mat-toolbar [appCustomBannerDirective]="bannerColor"> 
+            <mat-toolbar-row>
+              <p class="business-title">Chameleon <Br>Business Studio</p>
+                <span class="example-spacer"></span>
+                <button mat-stroked-button class="icon">About Us</button>
+                <sign-in></sign-in>
+            </mat-toolbar-row>            
+          </mat-toolbar>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-card>
+
+</div>
+
+</body>

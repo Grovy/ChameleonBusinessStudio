@@ -4,10 +4,10 @@ import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationServic
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.SynchronousSink;
 
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentResourceAssembler;
-import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 
@@ -96,20 +96,25 @@ public class AppointmentController {
             return Mono.just(ResponseEntity.badRequest().body(appointment));
         }
         
-        AbstractUser postedBy = authentication.getLoggedInUser();
-        if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
-            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
-        }
+        return authentication
+            .getLoggedInUserReactive()
+            .handle((user, sink)->{
+                var role = user.getRole().getRoleName();
+                if(isRoleAllowedToCreateAppointments(role)){
+                    sink.next(user);
+                } else {
+                    sink.error(new AccessDeniedException(String.format("Users with role %s are not allowed to create appointments", role)));
+                }
+            }).map((whatever)->{
+                appointments.createAppointment(appointment);
         
-        appointments.createAppointment(appointment);
-        
-        URI at = ServletUriComponentsBuilder
-                .fromCurrentContextPath() // relative to application root
-                .pathSegment("api", "v1", "appointments")
-                .build()
-                .toUri();
-        
-        return Mono.just(ResponseEntity.created(at).body(appointment));
+                URI at = ServletUriComponentsBuilder
+                        .fromCurrentContextPath() // relative to application root
+                        .pathSegment("api", "v1", "appointments")
+                        .build()
+                        .toUri();
+                return ResponseEntity.created(at).body(appointment);
+            });
     }
 
     /**
@@ -132,18 +137,24 @@ public class AppointmentController {
     public Mono<ResponseEntity<AppointmentEntity>> update(@RequestBody AppointmentEntity appointment){
         appointments.validateAppointment(appointment);
         
-        AbstractUser postedBy = authentication.getLoggedInUser();
-        if(!isRoleAllowedToCreateAppointments(postedBy.getAsEntity().getRole())){
-            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
-        }
-        
-        if(appointment.getId() == 0){ // new appointment
-            appointments.createAppointment(appointment);
-        } else { // updating an old appointment
-            appointments.updateAppointment(appointment);
-        }
-        
-        return Mono.just(ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment));
+        return authentication
+            .getLoggedInUserReactive()
+            .handle((user, sink)->{
+                var role = user.getRole().getRoleName();
+                if(isRoleAllowedToCreateAppointments(role)){
+                    sink.next(user);
+                } else {
+                    sink.error(new AccessDeniedException(String.format("Users with role %s are not allowed to create appointments", role)));
+                }
+            }).map((whatever)->{
+                if(appointment.getId() == 0){ // new appointment
+                    appointments.createAppointment(appointment);
+                } else { // updating an old appointment
+                    appointments.updateAppointment(appointment);
+                }
+                
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment);
+            });
     }
 
     /**
@@ -167,12 +178,15 @@ public class AppointmentController {
             return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
         }
 
-        var postedBy = authentication.getLoggedInUser().getAsEntity();
-        if(!appointments.isUserRegistered(appointment, postedBy.getEmail())){
-            appointments.registerUser(appointment, postedBy.getEmail());
-        }
-
-        return Mono.just(ResponseEntity.ok(appointment));
+        return authentication
+            .getLoggedInUserReactive()
+            .map(u -> u.getEmail())
+            .map(email->{
+                if(!appointments.isUserRegistered(appointment, email)){
+                    appointments.registerUser(appointment, email);
+                }
+                return ResponseEntity.ok(appointment);
+            });
     }
 
     /**
@@ -196,35 +210,52 @@ public class AppointmentController {
         if(!isValidEmail(email)){
             return Mono.error(new IllegalArgumentException("Invalid email: " + email));
         }
-        if(!users.isRegistered(email)){
-            return Mono.error(new IllegalArgumentException("Email is not registered as a user: " + email));
-        }
 
-        var appointmentMaybe = appointments.getAppointmentById(appointmentId);
-        if(appointmentMaybe.isEmpty()){
-            return Mono.error(new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
-        }
-
-        // check if logged in user is allowed to book
-        var postedBy = authentication.getLoggedInUser().getAsEntity();
-        if(!isRoleAllowedToBookOtherPeople(postedBy.getRole())){
-            var msg = String.format(
-                "Users with role \"%s\" are not allowed to book appointments for other users",
-                postedBy.getRole()
-            );
-            return Mono.error(new AccessDeniedException(msg));
-        }
+        // Matt hates Reactor. Java needs Async/await!
+        return users.isRegistered(email)
+            .handle((Boolean isRegistered, SynchronousSink<Boolean> sink)->{
+                if(isRegistered){
+                    sink.next(isRegistered);
+                } else {
+                    sink.error(new IllegalArgumentException("Email is not registered as a user: " + email));
+                }
+            }).handle((Boolean whatever, SynchronousSink<AppointmentEntity> sink) -> {
+                var appointmentMaybe = appointments.getAppointmentById(appointmentId);
+                if(appointmentMaybe.isEmpty()){
+                    sink.error(new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
+                } else {
+                    sink.next(appointmentMaybe.get());
+                }
+            }).handle((AppointmentEntity appt, SynchronousSink<AppointmentEntity> sink)->{
+                // need to call reactive from inside another reactive, pass down appt
+                authentication
+                    .getLoggedInUserReactive()
+                    .handle((user, userSink)->{
+                        // check if logged in user is allowed to book
+                        var role = user.getRole().getRoleName();
+                        if(isRoleAllowedToBookOtherPeople(role)){
+                            sink.next(appt);
+                        } else {
+                            var msg = String.format(
+                                "Users with role \"%s\" are not allowed to book appointments for other users",
+                                role
+                            );
+                            sink.error(new AccessDeniedException(msg));
+                        }
+                    });
+            }).handle((AppointmentEntity appt, SynchronousSink<AppointmentEntity> sink) -> {
+                if(appointments.isSlotAvailable(appt)){
+                    sink.next(appt);
+                } else {
+                    sink.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
+                }
+            }).map(appt -> {
+                if(!appointments.isUserRegistered(appt, email)){
+                    appointments.registerUser(appt, email);
+                }
         
-        var appointment = appointmentMaybe.get();
-        if(!appointments.isSlotAvailable(appointment)){
-            return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
-        }
-
-        if(!appointments.isUserRegistered(appointment, email)){
-            appointments.registerUser(appointment, email);
-        }
-
-        return Mono.just(ResponseEntity.ok(appointment));
+                return ResponseEntity.ok(appt);
+            });
     }
     
     private boolean isRoleAllowedToCreateAppointments(String role){

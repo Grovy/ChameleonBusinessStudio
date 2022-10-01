@@ -3,12 +3,11 @@
  */
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.springSecurity;
 import static org.springframework.web.reactive.function.client.ExchangeFilterFunctions.basicAuthentication;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test; // IMPORTANT! Need to use this dependency for @Test, not the other one!
+//import org.junit.jupiter.api.Test; // IMPORTANT! Need to use this dependency for @Test, not the other one!
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,8 +20,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import com.compilercharisma.chameleonbusinessstudio.ChameleonApplication;
 import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfig;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.user.Participant;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
@@ -67,10 +64,10 @@ public class AppointmentControllerApiTester {
     //@Test
     @WithMockUser // does not work. Do we need to create a user for this?
     public void bookMe_givenAValidAppointment_returnsUpdated() throws Exception{
-        var user = new Participant(new UserEntity());
+        //var user = new Participant(new UserEntity());
         var aValidAppointment = new AppointmentEntity();
 
-        when(authenticationMock.getLoggedInUser()).thenReturn(user);
+        //when(authenticationMock.getLoggedInUserReactive()).thenReturn(user);
         
         var t = sut
             .post()

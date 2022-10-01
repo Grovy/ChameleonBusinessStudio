@@ -1,7 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.entity.UserEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.user.AbstractUser;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.exception.NoUserLoggedInException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 
@@ -12,7 +11,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -38,26 +36,6 @@ public class AuthenticationService {
     }
 
     /**
-     * will throw exceptions if the user isn't registered
-     * @return the logged in user, using OUR representation of them 
-     */
-    public AbstractUser getLoggedInUser(){
-        if(!isLoggedInUserRegistered()){
-            throw new UserNotRegisteredException();
-        }
-        OAuth2User googleUser = getLoggedInGoogleUser();
-        return googleUserToAbstractUser(googleUser);
-    }
-
-    public OAuth2User getLoggedInGoogleUser(){
-        if(!isUserLoggedIn()){
-            throw new NoUserLoggedInException();
-        }
-        Object p = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principalToGoogleUser(p);
-    }
-
-    /**
      * This method may replace some of our other methods, as it sounds like
      * SecurityContextHolder is unreliable in Webflux: 
      * https://stackoverflow.com/q/70050719
@@ -65,7 +43,7 @@ public class AuthenticationService {
      * @return a mono containing the logged in user, or an error if no user is
      *  logged in
      */
-    public Mono<UserEntity> getLoggedInUserReactive(){
+    public Mono<User> getLoggedInUserReactive(){
         return ReactiveSecurityContextHolder
             .getContext()
             .map(SecurityContext::getAuthentication)
@@ -78,15 +56,7 @@ public class AuthenticationService {
                 }
             })
             .map(this::principalToGoogleUser)
-            .map(this::googleUserToAbstractUser)
-            .map(this::abstractUserToUserEntity);            
-    }
-
-    public Mono<Boolean> isReactiveUserLoggedIn(){
-        return ReactiveSecurityContextHolder
-            .getContext()
-            .map(SecurityContext::getAuthentication)
-            .map(this::isAuthenticatedUser);
+            .flatMap(this::googleUserToOurUser);           
     }
 
     private boolean isAuthenticatedUser(Authentication auth){
@@ -94,16 +64,6 @@ public class AuthenticationService {
             && auth.isAuthenticated() 
             && auth.getPrincipal() != null 
             && !(auth instanceof AnonymousAuthenticationToken);
-    }
-    
-    public boolean isUserLoggedIn(){
-        Authentication authStatus = SecurityContextHolder.getContext().getAuthentication();
-        return isAuthenticatedUser(authStatus);
-    }
-    
-    public boolean isLoggedInUserRegistered(){
-        OAuth2User googleUser = getLoggedInGoogleUser();
-        return users.isRegistered(googleUser.getAttribute("email"));
     }
 
     private OAuth2User principalToGoogleUser(Object principal){
@@ -113,11 +73,15 @@ public class AuthenticationService {
         return (OAuth2User)principal;
     }
 
-    private AbstractUser googleUserToAbstractUser(OAuth2User googleUser){
-        return users.get(googleUser.getAttribute("email"));
-    }
-
-    private UserEntity abstractUserToUserEntity(AbstractUser user){
-        return user.getAsEntity();
+    private Mono<User> googleUserToOurUser(OAuth2User googleUser){
+        String email = googleUser.getAttribute("email");
+        return users.get(email)
+            .handle((maybeUser, sink)->{
+                if(maybeUser.isPresent()){
+                    sink.next(maybeUser.get());
+                } else {
+                    sink.error(new UserNotRegisteredException(email));
+                }
+            });
     }
 }
