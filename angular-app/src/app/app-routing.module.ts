@@ -1,6 +1,7 @@
 import { AdminConfigurationComponent } from './pages/admin-configuration/admin-configuration/admin-configuration.component';
 import { AdminPanelComponent} from "./pages/admin-panel/admin-panel/admin-panel.component";
 import { AdminPanelTestComponent } from "./pages/admin-panel/admin-panel-test/admin-panel-test.component";
+import { AppointmentCreateFormComponent } from './pages/appointments/appointment-create-form/appointment-create-form.component';
 import { AppointmentDetailsComponent } from './pages/appointments/appointment-details/appointment-details.component';
 import { BookingPageComponent} from "./pages/appointments/booking-page/booking-page.component";
 import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'admin-configuration', component: AdminConfigurationComponent },
   { path: 'admin-panel', component: AdminPanelComponent },
   { path: 'admin-panel-test', component: AdminPanelTestComponent },
+  { path: 'appointment-create', component: AppointmentCreateFormComponent },
   { path: 'appointment-details', component: AppointmentDetailsComponent },
   { path: 'calender-view',component: CalenderViewComponent },
   { path: 'booking-page', component: BookingPageComponent },
