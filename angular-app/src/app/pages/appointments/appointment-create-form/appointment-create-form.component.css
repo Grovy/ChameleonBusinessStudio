@@ -12,3 +12,11 @@
     background-color: white;
     flex-grow: 1;
 }
+
+.schedule-button-container{
+    background: #03cdff;
+}
+
+.schedule-button{
+    background: cornflowerblue;
+}

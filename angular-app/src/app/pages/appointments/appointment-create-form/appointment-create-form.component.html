@@ -4,53 +4,53 @@
     <mat-card-title>Create a new appointment</mat-card-title>
     <mat-card-content>
         <form id="form" [formGroup]="appointmentForm" (ngSubmit)="submit()">
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="title">Title</mat-label>
                 <input matInput id="title" name="title" type="text" formControlName="title"/>
                 <mat-error *ngIf="appointmentForm.get('title').invalid">title must be at least one character</mat-error>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="description">Description</mat-label>
                 <textarea matInput id="description" name="description" formControlName="description"></textarea>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="restrictions">Restrictions</mat-label>
                 <textarea matInput id="restrictions" name="restrictions" formControlName="restrictions"></textarea>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="total-slots">Available slots</mat-label>
                 <input matInput id="total-slots" name="total-slots" type="number" formControlName="totalSlots"/>
                 <mat-error *ngIf="appointmentForm.get('totalSlots').invalid">must have at least 1 available slot</mat-error>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="start-date">Start Date</mat-label>
                 <input matInput id="start-date" name="start-date" type="date" formControlName="startDate"/>
                 <mat-error *ngIf="appointmentForm.get('startDate').invalid">start date & time must be after today</mat-error>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="start-time">Start Time</mat-label>
                 <input matInput id="start-time" name="start-time" type="time" formControlName="startTime"/>
                 <mat-error *ngIf="appointmentForm.get('startTime').invalid">start date & time must be after today</mat-error>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="end-date">End Date</mat-label>
                 <input matInput id="end-date" name="end-date" type="date" formControlName="endDate"/>
                 <mat-error *ngIf="appointmentForm.get('endDate').invalid">end date & time must be after start date & time</mat-error>
             </mat-form-field>
-            
+
             <mat-form-field class="field-wrapper">
                 <mat-label for="end-time">End Time</mat-label>
                 <input matInput id="end-time" name="end-time" type="time" formControlName="endTime"/>
                 <mat-error *ngIf="appointmentForm.get('endTime').invalid">end date & time must be after start date & time</mat-error>
             </mat-form-field>
-            
+
             <!-- todo tags section -->
         </form>
     </mat-card-content>
@@ -61,3 +61,6 @@
         <mat-spinner *ngIf="isSubmitting" aria-label="submitting"></mat-spinner>
     </mat-card-actions>
 </mat-card>
+<div class="schedule-button-container">
+  <button mat-raised-button class="schedule-button">Schedule Someone</button>
+</div>
