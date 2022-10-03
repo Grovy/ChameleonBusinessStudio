@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -82,6 +83,33 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
     public void createAppointment(AppointmentEntity appt){
         repo.save(appt);
     }
+
+    /**
+     * Gets the appointment with the given ID. Does not throw an exception if no
+     * such appointment exists.
+     * 
+     * @param appointmentId the ID of the appointment to get
+     * @return an optional containing the appointment, if it exists
+     */
+    public Optional<AppointmentEntity> getAppointmentById(int appointmentId){
+        return repo.findById(appointmentId);
+    }
+
+    // todo
+    public Page<AppointmentEntity> getAppointmentsForUser(String email, Pageable pageable){
+        var appts = new ArrayList<AppointmentEntity>();
+        appts.add(new AppointmentEntity());
+        appts.add(new AppointmentEntity());
+        appts.add(new AppointmentEntity());
+        for(int i = 0; i < appts.size(); i++){
+            appts.get(i).setTitle("Fake appointment #" + i);
+            appts.get(i).getRegisteredUsers().add(email);
+        }
+
+        var page = new PageImpl<AppointmentEntity>(appts, pageable, appts.size());
+
+        return page;
+    }
     
     public List<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime){
         return repo.findAll(occursWithin(startTime, endTime));
@@ -113,6 +141,16 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
     public boolean isAppointmentValid(AppointmentEntity e){
         return validator.isValid(e);
     }
+
+    /**
+     * Checks if the given appointment is valid, throwing an 
+     * InvalidAppointmentException if it isn't.
+     * 
+     * @param e the appointment to validate
+     */
+    public void validateAppointment(AppointmentEntity e){
+        validator.validate(e);
+    }
     
     public void registerUser(AppointmentEntity appt, String email){
         if(!isSlotAvailable(appt)){
@@ -124,7 +162,13 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
         repo.save(appt);
     }
     
-    private boolean isSlotAvailable(AppointmentEntity appt){
+    /**
+     * Checks if the given appointment can accept more users.
+     * 
+     * @param appt the appointment to check
+     * @return whether or not the appointment has any slots available
+     */
+    public boolean isSlotAvailable(AppointmentEntity appt){
         return appt.getTotalSlots() > appt.getRegisteredUsers().size();
     }
     
