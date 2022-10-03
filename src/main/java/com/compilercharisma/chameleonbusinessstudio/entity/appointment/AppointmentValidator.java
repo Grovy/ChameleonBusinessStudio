@@ -68,7 +68,7 @@ public class AppointmentValidator {
             throw new InvalidAppointmentException(e, "Appointment must have a positive number of slots");
         }
 
-        e.getTags().forEach(tag -> validateTag(tag, e));
+//        e.getTags().forEach(tag -> validateTag(tag, e));
     }
 
     private void validateTag(String tag, AppointmentEntity e){
