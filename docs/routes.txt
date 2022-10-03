@@ -6,7 +6,7 @@
     /appointments                     |        |              |
         /                             | POST   |              | accepts an AppointmentEntity
         /                             | PUT    |              | accepts an AppointmentEntity
-        /available                    | GET    | appt[]       | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
+        /available                    | GET    | appt-page    | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
         /book-me/{id}                 | POST   | appt         | books current user
         /book-them/{id}?email={email} | POST   | appt         |
         /mine                         | GET    | appt-page    | supports pagination. See resource-examples folder 

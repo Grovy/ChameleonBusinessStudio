@@ -1,30 +1,32 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
-import com.compilercharisma.chameleonbusinessstudio.service.UserService;
-
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.SynchronousSink;
-
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentResourceAssembler;
-import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
-import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
-
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
+import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
+import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
+import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
+import com.compilercharisma.chameleonbusinessstudio.service.UserService;
+
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.SynchronousSink;
 
 /**
  * This controller handles routes associated with appointments.
@@ -54,32 +56,23 @@ public class AppointmentController {
      *      *  attr is the name of one of AppointmentEntity's attributes
      *      *  by is either asc or desc
      * 
-     * @param days
+     * @param days the number of days to check for. A value of 3 means 
+     *  available appointments occuring within the next 3 days.
      * @param page size={size}&page={page}&sort={attr},{by}
      *
-     * @return 
+     * @return a response containing a page of available appintments
      */
-    //https://stackoverflow.com/a/63966321
     @GetMapping(path="available")
-    public Mono<ResponseEntity<PagedModel<EntityModel<AppointmentEntity>>>> getAvailableInDays(
+    public Mono<ResponseEntity<Page<AppointmentEntity>>> getAvailableInDays(
             @RequestParam(required=false, defaultValue="30") int days,
-            Pageable page){
-
-
-        /*
-        This method is currently broken because WebFlux messes up resource
-        assemblers. Matt has spent nearly 3 hours trying to fix this, but has
-        found nothing. Consider changing this method to resemble the
-        myAppointments(Pageable pageable) method and updating the Angular app to
-        expect data in the new format.
-        */
-
+            Pageable page
+    ){
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime later = now.plusDays(days);
         
-        return Mono.just(appointments.getAvailableAppointments(now, later, page))
-            .map(AppointmentResourceAssembler::toModel)
-            .map(pm -> ResponseEntity.ok().contentType(MediaTypes.HAL_JSON).body(pm));
+        var appts = appointments.getAvailableAppointments(now, later, page);
+        var response = ResponseEntity.ok(appts);
+        return Mono.just(response);
     }
     
     /**
