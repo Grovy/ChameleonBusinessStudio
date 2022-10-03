@@ -32,7 +32,7 @@ public class AppointmentRepository
         var query = """
                 mutation {
                   add_Appointment(
-                    input: {cancelled: "%s", endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: "%d"}
+                    input: {cancelled: "%s", endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
                   ) {
                     result {
                       cancelled
