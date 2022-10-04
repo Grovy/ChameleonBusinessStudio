@@ -4,6 +4,9 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -24,6 +27,20 @@ public class UserService {
      */
     public Mono<UserResponse> getAllUsers() {
         return userRepository.findAllUsers();
+    }
+
+    // temporary method by Matt
+    public Mono<Boolean> isRegistered(String email){
+        return getAllUsers()
+            .map(ur -> ur.getUsers())
+            .map(lu -> lu.stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
+    }
+
+    // temporary method by Matt
+    public Mono<Optional<User>> get(String email){
+        return getAllUsers()
+            .map(ur -> ur.getUsers())
+            .map(lu -> lu.stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst());
     }
 
     /**

@@ -52,7 +52,7 @@ public class AppointmentSpecifications {
     
     public static Specification<AppointmentEntity> isAvailable(){
         return (root, query, cb)->{
-            return cb.gt(root.<Integer>get("totalSlots"), cb.size(root.<Set>get("registeredUsers")));
+            return cb.gt(root.<Integer>get("totalSlots"), cb.size(root.<Set<String>>get("registeredUsers")));
         };
     }
 }

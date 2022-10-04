@@ -1,0 +1,104 @@
+{
+    "content": [
+        {
+            "id": 455,
+            "startTime": [
+                2022,
+                10,
+                2,
+                14,
+                50
+            ],
+            "endTime": [
+                2022,
+                10,
+                2,
+                16,
+                50
+            ],
+            "title": "Appt. #41",
+            "location": "820 J Street",
+            "description": "",
+            "restrictions": "",
+            "totalSlots": 2,
+            "tags": [],
+            "registeredUsers": [],
+            "canceled": false
+        },
+        {
+            "id": 457,
+            "startTime": [
+                2022,
+                10,
+                4,
+                16,
+                50
+            ],
+            "endTime": [
+                2022,
+                10,
+                4,
+                20,
+                50
+            ],
+            "title": "Appt. #43",
+            "location": "860 J Street",
+            "description": "",
+            "restrictions": "",
+            "totalSlots": 4,
+            "tags": [],
+            "registeredUsers": [],
+            "canceled": false
+        },
+        {
+            "id": 458,
+            "startTime": [
+                2022,
+                10,
+                5,
+                13,
+                50
+            ],
+            "endTime": [
+                2022,
+                10,
+                5,
+                14,
+                50
+            ],
+            "title": "Appt. #44",
+            "location": "880 J Street",
+            "description": "",
+            "restrictions": "",
+            "totalSlots": 5,
+            "tags": [],
+            "registeredUsers": [],
+            "canceled": false
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "empty": false,
+            "sorted": true,
+            "unsorted": false
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 3,
+        "unpaged": false,
+        "paged": true
+    },
+    "last": false,
+    "totalPages": 3,
+    "totalElements": 7,
+    "size": 3,
+    "number": 0,
+    "sort": {
+        "empty": false,
+        "sorted": true,
+        "unsorted": false
+    },
+    "first": true,
+    "numberOfElements": 3,
+    "empty": false
+}
