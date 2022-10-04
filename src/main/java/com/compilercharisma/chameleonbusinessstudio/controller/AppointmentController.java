@@ -55,8 +55,8 @@ public class AppointmentController {
         log.info("Creating user in Vendia with parameters [{}]", appointment);
         return appointmentService.createAppointment(appointment)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
-                .doOnNext(u -> log.info("User created in Vendia share!"))
-                .onErrorMap(e -> new Exception("Error creating user in Vendia"));
+                .doOnNext(u -> log.info("Appointment created in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error creating appointment in Vendia"));
     }
     
 //    /**

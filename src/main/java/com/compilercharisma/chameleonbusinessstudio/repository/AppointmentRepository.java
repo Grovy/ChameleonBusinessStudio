@@ -32,7 +32,7 @@ public class AppointmentRepository
         var query = """
                 mutation {
                   add_Appointment(
-                    input: {cancelled: "%s", endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
+                    input: {cancelled: %s, endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
                   ) {
                     result {
                       cancelled
@@ -47,9 +47,9 @@ public class AppointmentRepository
                     }
                   }
                 }
-                """.formatted(appointment.getCancelled(), appointment.getDescription(),
-                    appointment.getEndTime(), appointment.getLocation(),
-                    appointment.getParticipants(), appointment.getRestrictions(),
+                """.formatted(appointment.getCancelled(), appointment.getEndTime(),
+                    appointment.getDescription(), appointment.getLocation(),
+                    appointment.getRestrictions(),
                     appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
     }

@@ -16,6 +16,8 @@ public class SecurityConfiguration {
             ServerHttpSecurity security) {
         return security
                 .authorizeExchange()
+                .pathMatchers("/api/appointments/**")
+                .permitAll()
                 .and()
                 .oauth2Login()
                 .and()
