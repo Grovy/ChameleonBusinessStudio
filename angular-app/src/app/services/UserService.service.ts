@@ -5,7 +5,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 @Injectable()
 export class UserService {
 
-    private readonly apiUrl = 'http://localhost:8080/api';
+    private readonly apiUrl = '/api';
 
     constructor(private httpClient: HttpClient) { }
 
