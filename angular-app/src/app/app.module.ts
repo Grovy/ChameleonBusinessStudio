@@ -3,6 +3,7 @@
 */
 import { NgModule } from '@angular/core';
 
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AdminConfigurationComponent } from './pages/admin-configuration/admin-configuration/admin-configuration.component';
 import { AdminGenUserComponent } from './pages/admin-panel/admin-gen-user/admin-gen-user.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel/admin-panel.component';
@@ -16,6 +17,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
 import { CustomBannerDirective } from './theme/directives/custom-banner.directive';
 import { DefaultHeaderComponent } from './theme/default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
@@ -31,8 +34,10 @@ import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.comp
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { UserService } from './services/UserService.service';
+
+
+
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
@@ -54,7 +59,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
+
 
 
 
@@ -70,6 +75,7 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
     AppointmentDetailsComponent,
     AppointmentListComponent,
     BookingPageComponent,
+    CalenderViewComponent,
     CustomBannerDirective,
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
@@ -80,7 +86,6 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
     SiteFooterComponent,
     SiteHeaderComponent,
     SplashComponent,
-    CalenderViewComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -127,7 +132,7 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
     }),
   ],
 
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 
