@@ -4,86 +4,6 @@ mat-toolbar{
   padding: 15px;
 }
 
-mat-tab-group{
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.home{
-  background: blanchedalmond;
-  width: 100%;
-  flex-direction: row;
-  display: flex;
-  overflow: auto
-}
-
-.table-container{
-  width: 40rem;
-}
-
-.view-employees-container{
-  width: 100%;
-  flex-direction: row;
-  display: flex;
-  overflow: auto;
-}
-
-.add-employees-container{
-  width: 100%;
-  flex-direction: row;
-  display: flex;
-  overflow: auto;
-}
-
-.employee-table-card{
-  width: 30rem;
-  display: flex;
-  flex-direction: column;
-  background: lightblue;
-  margin-left: 20rem;
-}
-
-.employee-profile-card{
-  width: 30rem;
-  margin-left: 5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.element-row:hover {
-  background: #f5f5f5;
-  cursor: pointer;
-}
-
-.mat-elevation-z8{
-  width: 30rem;
-}
-
-.full-width{
-  width: 100%;
-}
-
-.form-container{
-  margin: 10px;
-}
-
-.add-user-card{
-  margin-left: 20rem;
-  background: yellowgreen;
-  width: 25rem;
-  height: fit-content;
-  padding-bottom: 2rem;
-}
-
-.add-user-card-title{
-  font-family: "Lato";
-}
-
-.add-user-card-subtitle{
-  font-family: "Lato";
-}
-
 .icon{
   padding: 0 20px;
   margin: 0 20px;
@@ -107,6 +27,7 @@ mat-tab-group{
   display: flex;
   scroll-behavior: smooth;
   padding: 20px;
+  alignment: center;
 }
 
 .card{

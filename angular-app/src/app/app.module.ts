@@ -55,6 +55,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 
@@ -81,6 +82,7 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
     SiteHeaderComponent,
     SplashComponent,
     CalenderViewComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -120,6 +122,7 @@ import { CalenderViewComponent } from './pages/appointments/appointment-calender
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+      {path:'**',component:PageNotFoundComponent}
     ]),
     CalendarModule.forRoot({
         provide:DateAdapter,

@@ -1,64 +1,79 @@
-
 <!-- tabindex 0 because it is a control element -->
 <!-- not sure if role form is ideal -->
-<mat-card id="card" tabindex="0" role="form">
-    <mat-card-title>Create a new appointment</mat-card-title>
-    <mat-card-content>
-        <form id="form" [formGroup]="appointmentForm" (ngSubmit)="submit()">
+<mat-toolbar class = "header">
+  <span>Schedule</span>
+</mat-toolbar>
 
-            <mat-form-field class="field-wrapper">
-                <mat-label for="title">Title</mat-label>
-                <input matInput id="title" name="title" type="text" formControlName="title"/>
-                <mat-error *ngIf="appointmentForm.get('title').invalid">title must be at least one character</mat-error>
+
+ <div class="container"  >
+
+    <div class="form-container">
+      <form id="form" [formGroup]="appointmentForm" (ngSubmit)="submit()">
+
+        <div class="comp-info">
+
+          <p class="exp">
+            <mat-form-field appearance="fill">
+              <mat-label for="title">Title</mat-label>
+              <input matInput id="title" name="title" placeholder="Title" formControlName="title"  required>
+              <mat-error *ngIf="appointmentForm.get('title')?.invalid">title must be at least one character</mat-error>
+            </mat-form-field>
+          </p>
+          <p class="exp">
+            <mat-form-field appearance="fill">
+              <mat-label for="description">Description</mat-label>
+              <textarea matInput id="description" name="description" placeholder="Description" formControlName="description"  required></textarea>
+              <mat-error *ngIf="appointmentForm.get('description')?.invalid">must be less than 250 characters</mat-error>
+            </mat-form-field>
+          </p>
+          <p class ="exp">
+            <mat-form-field appearance="fill">
+              <mat-label for="restrictions">Restrictions</mat-label>
+              <textarea matInput id="restrictions" name="restrictions" placeholder="Restrictions" formControlName="restrictions"  required></textarea>
+            </mat-form-field>
+          </p>
+          <p class="esc">
+            <mat-form-field appearance="fill">
+              <mat-label for="start-date">Start Date</mat-label>
+              <input matInput placeholder="Start Date" formControlName="startDate" type="date">
+              <mat-error *ngIf="appointmentForm.get('startDate')?.invalid">start date & time must be after today</mat-error>
+            </mat-form-field>
+            <span></span>
+
+            <mat-form-field appearance="fill">
+              <mat-label for="start-time">Start Time</mat-label>
+              <input matInput placeholder="Start Time" formControlName="startTime" type="time"  required>
+              <mat-error *ngIf="appointmentForm.get('startTime')?.invalid">end date & time must be after start date & time</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="field-wrapper">
-                <mat-label for="description">Description</mat-label>
-                <textarea matInput id="description" name="description" formControlName="description"></textarea>
-            </mat-form-field>
-
-            <mat-form-field class="field-wrapper">
-                <mat-label for="restrictions">Restrictions</mat-label>
-                <textarea matInput id="restrictions" name="restrictions" formControlName="restrictions"></textarea>
-            </mat-form-field>
-
-            <mat-form-field class="field-wrapper">
-                <mat-label for="total-slots">Available slots</mat-label>
-                <input matInput id="total-slots" name="total-slots" type="number" formControlName="totalSlots"/>
-                <mat-error *ngIf="appointmentForm.get('totalSlots').invalid">must have at least 1 available slot</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="field-wrapper">
-                <mat-label for="start-date">Start Date</mat-label>
-                <input matInput id="start-date" name="start-date" type="date" formControlName="startDate"/>
-                <mat-error *ngIf="appointmentForm.get('startDate').invalid">start date & time must be after today</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="field-wrapper">
-                <mat-label for="start-time">Start Time</mat-label>
-                <input matInput id="start-time" name="start-time" type="time" formControlName="startTime"/>
-                <mat-error *ngIf="appointmentForm.get('startTime').invalid">start date & time must be after today</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="field-wrapper">
+            </p>
+            <p class="esc">
+              <mat-form-field appearance="fill">
                 <mat-label for="end-date">End Date</mat-label>
-                <input matInput id="end-date" name="end-date" type="date" formControlName="endDate"/>
-                <mat-error *ngIf="appointmentForm.get('endDate').invalid">end date & time must be after start date & time</mat-error>
-            </mat-form-field>
+                <input matInput placeholder="End Date" formControlName="endDate" type="date">
+                <mat-error *ngIf="appointmentForm.get('endDate')?.invalid">start date & time must be after today</mat-error>
+              </mat-form-field>
+              <span></span>
 
-            <mat-form-field class="field-wrapper">
+              <mat-form-field appearance="fill">
                 <mat-label for="end-time">End Time</mat-label>
-                <input matInput id="end-time" name="end-time" type="time" formControlName="endTime"/>
-                <mat-error *ngIf="appointmentForm.get('endTime').invalid">end date & time must be after start date & time</mat-error>
-            </mat-form-field>
+                <input matInput placeholder="End Time" formControlName="endTime" type="time"  required>
+                <mat-error *ngIf="appointmentForm.get('endTime')?.invalid">end date & time must be after start date & time</mat-error>
+              </mat-form-field>
 
-            <!-- todo tags section -->
-        </form>
-    </mat-card-content>
-    <mat-card-actions align="end">
-        <span>{{this.message}}</span>
-        <button mat-raised-button>Cancel</button>
-        <button mat-raised-button (click)="submit()" [disabled]="!appointmentForm.valid || isSubmitting">Create</button>
-        <mat-spinner *ngIf="isSubmitting" aria-label="submitting"></mat-spinner>
-    </mat-card-actions>
-</mat-card>
+              </p>
+          </div>
+
+
+        <!-- todo tags section -->
+    </form>
+    </div>
+    <mat-card-actions align="end" >
+      <span>{{this.message}}</span>
+      <button mat-flat-button color="primary">Cancel</button>
+      <button mat-flat-button color="primary" (click)="submit()" [disabled]="!appointmentForm.valid || isSubmitting">Create</button>
+      <mat-spinner *ngIf="isSubmitting" aria-label="submitting"></mat-spinner>
+  </mat-card-actions>
+ </div>
+
+

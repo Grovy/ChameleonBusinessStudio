@@ -1,8 +1,5 @@
 //Author: Ariel Camargo
-import { Component } from "@angular/core";
-import { IUser } from "src/app/models/interfaces/IUser";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { MockEmployeeList } from "src/app/models/mock/mock-employees";
+import {Component, OnInit} from "@angular/core";
 
 @Component ({
   selector:'app-admin-panel',
@@ -10,76 +7,43 @@ import { MockEmployeeList } from "src/app/models/mock/mock-employees";
   styleUrls: ['./admin-panel.component.css']
 })
 
-export class AdminPanelComponent {
+export class AdminPanelComponent implements OnInit
+{
+  selectedRole: string = '';
+    stringConfirmation:string='';
+    // selectRole: boolean = false;
+    private userCreationStatus: string='';
+    userName = '';
+    outputString = '';
+    email = '';
+    names = [];
+    roles = [];
+    numbers = [];
+    message = [];
+    emails = [];
+    // Plan is to have the individual users keep their own data
+    newUserName = '';
+    newEmail = '';
+    printString = '';
+    numberSelected = '';
+    namedRoles = ['Admin', 'User'];
+    roleToAdd = '';
 
-  // New stuff
+    onCreateUser()
+      {
 
-  employeeData = MockEmployeeList;
-  displayedColumns: string[] = ['email', 'role'];
-  selectedProfile: IUser | undefined;
-  profileForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    this.selectedProfile = this.employeeData ? this.employeeData[0] : undefined;
-    this.profileForm = this.fb.group({
-      email: [''],
-      confirmEmail: [''],
-      role: [''],
-    })
-    console.log(this.employeeData);
-  }
-
-  setSelectedProfile(searchEmail: string) {
-    this.selectedProfile = MockEmployeeList.find( ({email}) => email === searchEmail);
-  }
-
-  getSelectedProfile() {
-    return this.selectedProfile;
-  }
-
-  createNewUser() {
-    
-  }
-
-  onClickSubmit(data) {
-    const newProfile: IUser = {
-      displayName: data?.displayName ? data.displayName : data.email,
-      email: data.email,
-      role: data.role,
-    }
-    console.log("Clicking save: " + newProfile.email);
-    console.log("Clicking save: " + newProfile.role);
-    console.log("Clicking save: " + newProfile.displayName);
-
-    
-    this.employeeData = [newProfile, ...this.employeeData ];
-    console.log(newProfile.email + " was added.");
-    console.log(this.employeeData);
-  }
-
-  onSave() {
-    console.log("New employee: " + this.profileForm);
-  }
-
-
-
-  
-
-
-
- /*  onCreateUser() {
-
-    if(this.userName != '' && this.selectedRole != '' && this.email != '') {
-      // this.selectRole = true;
-      this.names.push(this.userName);
-      this.roles.push(this.selectedRole);
-      this.numbers.push(this.names.length);
-      this.emails.push(this.email);
-      this.outputString = this.userName + " was added as " + this.selectedRole;
-      this.message.push(this.outputString);
-      //this.clearField();
-    }
-  }
+        if(this.userName != '' && this.selectedRole != '' && this.email != '')
+        {
+          // this.selectRole = true;
+          this.names.push(this.userName);
+          this.roles.push(this.selectedRole);
+          this.numbers.push(this.names.length);
+          this.emails.push(this.email);
+          this.outputString = this.userName + " was added as " + this.selectedRole;
+          this.message.push(this.outputString);
+          //this.clearField();
+        }
+      }
 
       ngOnInit()
       {
@@ -157,6 +121,24 @@ export class AdminPanelComponent {
         this.roleToAdd = (<HTMLInputElement>event.target).value;
       }
 
+      addRole()
+      {
+        if(this.roleToAdd != '')
+        {
+          for(let i = 0; i < this.namedRoles.length; i++)
+          {
+            if(this.namedRoles[i] == this.roleToAdd)
+            {
+              i = this.namedRoles.length;
+            }
+            if(i == this.namedRoles.length - 1)
+            {
+              this.namedRoles.push(this.roleToAdd);
+            }
+          }
+        }
+      }
+
       removeRole()
       {
         if(this.namedRoles.length > 1)
@@ -169,6 +151,6 @@ export class AdminPanelComponent {
           this.selectedRole = '';
         }
 
-      } */
+      }
 }
 
