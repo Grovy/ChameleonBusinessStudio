@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { IUser } from '../models/interfaces/IUser';
 
 @Injectable()
 export class UserService {
@@ -12,6 +13,15 @@ export class UserService {
     // Function to fetch all the users from Vendia
     public getAllUsers(): Observable<any> {
         return this.httpClient.get(`${this.apiUrl}/users/getAllUsers`)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    // Function to create a new user and save in Vendia
+    public createUser(user: IUser): Observable<any> {
+        return this.httpClient.post(`${this.apiUrl}/users/createUser`, user)
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

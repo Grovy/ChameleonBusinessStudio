@@ -107,7 +107,14 @@
             Guidelines: <br> New employee data should <strong>not</strong> include data of an existing employee.<br>
           </mat-card-subtitle>
           <mat-card-content>
-            <form [formGroup]="profileForm" class="form-container" (ngSubmit)="onClickSubmit(profileForm.value)">
+            <form [formGroup]="profileForm" class="form-container" id="ngForm" (ngSubmit)="onClickSubmit(profileForm.value)">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="full-width">
+                    <input type="text" formControlName="displayName" matInput placeholder="Enter New Employee's Display Name" required>
+                  </mat-form-field>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-6">
                   <mat-form-field class="full-width">
@@ -126,17 +133,16 @@
                 <mat-form-field class="full-width">
                   <mat-label>Select Employee's Role</mat-label>
                   <mat-select formControlName="role" matInput required>
-                    <mat-option value="Organizer">Organizer</mat-option>
-                    <mat-option value="Talent">Talent</mat-option>
+                    <mat-option value="ORGANIZER">Organizer</mat-option>
+                    <mat-option value="TALENT">Talent</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <input type="submit" value="Save">
             </form>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="onSave()">Save</button>
-            <button mat-raised-button color="secondary">Discard</button>
+            <button mat-raised-button color="primary" form="ngForm">Save</button>
+            <button mat-raised-button color="secondary" (click)="onDiscard()">Discard</button>
           </mat-card-actions>
         </mat-card>
 

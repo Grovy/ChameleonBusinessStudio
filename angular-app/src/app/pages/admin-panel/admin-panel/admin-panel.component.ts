@@ -1,8 +1,7 @@
-//Author: Ariel Camargo
-import { Component } from "@angular/core";
-import { IUser } from "src/app/models/interfaces/IUser";
+import { Component, ViewChild } from "@angular/core";
+import { IUser, UserRole } from "src/app/models/interfaces/IUser";
 import { IUserResponse } from "src/app/models/interfaces/IUserResponse";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "src/app/services/UserService.service";
 
 @Component ({
@@ -12,7 +11,7 @@ import { UserService } from "src/app/services/UserService.service";
 })
 
 export class AdminPanelComponent {
-
+  
   myUserResponse: IUserResponse = { users: [] };
   displayedColumns: string[] = ['displayName', 'email', 'role'];
   selectedProfile: IUser | undefined;
@@ -29,6 +28,7 @@ export class AdminPanelComponent {
   }
 
   ngOnInit(): void {
+    // Ensures we are retrieving users from Vendia when this page loads.
     this.userService.getAllUsers().subscribe(
       (data) => {
         this.myUserResponse = data;
@@ -45,14 +45,19 @@ export class AdminPanelComponent {
   }
 
   onClickSubmit(data) {
-    const newProfile: IUser = {
-      displayName: data?.displayName ? data.displayName : data.email,
+    const newUser: IUser = {
+      displayName: data.displayName,
       email: data.email,
-      role: data.role,
+      role: data.role as UserRole,
     }
-    console.log("Clicking save: " + newProfile.displayName);
-    console.log("Clicking save: " + newProfile.email);
-    console.log("Clicking save: " + newProfile.role);
+
+    this.userService.createUser(newUser).subscribe(
+      data => console.log(data)
+    );
+  }
+
+  onDiscard() {
+    this.profileForm.reset();
   }
 
   onSave() {
