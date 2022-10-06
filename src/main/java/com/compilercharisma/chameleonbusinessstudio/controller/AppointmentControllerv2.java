@@ -25,6 +25,11 @@ public class AppointmentControllerv2 {
         this.appointmentService = appointmentService;
     }
 
+    /**
+     * This creates a new appointment in Vendia
+     * @param appointment The appointment that you are creating
+     * @return The {@link} of the appointment being created.
+     */
     @PostMapping("/createAppointment")
     public Mono<ResponseEntity<Appointment>> createVendiaAppointment(@RequestBody Appointment appointment){
         log.info("Creating an appointment", appointment);
@@ -32,6 +37,21 @@ public class AppointmentControllerv2 {
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("Appointment created in Vendia share!"))
                 .onErrorMap(e -> new Exception("Error creating appointment in Vendia"));
+    }
+
+    /**
+     * This updates the appointment called in Vendia
+     * @param appointment The appointment you want to update
+     * @return The (@link} of the appointment being updated.
+     */
+    @PutMapping("/updateAppointment")
+    public Mono<ResponseEntity<Appointment>> updateVendiaAppointment(@RequestBody Appointment appointment)
+    {
+        log.info("Updating an appointment", appointment);
+        return appointmentService.updateAppointment(appointment)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error updatiing appointment in Vendia"));
     }
 
 }

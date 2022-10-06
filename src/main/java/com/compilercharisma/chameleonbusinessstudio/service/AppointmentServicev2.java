@@ -27,4 +27,14 @@ public class AppointmentServicev2 {
         return Mono.just(appointment).flatMap(u -> appointmentRepository.createAppointment(appointment));
     }
 
+    /**
+     * This updates an exisitng appointment in Vendia share.
+     * @param appointment
+     * @return
+     */
+    public Mono<Appointment> updateAppointment(Appointment appointment)
+    {
+        return Mono.just(appointment).flatMap(u -> appointmentRepository.updateAppointment(appointment));
+    }
+
 }
