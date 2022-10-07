@@ -1,17 +1,135 @@
-table {
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+mat-toolbar{
+  padding: 15px;
+}
+
+mat-tab-group{
   width: 100%;
-  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.mat-form-field {
-  font-size: 14px;
+.home{
+  background: blanchedalmond;
   width: 100%;
+  flex-direction: row;
+  display: flex;
+  overflow: auto
 }
 
-td, th {
-  width: 20%;
+.table-container{
+  width: 40rem;
 }
 
-.pointer {
+.view-employees-container{
+  width: 100%;
+  flex-direction: row;
+  display: flex;
+  overflow: auto;
+}
+
+.add-employees-container{
+  width: 100%;
+  flex-direction: row;
+  display: flex;
+  overflow: auto;
+}
+
+.employee-table-card{
+  width: 30rem;
+  display: flex;
+  flex-direction: column;
+  background: lightblue;
+  margin-left: 20rem;
+}
+
+.employee-profile-card{
+  width: 30rem;
+  margin-left: 5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.element-row:hover {
+  background: #f5f5f5;
   cursor: pointer;
+}
+
+.mat-elevation-z8{
+  width: 30rem;
+}
+
+.full-width{
+  width: 100%;
+}
+
+.form-container{
+  margin: 10px;
+}
+
+.add-user-card{
+  margin-left: 20rem;
+  background: yellowgreen;
+  width: 25rem;
+  height: fit-content;
+  padding-bottom: 2rem;
+}
+
+.add-user-card-title{
+  font-family: "Lato";
+}
+
+.add-user-card-subtitle{
+  font-family: "Lato";
+}
+
+.icon{
+  padding: 0 20px;
+  margin: 0 20px;
+}
+
+.business-title{
+  font-size: 32px;
+  margin: 15px;
+}
+
+.example-spacer{
+  flex: 1 1 auto;
+}
+
+.main{
+  display: flex;
+  align-content: center;
+}
+
+.main-content{
+  display: flex;
+  scroll-behavior: smooth;
+  padding: 20px;
+}
+
+.card{
+  margin: 15px;
+  width: 50%;
+  text-align: center;
+}
+
+.label{
+  text-align: center;
+}
+
+.main-icon{
+  width: 100px;
+  height: 100px;
+  min-height: 80px;
+  min-width: 80px;
+  max-height: 180px;
+  max-width: 180px;
+}
+
+.description{
+  text-align: center;
+  min-height: 80px;
+  min-width: 300px;
 }
