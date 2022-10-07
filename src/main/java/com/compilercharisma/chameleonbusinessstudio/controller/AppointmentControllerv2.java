@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentServicev2;
@@ -52,6 +53,20 @@ public class AppointmentControllerv2 {
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
                 .onErrorMap(e -> new Exception("Error updatiing appointment in Vendia"));
+    }
+
+    /**
+     * This deletes the appointment called in Vendia
+     * @param appointment The appointment you want to delete
+     * @return The (@link DeletionResponse} of the appointment being updated.
+     */
+    @DeleteMapping("/deleteAppointment")
+    public Mono<ResponseEntity<DeletionResponse>> deleteVendiaAppointment(@RequestBody Appointment appointment){
+        log.info("Deleting an appointment");
+        return appointmentService.deleteAppointment(appointment)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
     }
 
 }
