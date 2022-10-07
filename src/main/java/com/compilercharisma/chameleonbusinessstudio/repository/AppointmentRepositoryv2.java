@@ -2,13 +2,10 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 /**
  *
@@ -87,6 +84,23 @@ public class AppointmentRepositoryv2
                     appointment.getEndTime(),appointment.getLocation(), appointment.getRestrictions(),
                     appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
         return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class);
+    }
+
+    /**
+     * @param appointment The appointment that is getting deleted
+     * @return The {@link DeletionResponse} of the appointment getting deleted
+     */
+    public Mono<DeletionResponse> deleteAppointment(String id) {
+        var deleteAppointmentMutation = """
+                mutation {
+                  remove_Appointment(id: "%s") {
+                    transaction {
+                      _id
+                    }
+                  }
+                }""".formatted(id);
+        return vendiaClient.executeQuery(deleteAppointmentMutation, "remove_Appointment.transaction" , DeletionResponse.class)
+                .doOnError(l -> log.error("Something bad happened when executing mutation for deleting appointment, check syntax"));
     }
 
     /**
