@@ -1,10 +1,20 @@
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaField;
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaQueryBuilder;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
 import reactor.core.publisher.Mono;
 
 /**
@@ -52,6 +62,33 @@ public class AppointmentRepositoryv2
                 appointment.getRestrictions(),
                 appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
+    }
+
+    public Mono<Page<Appointment>> getAppointmentsForUser(String email, Pageable page){
+      var query = new VendiaQueryBuilder()
+        .select("_id", "title", 
+          //"startTime", 
+          //"endTime", 
+          "location", "description", "cancelled", "participants")
+        .from("Appointment")
+        .where(new VendiaField("participants").contains(email))
+        .build();
+
+      return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
+        .map(appts -> appts.getAppointments())
+        .map(appts -> toPage(appts, page));
+    }
+
+    private Page<Appointment> toPage(List<Appointment> appts, Pageable pageable){
+      // https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/PageImpl.html
+      /*
+        we'll have to change the 3rd parameter if we ever split into multiple
+        pages, as that records the total number of appointments available.
+        For example, if a query returns 3 appointments, but only 2 are included
+        in appts due to the pageable, the 3rd parameter will need to be adjusted
+      */
+      var page = new PageImpl<Appointment>(appts, pageable, (long)appts.size());
+      return page;
     }
 
     /**

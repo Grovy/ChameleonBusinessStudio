@@ -20,6 +20,8 @@ public record VendiaClient(HttpGraphQlClient httpGraphQlClient) {
      * @return {@link Mono}
      */
     public <T> Mono<T> executeQuery(String graphQlQuery, final String path, final Class<T> responseClass) {
+        System.out.printf("Executing query \"%s\"...\n", graphQlQuery); // rm once we enable logging
+        log.debug("Executing query \"%s\"...\n", graphQlQuery);
         return httpGraphQlClient
                 .document(graphQlQuery)
                 .execute()
@@ -27,7 +29,8 @@ public record VendiaClient(HttpGraphQlClient httpGraphQlClient) {
                 .onErrorResume(error ->
                         Mono.error(new ExternalServiceException("Something unexpected happened " +
                                 "when executing a query. Check the syntax!",
-                                HttpStatus.BAD_REQUEST)));
+                                HttpStatus.BAD_REQUEST,
+                                error)));
     }
 
 }
