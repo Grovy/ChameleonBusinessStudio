@@ -3,6 +3,7 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaField;
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaQueryBuilder;
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaSort;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
@@ -64,7 +65,18 @@ public class AppointmentRepositoryv2
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
     }
 
+    /**
+     * retrieves the appointments for which the given user is a participant
+     * 
+     * @param email the user's email
+     * @param page sorting options
+     * @return a page containing the user's appointments
+     */
     public Mono<Page<Appointment>> getAppointmentsForUser(String email, Pageable page){
+      var sorts = page.getSort()
+        .map(order -> VendiaSort.by(order.getProperty(), order.isAscending()))
+        .toList();
+
       var query = new VendiaQueryBuilder()
         .select("_id", "title", 
           //"startTime", 
@@ -72,8 +84,9 @@ public class AppointmentRepositoryv2
           "location", "description", "cancelled", "participants")
         .from("Appointment")
         .where(new VendiaField("participants").contains(email))
+        .orderBy(sorts)
         .build();
-
+      
       return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
         .map(appts -> appts.getAppointments())
         .map(appts -> toPage(appts, page));

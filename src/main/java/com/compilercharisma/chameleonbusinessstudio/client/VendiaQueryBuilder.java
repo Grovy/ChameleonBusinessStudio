@@ -9,7 +9,8 @@ import java.util.stream.Collectors;
  */
 public class VendiaQueryBuilder {
     private final List<VendiaField> fields = new ArrayList<>();
-    private Optional<VendiaFilter> filter = Optional.empty();
+    private final List<VendiaFilter> filters = new ArrayList<>();
+    private final List<VendiaSort> sorts = new ArrayList<>();
     private VendiaType type = null;
     
     /**
@@ -39,13 +40,44 @@ public class VendiaQueryBuilder {
     }
 
     /**
-     * Discards the previous filter, then sets it to the given one.
+     * Discards the previous filters, then sets it to the given ones.
      * 
      * @param filter the criteria to filter on
      * @return this, for chaining purposes
      */
-    public VendiaQueryBuilder where(VendiaFilter filter){
-        this.filter = Optional.of(filter);
+    public VendiaQueryBuilder where(VendiaFilter... filters){
+        this.filters.clear();
+        for(var filter : filters) {
+            this.filters.add(filter);
+        }
+        return this;
+    }
+
+    /**
+     * Discards any previous sorts, then sets it to the given ones.
+     * 
+     * @param sorts the criteria to sort on
+     * @return this, for chaining purposes
+     */
+    public VendiaQueryBuilder orderBy(VendiaSort... sorts){
+        this.sorts.clear();
+        for(var sort : sorts){
+            this.sorts.add(sort);
+        }
+        return this;
+    }
+
+    /**
+     * Discards any previous sorts, then sets it to the given ones.
+     * 
+     * @param sorts the criteria to sort on
+     * @return this, for chaining purposes
+     */
+    public VendiaQueryBuilder orderBy(List<VendiaSort> sorts){
+        this.sorts.clear();
+        for(var sort : sorts){
+            this.sorts.add(sort);
+        }
         return this;
     }
 
@@ -70,17 +102,37 @@ public class VendiaQueryBuilder {
     }
 
     public String getFilterString(){
-        var f = filter.isPresent() ? filter.get().toString() : "";
+        var f = filters.stream()
+            .map(VendiaFilter::toString)
+            .collect(Collectors.joining(","));
         return String.format("filter:{%s}", f);
+    }
+
+    public String getSortString(){
+        if(!isSorted()){
+            // Vendia cannot accept empty order, but can accept empty filter
+            return "";
+        }
+        var s = sorts.stream()
+            .map(VendiaSort::toString)
+            .collect(Collectors.joining(","));
+        return String.format("order:{%s}", s);
+    }
+
+    private boolean isSorted(){
+        return !sorts.isEmpty();
     }
 
     /**
      * @return a query that can be sent to the VendiaClient
      */
     public String build(){
+        var criteria = getFilterString();
+        if(isSorted()){
+            criteria += "," + getSortString();
+        }
         var t = getTypeString();
-        var f = getFilterString();
         var fs = getFieldsString();
-        return String.format("query{list%s(%s){%s %s}}", t, f, t, fs);
+        return String.format("query{list%s(%s){%s %s}}", t, criteria, t, fs);
     }
 }

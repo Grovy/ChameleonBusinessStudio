@@ -60,9 +60,23 @@ public class VendiaQueryBuilderTester {
     @Test
     public void where_givenAValidClause_createsAFilter(){
         var sut = new VendiaQueryBuilder();
+        
         sut.where(new VendiaField("foo").contains("bar"));
-
         var actual = sut.getFilterString();
+
+        Assertions.assertTrue(actual.contains("foo"));
+        Assertions.assertTrue(actual.contains("bar"));
+    }
+
+    @Test
+    public void orderBy_givenValidFields_createsASort(){
+        var sut = new VendiaQueryBuilder();
+
+        sut.orderBy(
+            VendiaSort.by("foo"), 
+            VendiaSort.by("bar", false)
+        );
+        var actual = sut.getSortString();
 
         Assertions.assertTrue(actual.contains("foo"));
         Assertions.assertTrue(actual.contains("bar"));
