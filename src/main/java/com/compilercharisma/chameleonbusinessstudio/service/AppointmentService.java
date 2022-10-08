@@ -16,8 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.dto.validators.AppointmentValidator;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentValidator;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 
