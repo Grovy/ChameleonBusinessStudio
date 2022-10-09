@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import { MatIconRegistry } from "@angular/material/icon";
+import { Component } from '@angular/core';
 import { DomSanitizer } from "@angular/platform-browser";
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconRegistry } from "@angular/material/icon";
+import { SignupModalComponent } from 'src/app/theme/modals/signup-modal/signup-modal.component';
 
 @Component({
   selector: 'app-splash',
   templateUrl: './splash.component.html',
   styleUrls: ['./splash.component.css']
 })
-export class SplashComponent implements OnInit {
+export class SplashComponent {
 
-  constructor(private http: HttpClient, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer) {
+  constructor(private http: HttpClient, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer, public dialog: MatDialog) {
     this.matIconRegistry.addSvgIcon(
       "calendar",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-calendar.svg")
@@ -41,8 +43,12 @@ export class SplashComponent implements OnInit {
     });
   }
 
+  displayModal(): void {
+    const dialogRef = this.dialog.open(SignupModalComponent, { disableClose: true });
 
-  ngOnInit(): void {
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("The modal was closed");
+    });
   }
 
 }
