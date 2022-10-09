@@ -3,7 +3,11 @@ import { IUser, UserRole } from '../interfaces/IUser';
 import { MockParticipantList } from "./mock-users";
 
 const participants: IUser[] = MockParticipantList;
-const barber = { email: 'danielr@chameleon.com', role: UserRole.TALENT};
+const barber = { 
+  displayName:'danielr@chameleon.com', 
+  email: 'danielr@chameleon.com', 
+  role: UserRole.TALENT
+};
 
 export const MockAppointmentList: IAppointment[] = [
     {

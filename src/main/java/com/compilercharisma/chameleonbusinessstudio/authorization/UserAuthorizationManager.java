@@ -26,8 +26,8 @@ public class UserAuthorizationManager implements ReactiveAuthorizationManager<Au
      * Uses the UserRepository to make sure that the logged-in user has enough roles to access certain endpoints
      *
      * @param authentication the authentication object containing the OAuth2.0 token
-     * @param object Not technically needed
-     * @return {@link AuthorizationDecision} of whether the user has enough roles or not, basically a Boolean
+     * @param object Not needed, just for overriding purposes
+     * @return {@link AuthorizationDecision} of whether the user has enough roles or not for the request
      */
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext object) {

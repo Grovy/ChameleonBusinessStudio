@@ -4,11 +4,16 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+
+import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -24,6 +29,26 @@ public class UserService {
      */
     public Mono<UserResponse> getAllUsers() {
         return userRepository.findAllUsers();
+    }
+
+    /**
+     * Returns a Boolean of whether the user is already registered
+     *
+     * @param email email of the user
+     * @return {@link Boolean}
+     */
+    public Mono<Boolean> isRegistered(String email){
+        return userRepository.findAllUsers()
+            .map(UserResponse::getUsers)
+            .map(users -> users.stream()
+                    .anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
+    }
+
+    // temporary method by Matt
+    public Mono<Optional<User>> get(String email){
+        return getAllUsers()
+            .map(UserResponse::getUsers)
+            .map(lu -> lu.stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst());
     }
 
     /**

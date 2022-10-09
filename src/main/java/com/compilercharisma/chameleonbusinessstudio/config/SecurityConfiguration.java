@@ -19,12 +19,9 @@ public class SecurityConfiguration {
         return security
                 .oauth2Login()
                 .and()
-                .logout()
-                .and()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.POST, "/api/users/createUser")
-                .permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/users/**").access(userAuthorizationManager)
+                .pathMatchers(HttpMethod.POST, "/api/appointments/**").access(userAuthorizationManager)
+                .pathMatchers(HttpMethod.DELETE, "/api/appointments/**").access(userAuthorizationManager)
                 .pathMatchers(
                         "/",
                         "/index",

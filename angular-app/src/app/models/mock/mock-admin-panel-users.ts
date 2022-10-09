@@ -46,8 +46,7 @@ export const createNewUser = (id: number): IUser => {
         NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + ' ';
 
         return {
-            firstName: FirstName,
-            lastName: LastName,
+            displayName: FirstName + " " + LastName,
             email: EMAIL.toString(),
             role: getRandomRole(UserRole),
         };

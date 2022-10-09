@@ -6,11 +6,15 @@ import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @RestController
-@RequestMapping(path="/api/users")
+@RequestMapping(path="/api/v2/users")
 @Slf4j
 public class UserController {
     
@@ -75,6 +79,22 @@ public class UserController {
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User deleted in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
+    }
+
+    /**
+     * Returns true if the currently authenticated user has a user in Vendia,
+     * else returns false
+     *
+     * @param authentication Authentication object (has the OAuth2.0 token)
+     * @return {@link Boolean}
+     */
+    @GetMapping("/isUserRegistered")
+    public Mono<ResponseEntity<Boolean>> isUserRegistered(Authentication authentication){
+        var email = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
+        log.info("Checking to see if user with email [{}] is registered in Vendia", email);
+        return Mono.just(Objects.requireNonNull(email))
+                .flatMap(s -> userService.isRegistered((String) s))
+                .map(bool -> new ResponseEntity<>(bool, HttpStatus.OK));
     }
 
 }
