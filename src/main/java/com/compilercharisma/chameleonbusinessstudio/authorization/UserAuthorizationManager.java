@@ -12,7 +12,6 @@ import org.springframework.security.web.server.authorization.AuthorizationContex
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.Set;
 
 @Component
@@ -37,11 +36,11 @@ public class UserAuthorizationManager implements ReactiveAuthorizationManager<Au
         var email = authentication
                 .map(a -> (OAuth2AuthenticationToken) a)
                 .mapNotNull(p -> (String) p.getPrincipal().getAttribute("email"));
-        return getBooleanMono(email)
+        return isUserAuthorized(email)
                 .map(AuthorizationDecision::new);
     }
 
-    private Mono<Boolean> getBooleanMono(Mono<String> email) {
+    private Mono<Boolean> isUserAuthorized(Mono<String> email) {
         return email.flatMap(e -> {
             var users = userRepository.findId(e);
             return users.flatMap(userResponse -> {
