@@ -61,6 +61,11 @@ dependencyManagement {
     }
 }
 
+tasks.withType(JavaCompile){
+    options.compilerArgs << "-Xlint:all"
+    // Add -Werror later
+}
+
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()

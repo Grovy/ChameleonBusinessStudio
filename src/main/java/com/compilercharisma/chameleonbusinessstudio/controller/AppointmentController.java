@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
@@ -120,9 +121,9 @@ public class AppointmentController {
      * @return a mono containing some of the user's booked appointments
      */
     @GetMapping("mine")
-    public Mono<ResponseEntity<Page<AppointmentEntity>>> myAppointments(Pageable pageable){
+    public Mono<ResponseEntity<Page<Appointment>>> myAppointments(Pageable pageable){       
         return authentication.getLoggedInUserReactive()
-            .map(user -> appointments.getAppointmentsForUser(user.getEmail(), pageable))
+            .flatMap(user -> appointments.getAppointmentsForUser(user.getEmail(), pageable))
             .map(page -> ResponseEntity.ok(page));
     }
     
