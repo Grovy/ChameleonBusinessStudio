@@ -7,11 +7,13 @@ import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -29,17 +31,23 @@ public class UserService {
         return userRepository.findAllUsers();
     }
 
-    // temporary method by Matt
+    /**
+     * Returns a Boolean of whether the user is already registered
+     *
+     * @param email email of the user
+     * @return {@link Boolean}
+     */
     public Mono<Boolean> isRegistered(String email){
-        return getAllUsers()
-            .map(ur -> ur.getUsers())
-            .map(lu -> lu.stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
+        return userRepository.findAllUsers()
+            .map(UserResponse::getUsers)
+            .map(users -> users.stream()
+                    .anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
     }
 
     // temporary method by Matt
     public Mono<Optional<User>> get(String email){
         return getAllUsers()
-            .map(ur -> ur.getUsers())
+            .map(UserResponse::getUsers)
             .map(lu -> lu.stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst());
     }
 
