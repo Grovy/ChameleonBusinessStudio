@@ -1,7 +1,9 @@
 package com.compilercharisma.chameleonbusinessstudio.authorization;
 
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,7 @@ import org.springframework.security.web.server.authorization.AuthorizationContex
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.Set;
 
 @Component
@@ -34,9 +37,21 @@ public class UserAuthorizationManager implements ReactiveAuthorizationManager<Au
         var email = authentication
                 .map(a -> (OAuth2AuthenticationToken) a)
                 .mapNotNull(p -> (String) p.getPrincipal().getAttribute("email"));
-        return email.flatMap(userRepository::findId)
-                .map(ur -> AUTHORIZED_ROLES.contains(ur.getUsers().get(0).getRole()))
+        return getBooleanMono(email)
                 .map(AuthorizationDecision::new);
+    }
+
+    private Mono<Boolean> getBooleanMono(Mono<String> email) {
+        return email.flatMap(e -> {
+            var users = userRepository.findId(e);
+            return users.flatMap(userResponse -> {
+                if (CollectionUtils.isEmpty(userResponse.getUsers())) {
+                    var msg = "User with email [%s] not registered".formatted(e);
+                    return Mono.error(new UserNotRegisteredException(msg));
+                }
+                return Mono.just(AUTHORIZED_ROLES.contains(userResponse.getUsers().get(0).getRole()));
+            });
+        });
     }
 
 }
