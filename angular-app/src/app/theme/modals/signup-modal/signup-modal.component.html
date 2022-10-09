@@ -1,0 +1,48 @@
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
+
+<mat-card>
+    <mat-card-title class="title-text">
+        Welcome to Chameleon Business Studio!
+    </mat-card-title>
+    <mat-card-subtitle class="subtitle-text">
+        To get started using our application, you must first provide a display name to be associated to your acount.
+        This name will display to our talent whom you book with. By continuing to sign up, you are consenting us to
+        store your display name and email address. 
+        <br><br>You also agree to our terms of service which you can find here.
+    </mat-card-subtitle>
+    <mat-card-content>
+        <div class="form-container">
+            <p class="content-text">Provide your display name to get started!</p>
+            <form [formGroup]="profileForm" id="ngForm" (ngSubmit)="onClickSubmit(profileForm.value)">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="full-width">
+                            <input type="text" formControlName="displayName" matInput placeholder="Enter your display name" required>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="full-width">
+                            <input type="text" formControlName="confirmDisplayName" matInput placeholder="Confirm your display name" required>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="content-text">We will associate the following email to this account:</p>
+                        <p class="content-text">*Email will go here*</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-raised-button [disabled]="profileForm.invalid" class="create-button" form="ngForm">Create New Account</button>
+        <button mat-raised-button color="secondary" (click)="onNoClick()">Cancel</button>
+    </mat-card-actions>
+
+</mat-card>
