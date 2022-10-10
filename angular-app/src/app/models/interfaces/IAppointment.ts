@@ -8,7 +8,7 @@ export interface IAppointment {
     title: string;
     location: string;
     description: string;
-    restrictions?: string;
+    //restrictions?: string;
     totalSlots?: number;
     tags?: string[];
     registeredUsers: string[] | IUser[];

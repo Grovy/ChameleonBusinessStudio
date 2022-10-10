@@ -122,6 +122,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+      {path:'appointment-list',component:AppointmentListComponent},
       {path:'**',component:PageNotFoundComponent}
     ]),
     CalendarModule.forRoot({

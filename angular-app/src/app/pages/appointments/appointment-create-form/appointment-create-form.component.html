@@ -22,16 +22,16 @@
           <p class="exp">
             <mat-form-field appearance="fill">
               <mat-label for="description">Description</mat-label>
-              <textarea matInput id="description" name="description" placeholder="Description" formControlName="description"  required></textarea>
+              <textarea matInput id="description" name="description" placeholder="Description" formControlName="description"  ></textarea>
               <mat-error *ngIf="appointmentForm.get('description')?.invalid">must be less than 250 characters</mat-error>
             </mat-form-field>
           </p>
-          <p class ="exp">
+          <!-- <p class ="exp">
             <mat-form-field appearance="fill">
               <mat-label for="restrictions">Restrictions</mat-label>
               <textarea matInput id="restrictions" name="restrictions" placeholder="Restrictions" formControlName="restrictions"  required></textarea>
             </mat-form-field>
-          </p>
+          </p> -->
           <p class="esc">
             <mat-form-field appearance="fill">
               <mat-label for="start-date">Start Date</mat-label>
@@ -69,10 +69,14 @@
     </form>
     </div>
     <mat-card-actions align="end" >
-      <span>{{this.message}}</span>
+      <div class="spinner"><span>{{this.message}}</span>
+        <mat-spinner *ngIf="isSubmitting" aria-label="submitting" strokeWidth="3" [diameter]="40"></mat-spinner>
+
+      </div>
+
       <button mat-flat-button color="primary">Cancel</button>
       <button mat-flat-button color="primary" (click)="submit()" [disabled]="!appointmentForm.valid || isSubmitting">Create</button>
-      <mat-spinner *ngIf="isSubmitting" aria-label="submitting"></mat-spinner>
+
   </mat-card-actions>
  </div>
 

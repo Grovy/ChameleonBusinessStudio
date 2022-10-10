@@ -1,7 +1,15 @@
+
+<!-- I tried this method but to create Angular mat table dataSource is
+required which is an array like structure and
+not able to pass appoinntments array from this component
+to appointment component -->
+
 <div class="appt-list">
-    <div *ngFor="let appointment of appointments">
-        <div class="appt-box">
-            <appointment [appt]="appointment"></appointment>
+        <h1>Current Schedule</h1>
+        <div class="table-view">
+            <appointment [appts]="appointments"></appointment>
         </div>
-    </div>
+        <div class="calender-view">
+          <app-calender-view></app-calender-view>
+        </div>
 </div>

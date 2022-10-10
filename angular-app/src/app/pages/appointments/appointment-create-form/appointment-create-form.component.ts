@@ -25,17 +25,7 @@ import { IAppointment } from '../../../models/interfaces/IAppointment';
 })
 export class AppointmentCreateFormComponent {
     appointmentForm = this.fb.group({
-        // array: first cell is default value, second is validators
-        // firstName:["",Validators.compose([
-        //   Validators.required,
-        //   Validators.minLength(1),
-        //   Validators.maxLength(25)
-        // ])],
-        // lastName:["",Validators.compose([
-        //   Validators.required,
-        //   Validators.minLength(1),
-        //   Validators.maxLength(25)
-        // ])],
+
         title: ['', Validators.compose([
             Validators.required,
             Validators.minLength(1)
@@ -47,15 +37,14 @@ export class AppointmentCreateFormComponent {
         description: ['', Validators.compose([
           Validators.maxLength(250)
         ])],
-        restrictions: [''],
         totalSlots: [1, Validators.compose([
             Validators.required,
             Validators.min(1)
         ])],
         startDate: [new Date(), this.startMustBeAfterToday()],
-        startTime: ["", this.startMustBeAfterToday()],
+        startTime: ["12:00", this.startMustBeAfterToday()],
         endDate: [new Date(), this.endMustBeAfterStart()],
-        endTime: ["", this.endMustBeAfterStart()]
+        endTime: ["12:00", this.endMustBeAfterStart()]
         // todo tags
     });
 
@@ -104,6 +93,8 @@ export class AppointmentCreateFormComponent {
 
         const date = this.appointmentForm.get(prefix + "Date")?.value;
         const time = this.appointmentForm.get(prefix + "Time")?.value;
+        console.log(`date is ${date} and time is ${time}`);
+
         const iso8601Time = `${date}T${time}`;
         // console.log(iso8601Time);
         return new Date(iso8601Time);
@@ -122,7 +113,6 @@ export class AppointmentCreateFormComponent {
             title: this.appointmentForm.get("title")?.value,
             location: this.appointmentForm.get("location")?.value,
             description: this.appointmentForm.get("description")?.value,
-            restrictions: this.appointmentForm.get("restrictions")?.value,
             totalSlots: this.appointmentForm.get("totalSlots")?.value,
             tags: []
         };
@@ -143,7 +133,7 @@ export class AppointmentCreateFormComponent {
     private handleError(error: HttpErrorResponse): Observable<any>{
         console.error(error);
         this.isSubmitting = false;
-        this.message = "Something went wrong while creating your appointment";
+        this.message = "Something went wrong!!";
         return throwError(() => error);
     }
 }
