@@ -1,4 +1,7 @@
-<!-- Author:Ariel Camargo-->
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
+
 <mat-toolbar color="accent">
   <mat-toolbar-row>
     <p class="business-title">Chameleon <Br>Business Studio</p>
@@ -9,65 +12,134 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<!--To add a role-->
-<div>
-  Add a New Role:
-  <input
-    type="text"
-    (input)="roleGrab($event)">
-  <button (click)="addRole()">Add Role</button>
+<div class="home">
+  <mat-tab-group>
+    <!--The first tab which allows you to view employees-->
+    <mat-tab label="View Employees">
+      <div class="view-employees-container">
+      <!--View the current employee table-->
+      <mat-card class="employee-table-card">
+        <mat-card-title><strong>My Employees</strong></mat-card-title>
+        <mat-card-content class="table-container">
+          <table mat-table [dataSource]="employeeData" class="mat-elevation-z8">
+            <!--Email Column-->                            
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+            </ng-container>
+            <!--Role Column-->
+            <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef> Role </th>
+                <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row class="element-row" 
+              *matRowDef="let row; 
+              columns: displayedColumns;"
+              (click)="setSelectedProfile(row.email)"
+              >
+            </tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="employee-profile-card">
+        <mat-card-title> 
+          <strong>{{ selectedProfile?.displayName }}</strong>
+        </mat-card-title>
+        <mat-card-content>
+          <mat-label>Display Name: {{ selectedProfile?.displayName }} </mat-label> <br> <br>
+          <mat-label>Email: {{ selectedProfile?.email }} </mat-label> <br> <br>
+          <mat-label>Role: {{ selectedProfile?.role }} </mat-label> <br> <br>
+          <mat-label>Current Booked Appointments: Coming soon! </mat-label> <br> <br>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button>Edit Permissions</button>
+          <button mat-raised-button>See Their Booked Appointments</button>
+        </mat-card-actions>
+      </mat-card>
+
+      </div>
+    </mat-tab>
+
+
+    <!--The second tab which allows you to add employees-->
+    <mat-tab label="Add Employee">
+      <div class="add-employees-container">
+        <!--View the current employee table-->
+        <mat-card class="employee-table-card">
+          <mat-card-title>My Employees</mat-card-title>
+          <mat-card-content class="table-container">
+            <table mat-table [dataSource]="employeeData" class="mat-elevation-z8">
+              <!--Email Column-->                            
+              <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef> Email </th>
+                  <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+              <!--Role Column-->
+              <ng-container matColumnDef="role">
+                  <th mat-header-cell *matHeaderCellDef> Role </th>
+                  <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+
+        <!--Form to add a new user (employee)-->
+        <mat-card class="add-user-card">
+          <mat-card-title class="add-user-card-title">Register a New Employee</mat-card-title>
+          <mat-card-subtitle class="add-user-card-subtitle">
+            Enter the following information to create a new employee. <br><br>
+            Guidelines: <br> New employee data should <strong>not</strong> include data of an existing employee.<br>
+          </mat-card-subtitle>
+          <mat-card-content>
+            <form [formGroup]="profileForm" class="form-container" (ngSubmit)="onClickSubmit(profileForm.value)">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="full-width">
+                    <input type="email" formControlName="email" matInput placeholder="Enter New Employee's Email" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="full-width">
+                    <input type="email" formControlName="confirmEmail" matInput placeholder="Confirm New Employee's Email" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <mat-form-field class="full-width">
+                  <mat-label>Select Employee's Role</mat-label>
+                  <mat-select formControlName="role" matInput required>
+                    <mat-option value="Organizer">Organizer</mat-option>
+                    <mat-option value="Talent">Talent</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <input type="submit" value="Save">
+            </form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+            <button mat-raised-button color="secondary">Discard</button>
+          </mat-card-actions>
+        </mat-card>
+
+      </div>
+    </mat-tab>
+    <mat-tab label="View Appointments">View Appointments Coming Soon</mat-tab>
+    <mat-tab label="Edit Employee Permissions">Edit Employee Permissions Coming Soon</mat-tab>
+  </mat-tab-group>
+
+
+  
+
 </div>
 
-<!--Creation of a new User-->
-Insert Name:
-<input
-  type="text"
-  id="nameField"
-  (input)="textGrab($event)">
-<!--Display all roles-->
-<select [(ngModel)]="selectedRole">
-  <option *ngFor="let test of namedRoles; let i = index"
-          [value]="namedRoles[i]">
-    {{namedRoles[i]}}</option>
-</select>
 
 
-<button (click)="onCreateUser()">
-  Add {{ selectedRole }} </button>
-<!--Fancy clear of text that is not needed-->
-<!--<button (click)="clearField()"-->
-<!--        [disabled]="!selectRole">Clear</button>-->
-<button (click)="removeRole()">Remove Role</button>
-
-<div>
-  Insert Email:
-  <input
-    type="email"
-    id="emailField"
-    (input)="emailGrab($event)">
-</div>
-
-
-<admin-gen-user *ngFor="let server of names; let i = index">
-  <p>{{message[i]}}</p>
-  <button (click)="deleteTest(i)">Delete {{names[i]}}</button>
-</admin-gen-user>
-
-
-
-<div>
-  <select [(ngModel)]="numberSelected">
-    <option *ngFor="let number of numbers; let i = index"
-            [value]="i">
-      Worker {{numbers[i]}}
-    </option>
-  </select>
-  <button (click)="onShow()">Show</button>
-</div>
-
-
-<p>{{printString}}</p>
-
-<div>
-  <!--  <button>Submit</button>-->
-</div>

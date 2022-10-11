@@ -55,7 +55,6 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 
@@ -82,7 +81,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     SiteHeaderComponent,
     SplashComponent,
     CalenderViewComponent,
-    PageNotFoundComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -122,8 +120,11 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+<<<<<<< HEAD
       {path:'appointment-list',component:AppointmentListComponent},
       {path:'**',component:PageNotFoundComponent}
+=======
+>>>>>>> parent of 637e1a1 (COM207- Appointment Creation From)
     ]),
     CalendarModule.forRoot({
         provide:DateAdapter,

@@ -31,8 +31,29 @@ export class AppointmentComponent implements AfterViewInit{
     this.dataSource.paginator = this.paginator;
   }
 
-    public formatTime(time: string): string {
-        let dayStr = new Date(time).toLocaleString();
-        return dayStr;
+
+    public padTo2Digits(num: number) {
+      return num.toString().padStart(2, '0');
+    }
+
+    public formatDate(date: Date) {
+      console.log(date);
+      return (
+        [
+          date.getFullYear(),
+          this.padTo2Digits(date.getMonth() + 1),
+          this.padTo2Digits(date.getDate()),
+        ].join('-')
+      );
+    }
+
+    public formatTime(date: Date){
+      return (
+        [
+          this.padTo2Digits(date.getHours()),
+          this.padTo2Digits(date.getMinutes()),
+          this.padTo2Digits(date.getSeconds()),
+        ].join(':')
+      );
     }
 }
