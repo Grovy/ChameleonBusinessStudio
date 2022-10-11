@@ -1,19 +1,27 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import static com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentSpecifications.*;
-import java.time.LocalDateTime;
-import java.util.*;
+import static com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentSpecifications.isAvailable;
+import static com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentSpecifications.occursWithin;
 
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentValidator;
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
+import com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentValidator;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+
+import reactor.core.publisher.Mono;
 
 /**
  * https://stackoverflow.com/q/56241495
@@ -28,11 +36,13 @@ import org.springframework.stereotype.Service;
 public class AppointmentService implements ApplicationListener<ApplicationReadyEvent>{
     
     private final AppointmentRepository repo;
+    private final AppointmentRepositoryv2 repoV2;
     private final AppointmentValidator validator;
     
     @Autowired
-    public AppointmentService(AppointmentRepository repo, AppointmentValidator validator){
+    public AppointmentService(AppointmentRepository repo, AppointmentRepositoryv2 repoV2, AppointmentValidator validator){
         this.repo = repo;
+        this.repoV2 = repoV2;
         this.validator = validator;
     }
     
@@ -95,20 +105,15 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
         return repo.findById(appointmentId);
     }
 
-    // todo
-    public Page<AppointmentEntity> getAppointmentsForUser(String email, Pageable pageable){
-        var appts = new ArrayList<AppointmentEntity>();
-        appts.add(new AppointmentEntity());
-        appts.add(new AppointmentEntity());
-        appts.add(new AppointmentEntity());
-        for(int i = 0; i < appts.size(); i++){
-            appts.get(i).setTitle("Fake appointment #" + i);
-            appts.get(i).getRegisteredUsers().add(email);
-        }
-
-        var page = new PageImpl<AppointmentEntity>(appts, pageable, appts.size());
-
-        return page;
+    /**
+     * retrieves the appointments for which the given email is a participant
+     * 
+     * @param email a user's email
+     * @param pageable the pagination to apply
+     * @return a page of the user's appointments
+     */
+    public Mono<Page<Appointment>> getAppointmentsForUser(String email, Pageable pageable){
+        return repoV2.getAppointmentsForUser(email, pageable);
     }
     
     public List<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime){

@@ -1,43 +1,55 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { IUser } from 'src/app/models/interfaces/IUser';
-import { AdminPanelTestUsers } from 'src/app/models/mock/mock-admin-panel-users';
+//Author: Ariel Camargo
+import { Component } from "@angular/core";
+import { IUser } from "src/app/models/interfaces/IUser";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { MockEmployeeList } from "src/app/models/mock/mock-employees";
 
-@Component({
-  selector: 'app-admin-panel-test',
-  templateUrl: './admin-panel-test.component.html',
+@Component ({
+  selector:'app-admin-panel',
+  templateUrl:'./admin-panel-test.component.html',
   styleUrls: ['./admin-panel-test.component.css']
 })
-export class AdminPanelTestComponent implements AfterViewInit {
-  displayedColumns: string[] = ['name', 'email', 'phone', 'role', 'actions'];
-  dataSource: MatTableDataSource<IUser>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+export class AdminPanelTestComponent {
 
-  constructor() {
-    // Create 100 users
-    // const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
-    const myUsers = AdminPanelTestUsers;
-    console.log(myUsers);
+  employeeData = MockEmployeeList;
+  displayedColumns: string[] = ['email', 'role'];
+  selectedProfile: IUser | undefined;
+  profileForm: FormGroup;
 
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(myUsers);
+  constructor(private fb: FormBuilder) {
+    this.selectedProfile = this.employeeData ? this.employeeData[0] : undefined;
+    this.profileForm = this.fb.group({
+      displayName: [''],
+      email: [''],
+      confirmEmail: [''],
+      role: [''],
+    })
+    console.log(this.employeeData);
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  setSelectedProfile(searchEmail: string) {
+    this.selectedProfile = MockEmployeeList.find( ({email}) => email === searchEmail);
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  getSelectedProfile() {
+    return this.selectedProfile;
+  }
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+  onClickSubmit(data) {
+    const newProfile: IUser = {
+      displayName: data?.displayName ? data.displayName : data.email,
+      email: data.email,
+      role: data.role,
     }
+
+    this.employeeData = [newProfile, ...this.employeeData ];
   }
+
+  onSave() {
+    console.log("New employee: " + this.profileForm);
+  }
+
+
 }
+  

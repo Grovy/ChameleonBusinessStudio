@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -27,4 +28,23 @@ public class AppointmentServicev2 {
         return Mono.just(appointment).flatMap(u -> appointmentRepository.createAppointment(appointment));
     }
 
+    /**
+     * This updates an exisitng appointment in Vendia share.
+     * @param appointment
+     * @return
+     */
+    public Mono<Appointment> updateAppointment(Appointment appointment)
+    {
+        return Mono.just(appointment).flatMap(u -> appointmentRepository.updateAppointment(appointment));
+    }
+
+    /**
+     * This deletes an exisitng appointment in Vendia share.
+     * @param appointment
+     * @return
+     */
+    public Mono<DeletionResponse> deleteAppointment(Appointment appointment)
+    {
+        return Mono.just(appointment).flatMap(u -> appointmentRepository.deleteAppointment(appointment.get_id()));
+    }
 }
