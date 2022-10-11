@@ -1,0 +1,11 @@
+
+.center{
+  display: flex;
+  height:500px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.center h1{
+  align-self: center;
+}

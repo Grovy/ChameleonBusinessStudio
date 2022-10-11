@@ -26,6 +26,7 @@ import { FormsModule} from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageConfigurationComponent } from './pages/admin-configuration/landing-page-configuration/landing-page-configuration.component';
 import { NavComponent } from './pages/nav/nav.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
@@ -81,6 +82,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
     NavComponent,
+    PageNotFoundComponent,
     SetupWizardComponent,
     SignInComponent,
     SignInFormComponent,
@@ -122,12 +124,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'admin-panel', component: AdminPanelComponent },
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
+      {path:'appointment-list',component:AppointmentListComponent},
+      {path:'appointment-creation',component:AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'calender-view',component: CalenderViewComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+
+      {path:'**',component:PageNotFoundComponent}
     ]),
     CalendarModule.forRoot({
         provide:DateAdapter,
@@ -136,7 +142,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
 
   providers: [
-   
+
     UserService
   ],
   bootstrap: [AppComponent]

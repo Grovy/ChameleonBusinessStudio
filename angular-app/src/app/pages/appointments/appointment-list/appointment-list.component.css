@@ -1,16 +1,22 @@
-/* 
+/*
     Created on : Apr 27, 2022, 12:26:03 PM
     Author     : Matt Crow <mattcrow19@gmail.com>
+
+    updated by: Rojan Maharjan 10/06/2022
+
 */
 
 .appt-list {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     gap: 10px;
 }
 
-.appt-box {
-    flex-grow: 1; 
-    border: 5px solid black;
+.table-view{
+  width: 800px;
+}
+
+.calender-view{
+  width:800px;
 }

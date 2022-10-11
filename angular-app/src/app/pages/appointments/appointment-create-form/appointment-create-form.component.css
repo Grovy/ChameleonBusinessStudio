@@ -1,6 +1,16 @@
-#card {
-    background-color: cornflowerblue;
+.header{
+  background-color: black;
+  color: whitesmoke;
+  width:100%;
+  justify-content:center ;
 }
+.container{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+
 
 #form {
     display: flex;
@@ -11,4 +21,24 @@
 .field-wrapper {
     background-color: white;
     flex-grow: 1;
+}
+
+mat-form-field.mat-form-field {
+  font-size: 16px;
+
+}
+
+span{
+  margin-left: 10px;
+}
+.exp .mat-form-field {
+  width: 420px;
+}
+
+.esc .mat-form-field{
+  width: 130px;
+}
+
+button{
+  margin:5px;
 }
