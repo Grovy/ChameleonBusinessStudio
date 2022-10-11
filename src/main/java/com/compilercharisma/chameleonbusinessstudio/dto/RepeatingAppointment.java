@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.dto;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -37,4 +38,10 @@ public class RepeatingAppointment {
      * the appointment that repeats according to this class
      */
     private Appointment appointment;
+
+    /**
+     * The last time this has been used to generate appointments.
+     * This should be set to null whenever any other data changes.
+     */
+    private LocalDateTime lastGenerated;
 }

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import lombok.var;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,6 +30,7 @@ import reactor.core.publisher.Mono;
  * Temporary implementation of ScheduleRepository that stores schedules in a
  * JSON file
  */
+@Slf4j
 @Repository // comment this out, then add to VendiaScheduleRepository once we use that
 public class JsonScheduleRepository implements ScheduleRepository, ApplicationListener<ApplicationReadyEvent> {
     public static final String DEFAULT_STORE_NAME = "schedules.json";
@@ -53,7 +54,9 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
             .collectList()
             .handle((schedules, dummy)->{
                 if(schedules.isEmpty()){
+                    log.info("no schedules found, storing test schedule data...");
                     storeTestData();
+                    log.info("... done storing test data schedule");
                 }
             })
             .subscribe(); // does not run if no subscribers
@@ -179,6 +182,9 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
         var file = f.getFile(storeName);
         try (var stream = Files.lines(file.toPath())) {
             var text = stream.collect(Collectors.joining("\n"));
+            if(!(text.startsWith("[") && text.endsWith("]"))){ // not JSON array
+                text = '[' + text + ']';
+            }
             //                                           https://stackoverflow.com/a/14891237
             var obj = makeMapper().readValue(text, new TypeReference<List<Schedule>>(){});
             schedules = Flux.fromIterable(obj);
