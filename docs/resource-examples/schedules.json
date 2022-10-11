@@ -1,0 +1,92 @@
+[
+    {
+        "_id": "48456b33-4f8a-4782-94fa-705533db1883",
+        "name": "Classes",
+        "appointments": [
+            {
+                "_id": "3b5394da-78e2-401c-b9c6-1ff6f8c47c20",
+                "repeatsOn": [
+                    "TUESDAY",
+                    "THURSDAY"
+                ],
+                "appointment": {
+                    "_id": "dc2a3a9f-bcff-4f70-bdfc-94907803b2a9",
+                    "title": "CSC152",
+                    "startTime": [
+                        2022,
+                        10,
+                        11,
+                        15,
+                        0
+                    ],
+                    "endTime": [
+                        2022,
+                        10,
+                        11,
+                        16,
+                        15
+                    ]
+                },
+                "enabled": true
+            },
+            {
+                "_id": "b7c648a8-f5d2-45a2-a832-bc20776d50b8",
+                "repeatsOn": [
+                    "WEDNESDAY"
+                ],
+                "appointment": {
+                    "_id": "53c8d04b-9cb8-4c4f-ba30-94a5545961fc",
+                    "title": "CSC191",
+                    "startTime": [
+                        2022,
+                        10,
+                        12,
+                        19,
+                        0
+                    ],
+                    "endTime": [
+                        2022,
+                        10,
+                        12,
+                        19,
+                        50
+                    ]
+                },
+                "enabled": true
+            }
+        ],
+        "enabled": true
+    },
+    {
+        "_id": "96822c52-6c64-4d79-b891-f54be9512496",
+        "name": "Social Life",
+        "appointments": [
+            {
+                "_id": "2cedbb73-0d6f-49e2-91d4-8ac16832fcd5",
+                "repeatsOn": [
+                    "SUNDAY"
+                ],
+                "appointment": {
+                    "_id": "6a693d94-ef8a-4528-8ade-f88d5dbe909b",
+                    "title": "D&D",
+                    "startTime": [
+                        2022,
+                        10,
+                        9,
+                        12,
+                        30
+                    ],
+                    "endTime": [
+                        2022,
+                        10,
+                        9,
+                        13,
+                        30
+                    ]
+                },
+                "enabled": true
+            }
+        ],
+        "enabled": false
+    }
+]
