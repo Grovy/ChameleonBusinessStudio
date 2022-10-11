@@ -7,6 +7,7 @@ import { BookingPageComponent} from "./pages/appointments/booking-page/booking-p
 import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
 import { LandingPageConfigurationComponent } from "./pages/admin-configuration/landing-page-configuration/landing-page-configuration.component";
 import { NgModule } from '@angular/core';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RouterModule, Routes } from '@angular/router';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
