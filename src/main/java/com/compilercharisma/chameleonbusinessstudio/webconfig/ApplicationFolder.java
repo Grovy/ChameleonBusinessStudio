@@ -8,7 +8,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +24,7 @@ public class ApplicationFolder {
     private static final String LANDING_PAGES_DIR = "landingPages";
     private static final String LOGO_DIR = "logos";
     private static final String SPLASH_DIR = "splashes";
+    public static final String SCHED_DIR = "schedules"; // rm this once we store schedules in Vendia
 
     private final IWebsiteConfigurationRepository websiteConfigRepo;
 
@@ -40,7 +40,7 @@ public class ApplicationFolder {
     }
 
     private void createAbsentFolders() throws IOException{
-        String[] dirs = {SPLASH_DIR, LANDING_PAGES_DIR, LOGO_DIR};
+        String[] dirs = {SPLASH_DIR, LANDING_PAGES_DIR, LOGO_DIR, SCHED_DIR};
         Path p;
         for(String dir : dirs){
             p = getSubdir(dir);
@@ -48,6 +48,16 @@ public class ApplicationFolder {
                 Files.createDirectories(p);
             }
         }
+    }
+
+    /**
+     * Gets access to the folder within this folder with the given name
+     * 
+     * @param name the name of the folder
+     * @return the subfolder with the given name
+     */
+    public Folder getFolder(String name){
+        return new Folder(getSubdir(name));
     }
 
     private Path getSubdir(String dirName){
@@ -77,16 +87,14 @@ public class ApplicationFolder {
      * @return the file's text contents
      */
     private String readFile(File f){
-        Stream<String> content;
-        try {
-            // Had to replace the readString() method with lines() method to be compatible with Java 8 - Daniel
-            content = Files.lines(f.toPath());
+        var content = "";
+        try (var stream = Files.lines(f.toPath())){
+            content = stream.collect(Collectors.joining("\n"));
         } catch (IOException ex) {
             Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
-        String s = content.collect(Collectors.joining("\n")); // stream to string
-        return s;
+        return content;
     }
 
     public void saveLogo(MultipartFile file){

@@ -12,6 +12,7 @@
         /mine                         | GET    | appt-page    | supports pagination. See resource-examples folder. Sort currently broken 
     /config                           | POST   |              |
         /landing-page                 | POST   |              |
+    /schedules                        |        |              |
     /users/admin                      | POST   |              | likely will be removed
 /auth/userinfo.email                  |        |              |
     /principal                        | GET    | JSON         | likely RM
