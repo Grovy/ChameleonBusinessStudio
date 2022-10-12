@@ -76,16 +76,6 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
             appt.setTitle(String.format("Appt. #%d", i));
             appt.setLocation(String.format("%d J Street", i * 20));
             appt.setTotalSlots(i % 10 + 1);
-            if(i % 5 == 0){
-                for(int j = 0; j <= i / 5; ++j){
-                    addTag(appt, "Tag " + j);
-                }
-            }
-            if(i % 3 == 0){
-                for(int j = 0; j <= i / 3 && appt.getRegisteredUsers().size() < appt.getTotalSlots(); ++j){
-                    registerUser(appt, "email " + j);
-                }
-            }
             createAppointment(appt);
         }
     }
