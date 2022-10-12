@@ -15,8 +15,18 @@ component.
 export class AppointmentListComponent {
     @Input() appointments: IAppointment[];
 
+    temp:IAppointment ={
+      id: 123,
+      date: "masdf",
+      startTime: '',
+      endTime: '',
+      title: 'Hair cut',
+      location: 'jasdfjsd',
+      description: 'sdfasdf',
+      registeredUsers: []
+    };
     constructor(){
-        this.appointments = [];
+        this.appointments = [this.temp];
     }
 
     ngOnChanges(changes: SimpleChanges){

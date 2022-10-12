@@ -26,11 +26,13 @@ import { FormsModule} from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageConfigurationComponent } from './pages/admin-configuration/landing-page-configuration/landing-page-configuration.component';
 import { NavComponent } from './pages/nav/nav.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
 import { SignInComponent } from './pages/auth/signin/signin.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
+import { SignupModalComponent } from './theme/modals/signup-modal/signup-modal.component';
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
@@ -42,15 +44,15 @@ import { UserService } from './services/UserService.service';
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from "@angular/material/icon";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from "@angular/material/list";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelect, MatSelectModule } from "@angular/material/select";
+import { MatSelectModule } from "@angular/material/select";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -80,9 +82,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
     NavComponent,
+    PageNotFoundComponent,
     SetupWizardComponent,
     SignInComponent,
     SignInFormComponent,
+    SignupModalComponent,
     SiteFooterComponent,
     SiteHeaderComponent,
     SplashComponent,
@@ -95,6 +99,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     HttpClientModule,
     MatCardModule,
+    MatDialogModule,
     MatButtonModule,
     MatExpansionModule,
     MatFormFieldModule,
@@ -119,12 +124,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'admin-panel', component: AdminPanelComponent },
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
+      {path:'appointment-list',component:AppointmentListComponent},
+      {path:'appointment-creation',component:AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'calender-view',component: CalenderViewComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
+
+      {path:'**',component:PageNotFoundComponent}
     ]),
     CalendarModule.forRoot({
         provide:DateAdapter,
@@ -132,7 +141,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     }),
   ],
 
-  providers: [UserService],
+  providers: [
+
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 
