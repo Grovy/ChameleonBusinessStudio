@@ -2,6 +2,8 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
 import com.compilercharisma.chameleonbusinessstudio.repository.ScheduleRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.ScheduleValidator;
@@ -9,6 +11,7 @@ import com.compilercharisma.chameleonbusinessstudio.validators.ScheduleValidator
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Service
 public class ScheduleService {
     private final ScheduleRepository repo;
     private final ScheduleValidator validator;
@@ -46,5 +49,13 @@ public class ScheduleService {
      */
     public Flux<Schedule> getAllSchedules(){
         return repo.getAllSchedules();
+    }
+
+    /**
+     * @param id the ID of the Schedule to get
+     * @return the Schedule with the given ID, if any such Schedule exists.
+     */
+    public Mono<Schedule> getScheduleById(String id){
+        return repo.getScheduleById(id);
     }
 }

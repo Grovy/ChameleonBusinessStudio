@@ -3,6 +3,8 @@ package com.compilercharisma.chameleonbusinessstudio.validators;
 import java.time.DayOfWeek;
 import java.util.HashSet;
 
+import org.springframework.stereotype.Service;
+
 import com.compilercharisma.chameleonbusinessstudio.dto.RepeatingAppointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidScheduleException;
@@ -10,6 +12,7 @@ import com.compilercharisma.chameleonbusinessstudio.exception.InvalidScheduleExc
 /**
  * ensures Schedules and RepeatingAppointments adhere to business rules
  */
+@Service
 public class ScheduleValidator {
     private final AppointmentValidator appointmentValidator;
 
