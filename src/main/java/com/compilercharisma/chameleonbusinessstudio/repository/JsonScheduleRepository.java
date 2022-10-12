@@ -167,7 +167,7 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
 
     @Override
     public Flux<Schedule> getAllSchedulesWhereEnabledEquals(boolean b) {
-        return getAllSchedules().filter(sched -> sched.isEnabled() == b);
+        return getAllSchedules().filter(sched -> sched.getIsEnabled() == b);
     }
 
     @Override

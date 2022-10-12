@@ -26,7 +26,7 @@ public class RepeatingAppointment {
      * if set to false, the appointment contained herein will not be copied when
      * creating new appointments
      */
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
     /**
      * the days the appointment repeats on

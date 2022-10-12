@@ -33,7 +33,7 @@ public class Schedule {
      * appointments from this schedule
      */
     @Builder.Default
-    private boolean isEnabled = true;
+    private Boolean isEnabled = true;
 
     /**
      * the appointments contained in this schedule

@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.dto.validators;
+package com.compilercharisma.chameleonbusinessstudio.validators;
 
 import java.time.DayOfWeek;
 import java.util.HashSet;
