@@ -124,7 +124,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'admin-panel', component: AdminPanelComponent },
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
-      {path:'appointment-list',component:AppointmentListComponent},
+      {path:'appointment',component:AppointmentComponent},
       {path:'appointment-creation',component:AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'calender-view',component: CalenderViewComponent },

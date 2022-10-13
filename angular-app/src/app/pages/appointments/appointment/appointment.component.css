@@ -1,20 +1,22 @@
 /*
-    Created on : Apr 28, 2022, 12:10:25 PM
+    Created on : Apr 27, 2022, 12:26:03 PM
     Author     : Matt Crow <mattcrow19@gmail.com>
+
+    updated by: Rojan Maharjan 10/06/2022
+
 */
 
-.appointment {
+.appt-list {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    width: 100%;
+    align-items: center;
+    gap: 10px;
 }
 
-.appointment table{
-width: 100%;
+.table-view{
+  width: 800px;
 }
 
-mat-paginator{
-  width: inherit;
+.calender-view{
+  width:800px;
 }

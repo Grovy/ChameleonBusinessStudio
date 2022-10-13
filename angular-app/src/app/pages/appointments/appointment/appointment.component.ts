@@ -1,10 +1,10 @@
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+
 /*
-we'll need to change this component a bit once we allow listing unavailable
-appointments.
+This component is currently responsible for rendering a list of appointments. As
+our design evolves, we may need to push more responsibilities into this
+component.
 */
 
 @Component({
@@ -12,48 +12,25 @@ appointments.
     templateUrl: './appointment.component.html',
     styleUrls: ['./appointment.component.css']
 })
+export class AppointmentComponent {
+    @Input() appointments: IAppointment[];
 
-export class AppointmentComponent implements AfterViewInit{
-
-    // needs to be nullable, as it cannot initialize in the constructor
-    @Input() appts?: IAppointment[];
-    displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
-
-    dataSource: MatTableDataSource<IAppointment>;
-
-
-    @ViewChild(MatPaginator) paginator:MatPaginator;
+    temp:IAppointment ={
+      id: 123,
+      date: "masdf",
+      startTime: '',
+      endTime: '',
+      title: 'Hair cut',
+      location: 'jasdfjsd',
+      description: 'sdfasdf',
+      registeredUsers: []
+    };
     constructor(){
-      this.dataSource = new MatTableDataSource(this.appts);
+        this.appointments = [this.temp];
     }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
-
-    public padTo2Digits(num: number) {
-      return num.toString().padStart(2, '0');
-    }
-
-    public formatDate(date: Date) {
-      console.log(date);
-      return (
-        [
-          date.getFullYear(),
-          this.padTo2Digits(date.getMonth() + 1),
-          this.padTo2Digits(date.getDate()),
-        ].join('-')
-      );
-    }
-
-    public formatTime(date: Date){
-      return (
-        [
-          this.padTo2Digits(date.getHours()),
-          this.padTo2Digits(date.getMinutes()),
-          this.padTo2Digits(date.getSeconds()),
-        ].join(':')
-      );
+    ngOnChanges(changes: SimpleChanges){
+        console.log(changes);
+        this.appointments = changes['appointments'].currentValue;
     }
 }

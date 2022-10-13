@@ -1,10 +1,10 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 /*
-This component is currently responsible for rendering a list of appointments. As
-our design evolves, we may need to push more responsibilities into this
-component.
+we'll need to change this component a bit once we allow listing unavailable
+appointments.
 */
 
 @Component({
@@ -12,25 +12,48 @@ component.
     templateUrl: './appointment-list.component.html',
     styleUrls: ['./appointment-list.component.css']
 })
-export class AppointmentListComponent {
-    @Input() appointments: IAppointment[];
 
-    temp:IAppointment ={
-      id: 123,
-      date: "masdf",
-      startTime: '',
-      endTime: '',
-      title: 'Hair cut',
-      location: 'jasdfjsd',
-      description: 'sdfasdf',
-      registeredUsers: []
-    };
+export class AppointmentListComponent implements AfterViewInit{
+
+    // needs to be nullable, as it cannot initialize in the constructor
+    @Input() appointments?: IAppointment[];
+    displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
+
+    dataSource: MatTableDataSource<IAppointment>;
+
+
+    @ViewChild(MatPaginator) paginator:MatPaginator;
     constructor(){
-        this.appointments = [this.temp];
+      this.dataSource = new MatTableDataSource(this.appointments);
     }
 
-    ngOnChanges(changes: SimpleChanges){
-        console.log(changes);
-        this.appointments = changes['appointments'].currentValue;
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
+
+
+    public padTo2Digits(num: number) {
+      return num.toString().padStart(2, '0');
+    }
+
+    public formatDate(date: Date) {
+      console.log(date);
+      return (
+        [
+          date.getFullYear(),
+          this.padTo2Digits(date.getMonth() + 1),
+          this.padTo2Digits(date.getDate()),
+        ].join('-')
+      );
+    }
+
+    public formatTime(date: Date){
+      return (
+        [
+          this.padTo2Digits(date.getHours()),
+          this.padTo2Digits(date.getMinutes()),
+          this.padTo2Digits(date.getSeconds()),
+        ].join(':')
+      );
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit,
   ChangeDetectorRef,Injectable,ViewEncapsulation,
-  ChangeDetectionStrategy,ViewChild,TemplateRef } from '@angular/core';
+  ChangeDetectionStrategy,ViewChild,TemplateRef, Input } from '@angular/core';
 
 import {CalendarEvent,CalendarEventTitleFormatter} from 'angular-calendar'
 import { WeekViewHourSegment } from 'calendar-utils';
@@ -9,6 +9,7 @@ import { finalize,takeUntil } from 'rxjs/operators';
 
 
 import { startOfDay, endOfDay,endOfWeek,subDays,setHours,setMinutes,addDays,endOfMonth,isSameDay,isSameMonth,addHours, addMinutes } from 'date-fns';
+import { IAppointment } from 'src/app/models/interfaces/IAppointment';
 
 
 // function floorToNearest(amount: number, precision: number) {
@@ -52,6 +53,7 @@ export class CustomEventTitleFormatter extends CalendarEventTitleFormatter {
   encapsulation: ViewEncapsulation.None,
 })
 export class CalenderViewComponent implements OnInit {
+  @Input() appts?: IAppointment[];
 
   viewDate = new Date();
   events: CalendarEvent[] =[{
@@ -63,7 +65,9 @@ export class CalenderViewComponent implements OnInit {
   dragToCreateActive = false;
   weekStartsOn: 0 =0;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) {
+
+   }
 
   startDragToCreate(
     segment: WeekViewHourSegment,

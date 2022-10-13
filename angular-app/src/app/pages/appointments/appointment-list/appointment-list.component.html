@@ -1,15 +1,56 @@
+<h1 *ngIf="!appointments">appointment is null</h1>
+<div *ngIf="appointments" class="appointment">
 
-<!-- I tried this method but to create Angular mat table dataSource is
-required which is an array like structure and
-not able to pass appoinntments array from this component
-to appointment component -->
+  <table mat-table [dataSource]="appointments" class="mat-elevation-z8">
+   <!-- position column -->
+   <ng-container matColumnDef="position">
 
-<div class="appt-list">
-        <h1>Current Schedule</h1>
-        <div class="table-view">
-            <appointment [appts]="appointments"></appointment>
-        </div>
-        <div class="calender-view">
-          <app-calender-view></app-calender-view>
-        </div>
+    <th mat-header-cell *matHeaderCellDef>No.</th>
+    <td mat-cell *matCellDef="let appt">{{appt.id}}</td>
+   </ng-container>
+   <!-- position date -->
+   <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Date</th>
+    <td mat-cell *matCellDef="let appt">{{appt.date}}</td>
+  </ng-container>
+
+  <!-- position title-->
+  <ng-container matColumnDef="title">
+
+   <th mat-header-cell *matHeaderCellDef>Title</th>
+   <td mat-cell *matCellDef="let appt">{{appt.title}}</td>
+  </ng-container>
+
+  <!-- position start Time -->
+  <ng-container matColumnDef="startTime">
+
+    <th mat-header-cell *matHeaderCellDef>Start Time</th>
+    <td mat-cell *matCellDef="let appt">{{appt.startTime}}</td>
+   </ng-container>
+
+
+    <!-- position End Time -->
+  <ng-container matColumnDef="endTime">
+
+    <th mat-header-cell *matHeaderCellDef>End Time</th>
+    <td mat-cell *matCellDef="let appt">{{appt.endTime}}</td>
+   </ng-container>
+
+   <!-- position Slots remaining -->
+   <ng-container matColumnDef="totalSlots">
+
+    <th mat-header-cell *matHeaderCellDef>Total Slots</th>
+    <td mat-cell *matCellDef="let appt">{{appt.totalSlots}}</td>
+   </ng-container>
+
+   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+</table>
+
+<mat-paginator class ="mat-elevation-z8" [pageSizeOptions]="[5, 10, 20]"
+showFirstLastButtons
+aria-label="Select page of appointments">
+</mat-paginator>
 </div>
