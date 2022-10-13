@@ -14,6 +14,7 @@ import { AppointmentCreateFormComponent } from './pages/appointments/appointment
 import { AppointmentDetailsComponent } from './pages/appointments/appointment-details/appointment-details.component';
 import { AppointmentListComponent } from './pages/appointments/appointment-list/appointment-list.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AuthenticationService } from './services/AuthenticationService.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
@@ -124,8 +125,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'admin-panel', component: AdminPanelComponent },
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
-      {path:'appointment-list',component:AppointmentListComponent},
-      {path:'appointment-creation',component:AppointmentCreateFormComponent},
+      { path: 'appointment-list',component:AppointmentListComponent},
+      { path: 'appointment-creation',component:AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'calender-view',component: CalenderViewComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
@@ -133,7 +134,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
 
-      {path:'**',component:PageNotFoundComponent}
+      { path: '**', component: PageNotFoundComponent }
     ]),
     CalendarModule.forRoot({
         provide:DateAdapter,
@@ -142,7 +143,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
 
   providers: [
-
+    AuthenticationService,
     UserService
   ],
   bootstrap: [AppComponent]

@@ -81,20 +81,4 @@ public class UserController {
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
-    /**
-     * Returns true if the currently authenticated user has a user in Vendia,
-     * else returns false
-     *
-     * @param authentication Authentication object (has the OAuth2.0 token)
-     * @return {@link Boolean}
-     */
-    @GetMapping("/isUserRegistered")
-    public Mono<ResponseEntity<Boolean>> isUserRegistered(Authentication authentication){
-        var email = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
-        log.info("Checking to see if user with email [{}] is registered in Vendia", email);
-        return Mono.just(Objects.requireNonNull(email))
-                .flatMap(s -> userService.isRegistered((String) s))
-                .map(bool -> new ResponseEntity<>(bool, HttpStatus.OK));
-    }
-
 }
