@@ -2,6 +2,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/fo
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UserService } from "src/app/services/UserService.service";
 
 @Component({
   selector: 'app-signup-modal',
@@ -13,7 +14,7 @@ export class SignupModalComponent {
   profileForm: FormGroup;
   userEmailValue: string;
 
-  constructor (@Inject(MAT_DIALOG_DATA) public data: { userEmailValue: string}, public dialogRef: MatDialogRef<SignupModalComponent>) {
+  constructor (@Inject(MAT_DIALOG_DATA) public data: { userEmailValue: string}, private userService: UserService, public dialogRef: MatDialogRef<SignupModalComponent>) {
     this.profileForm = new FormGroup({
       displayName: new FormControl ('', [ Validators.required ]),
       confirmDisplayName: new FormControl('')
@@ -36,7 +37,13 @@ export class SignupModalComponent {
       email: this.userEmailValue,
       role: "PARTICIPANT" as UserRole
     }
-    console.log("Created user with displayName: " + newUser.displayName);
+    
+    // Will need to add error handling and a spinner animation here later
+    this.userService.createUser(newUser).subscribe(
+      data => console.log(data)
+    );
+
+    this.dialogRef.close();
   }
 
   onNoClick(): void {
