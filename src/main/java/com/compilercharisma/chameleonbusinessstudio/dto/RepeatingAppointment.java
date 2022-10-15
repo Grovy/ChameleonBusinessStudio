@@ -41,6 +41,9 @@ public class RepeatingAppointment {
 
     /**
      * The last time this has been used to generate appointments.
+     * For example, if lastGenerated is set to January 1st, then this was used
+     * to generate an appointment on January 1st, and likely dates before that.
+     * 
      * This should be set to null whenever any other data changes.
      */
     private LocalDateTime lastGenerated;

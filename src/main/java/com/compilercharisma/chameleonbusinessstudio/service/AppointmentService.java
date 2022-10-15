@@ -80,8 +80,13 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
         }
     }
     
+    // phasing this out
     public void createAppointment(AppointmentEntity appt){
         repo.save(appt);
+    }
+
+    public Mono<Appointment> createAppointment(Appointment appt){
+        return repoV2.createAppointment(appt);
     }
 
     /**
