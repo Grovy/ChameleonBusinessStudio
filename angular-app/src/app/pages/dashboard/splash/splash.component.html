@@ -9,7 +9,9 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<app-nav></app-nav>
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue)">
+  <app-nav></app-nav>
+</div>
 
 <div class="main-content">
   <div class="card">
