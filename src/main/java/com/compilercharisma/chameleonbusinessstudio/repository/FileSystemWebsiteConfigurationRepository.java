@@ -1,9 +1,13 @@
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.logging.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +20,6 @@ import org.springframework.stereotype.Component;
 public class FileSystemWebsiteConfigurationRepository implements IWebsiteConfigurationRepository {
     private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
     
-    private final Path folderPath;
     private final Path filePath;
     private Properties cache;
     
@@ -25,9 +28,11 @@ public class FileSystemWebsiteConfigurationRepository implements IWebsiteConfigu
         this(ROOT);
     }
     
-    public FileSystemWebsiteConfigurationRepository(Path filePath){
-        this.folderPath = filePath;
-        this.filePath = Paths.get(filePath.toString(), "config.properties");
+    /**
+     * @param folderPath path to a folder to load/store config.properties from/to
+     */
+    public FileSystemWebsiteConfigurationRepository(Path folderPath){
+        this.filePath = Paths.get(folderPath.toString(), "config.properties");
         cache = null;
     }
     
@@ -36,13 +41,13 @@ public class FileSystemWebsiteConfigurationRepository implements IWebsiteConfigu
     public Properties load() {
         if(cache == null){ // not loaded yet
             cache = new Properties();
-            try(
-                    InputStream in = Files.newInputStream(filePath);
-            ){
+            try(InputStream in = Files.newInputStream(filePath)){
                 cache.load(in);
             } catch (IOException ex) {
-                Logger.getLogger(FileSystemWebsiteConfigurationRepository.class.getName()).log(Level.SEVERE, null, ex);
-                throw new RuntimeException(String.format("Failed to open \"%s\"", filePath.toString()), ex);
+                throw new RuntimeException(String.format(
+                    "Failed to open \"%s\"", 
+                    filePath.toString()
+                ), ex);
             }
         }
         return cache;
@@ -55,13 +60,12 @@ public class FileSystemWebsiteConfigurationRepository implements IWebsiteConfigu
         newProperties.stringPropertyNames().forEach(k->{
             cache.setProperty(k, newProperties.getProperty(k));
         });
-        try(
-                OutputStream out = Files.newOutputStream(filePath);
-        ){
+        try(OutputStream out = Files.newOutputStream(filePath)){
             cache.store(out, null);
         } catch (IOException ex) {
-            Logger.getLogger(FileSystemWebsiteConfigurationRepository.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(String.format("Failed to open \"%s\"", filePath.toString()), ex);
+            throw new RuntimeException(String.format(
+                "Failed to open \"%s\"", filePath.toString()
+            ), ex);
         }
     }
 }

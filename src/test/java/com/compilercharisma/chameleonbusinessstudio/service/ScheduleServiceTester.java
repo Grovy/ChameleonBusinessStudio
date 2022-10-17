@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
-import com.compilercharisma.chameleonbusinessstudio.dto.validators.ScheduleValidator;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidScheduleException;
 import com.compilercharisma.chameleonbusinessstudio.repository.ScheduleRepository;
+import com.compilercharisma.chameleonbusinessstudio.validators.ScheduleValidator;
 
 import reactor.core.publisher.Flux;
 

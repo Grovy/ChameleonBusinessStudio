@@ -5,7 +5,6 @@ import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +28,7 @@ public class WebsiteAppearanceController {
     }
     
     @PostMapping
-    public String handlePost(
+    public ResponseEntity<Void> handlePost(
             @RequestParam("org-name") String organizationName,
             @RequestParam("splash") MultipartFile splash,
             @RequestParam("logo") MultipartFile logo,
@@ -40,7 +39,7 @@ public class WebsiteAppearanceController {
         serv.setSplashPageContent(splash);
         serv.setLogo(logo);
         serv.setBannerColor(bannerColor);
-        return "yay";
+        return ResponseEntity.ok().build();
     }
     
     /**
@@ -50,8 +49,8 @@ public class WebsiteAppearanceController {
      * @return a 201 Created At response if successful
      */
     @PostMapping("landing-page")
-    public ResponseEntity postLandingPage(@RequestParam("file") MultipartFile file){
-        if(!file.getContentType().equals(MimeTypeUtils.TEXT_HTML_VALUE)){
+    public ResponseEntity<Void> postLandingPage(@RequestParam("file") MultipartFile file){
+        if(!MimeTypeUtils.TEXT_HTML_VALUE.equals(file.getContentType())){
             return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
         }
         /*
