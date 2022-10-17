@@ -6,8 +6,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.DayOfWeek;
 import java.util.HashSet;
-import java.util.List;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,14 +17,15 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.RepeatingAppointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidScheduleException;
 import com.compilercharisma.chameleonbusinessstudio.repository.ScheduleRepository;
+import com.compilercharisma.chameleonbusinessstudio.util.TestScheduleBuilder;
 import com.compilercharisma.chameleonbusinessstudio.validators.ScheduleValidator;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class ScheduleServiceTester {
     private final ScheduleRepository repo;
@@ -81,11 +83,9 @@ public class ScheduleServiceTester {
 
     @Test
     public void generateAppointments_withNoEnabledRepeatingAppointments_doesNothing(){
-        var disabledRepeatingAppointment = RepeatingAppointment.builder()
-            .isEnabled(false)
-            .build();
-        var schedule = Schedule.builder()
-            .appointments(List.of(disabledRepeatingAppointment))
+        var schedule = new TestScheduleBuilder()
+            .enabled()
+            .withAppointment(appt->appt.disabled())
             .build();
         when(repo.getAllSchedulesWhereEnabledEquals(true)).thenReturn(Flux.just(schedule));
 
@@ -96,21 +96,38 @@ public class ScheduleServiceTester {
 
     @Test
     public void generateAppointments_withAValidSchedule_copiesAppointmentsToTheProperDays(){
-        var created = new HashSet<>();
-        when(appointments.createAppointment(any(Appointment.class))).thenAnswer(new Answer<Appointment>() {
+        when(appointments.createAppointment(any(Appointment.class)))
+            .thenReturn(Mono.just(new Appointment()));
+        when(repo.storeSchedules(anyList()))
+            .thenReturn(Mono.empty());
+        var created = new HashSet<Appointment>();
+
+        /*
+         * Unfortunately, Mockito is really bad at mocking side effects...
+         */
+        when(appointments.createAppointment(any(Appointment.class))).then(new Answer<Mono<Appointment>>() {
             @Override
-            public Appointment answer(InvocationOnMock invocation) throws Throwable {
-                var arg = invocation.getArgument(0);
-                if(!(arg instanceof Appointment)){
-                    throw new RuntimeException("better way of doing side effects?");
-                }
-                var appt = (Appointment)arg;
+            public Mono<Appointment> answer(InvocationOnMock invocation) throws Throwable {
+                var appt = invocation.getArgument(0, Appointment.class);
                 created.add(appt);
-                return appt;
+                return Mono.just(appt);
             }
         });
 
-        throw new UnsupportedOperationException();
+        var aValidSchedule = new TestScheduleBuilder()
+            .enabled()
+            .withAppointment(appt->appt.enabled().on(DayOfWeek.MONDAY))
+            .build();
+        when(repo.getAllSchedulesWhereEnabledEquals(true)).thenReturn(Flux.just(aValidSchedule));
+        
+        sut.generateAppointments().block();
+
+        Predicate<Appointment> onMondayOrThursday = (Appointment appt)->{
+            return appt.getStartTime().getDayOfWeek().equals(DayOfWeek.MONDAY)
+                && appt.getEndTime().getDayOfWeek().equals(DayOfWeek.MONDAY);
+        };
+        Assertions.assertTrue(!created.isEmpty());
+        Assertions.assertTrue(created.stream().allMatch(onMondayOrThursday));
     }
 
     private void thenNoAppointmentsWereGenerated(){

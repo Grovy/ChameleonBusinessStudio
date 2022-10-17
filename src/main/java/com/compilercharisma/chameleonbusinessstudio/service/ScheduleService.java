@@ -3,9 +3,9 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.TimeUnit;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
@@ -86,14 +86,33 @@ public class ScheduleService {
         return repo.getScheduleById(id);
     }
 
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
+    public void doAppointmentGeneration(){
+        generateAppointments().subscribe();
+    }
+    
     public Mono<Void> generateAppointments(){
         log.info("Generating appointments...");
         return repo.getAllSchedulesWhereEnabledEquals(true)
+            .filter(this::canGenerateAppointmentFrom)
             .flatMap(this::generateAppointmentsFrom)
             .collectList()
             .flatMap(this::saveSchedules) // save modified schedules
             .doFinally((signal)->log.info("Done generating appointments"))
             .then();
+    }
+
+    private boolean canGenerateAppointmentFrom(Schedule s){
+        return s.getAppointments().parallelStream()
+            .anyMatch(this::canGenerateAppointmentFrom);
+    }
+
+    private boolean canGenerateAppointmentFrom(RepeatingAppointment ra){
+        var now = LocalDateTime.now();
+        var maxDate = now.plusDays(DAYS_IN_ADVANCE);
+        var lastGen = ra.getLastGenerated();
+        return ra.getIsEnabled()
+            && (lastGen == null || lastGen.isBefore(maxDate));
     }
 
     /**
@@ -103,30 +122,16 @@ public class ScheduleService {
      * @return a mono containing the schedule if it was updated, or nothing if
      *  no new appointments were generated from it
      */
-    private Mono<Schedule> generateAppointmentsFrom(Schedule s){
-        var now = LocalDateTime.now();
-        var maxDate = now.plusDays(DAYS_IN_ADVANCE);
-
-        var stream = s.getAppointments().parallelStream()
-            .filter(ra->ra.getIsEnabled() && ra.getLastGenerated().isBefore(maxDate));
-        
-        if(stream.findAny().isPresent()){
-            return Mono.empty();
-        }
-
-        var duplicatedAppointments = stream
-            .flatMap(this::duplicateAppointment)
-            .collect(Collectors.toList());
-        
-        // don't have a method for batch-creating appts in Vendia yet
-        duplicatedAppointments.forEach(appointments::createAppointment);
-
-        return Mono.just(s);
+    private Mono<Schedule> generateAppointmentsFrom(Schedule s){        
+        return Flux.fromIterable(s.getAppointments())
+            .filter(this::canGenerateAppointmentFrom)
+            .flatMapIterable(this::copyToDays)
+            .map(appointments::createAppointment) // don't have a method for batch-creating appts in Vendia yet
+            .then(Mono.just(s));
     }
 
-    private Stream<Appointment> duplicateAppointment(RepeatingAppointment ra){
-        var duplicatedAppointments = new LinkedList<Appointment>();
-        
+    private List<Appointment> copyToDays(RepeatingAppointment ra){
+        var copies = new LinkedList<Appointment>();
         var now = LocalDateTime.now();
         var maxDate = now.plusDays(DAYS_IN_ADVANCE);
         
@@ -136,11 +141,13 @@ public class ScheduleService {
             if(ra.getRepeatsOn().contains(day.getDayOfWeek())){
                 // copy to that day
                 copy = copyToDay(ra.getAppointment(), day);
-                duplicatedAppointments.add(copy);
+                copies.add(copy);
             }
         }
+        
+        ra.setLastGenerated(maxDate);
 
-        return duplicatedAppointments.stream();
+        return copies;
     }
 
     private Appointment copyToDay(Appointment appt, LocalDateTime day){

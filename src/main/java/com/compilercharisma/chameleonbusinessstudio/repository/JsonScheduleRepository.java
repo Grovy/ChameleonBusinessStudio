@@ -73,6 +73,8 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
                     .appointment(
                         Appointment.builder()
                             .title("CSC152")
+                            .location("Sac State")
+                            .description("Cryptography")
                             .startTime(LocalDateTime.parse("2022-10-11T15:00:00"))
                             .endTime(LocalDateTime.parse("2022-10-11T16:15:00"))
                             .build()
@@ -84,6 +86,8 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
                     .appointment(
                         Appointment.builder()
                             .title("CSC191")
+                            .location("Online")
+                            .description("Senior project")
                             .startTime(LocalDateTime.parse("2022-10-12T19:00:00"))
                             .endTime(LocalDateTime.parse("2022-10-12T19:50:00"))
                             .build()
@@ -101,6 +105,8 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
                     .appointment(
                         Appointment.builder()
                             .title("D&D")
+                            .location("Home")
+                            .description("Dungeons and Dragons")
                             .startTime(LocalDateTime.parse("2022-10-09T12:30:00"))
                             .endTime(LocalDateTime.parse("2022-10-09T13:30:00"))
                             .build()

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -40,31 +41,37 @@ public class Appointment implements Serializable {
     /**
      * The location of the appointment
      */
-    private String location;
+    @Builder.Default
+    private String location = "online";
 
     /**
      * Description of the appointment
      */
-    private String description;
+    @Builder.Default
+    private String description= "";
 
     /**
      * The restrictions related to this appointment
      */
-    private String restrictions;
+    @Builder.Default
+    private String restrictions = "";
 
     /**
      * If the appointment is cancelled or not
      */
-    private Boolean cancelled;
+    @Builder.Default
+    private Boolean cancelled = false;;
 
     /**
      * Total number of slots available for the appointment
      */
-    private Integer totalSlots;
+    @Builder.Default
+    private Integer totalSlots = 1;
 
     /**
      * List of the email/Ids of the users participating in the appointment
      */
-    private List<String> participants;
+    @Builder.Default
+    private List<String> participants = new ArrayList<>();
 
 }
