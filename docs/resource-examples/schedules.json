@@ -1,92 +1,144 @@
-[
-    {
-        "_id": "52ec1cdd-920e-495c-a680-0787c823116c",
-        "name": "Classes",
-        "appointments": [
-            {
-                "_id": "3c1eb369-fb0b-4be1-b5f7-0de5cf42aa09",
-                "repeatsOn": [
-                    "TUESDAY",
-                    "THURSDAY"
-                ],
-                "appointment": {
-                    "_id": "95622326-5d88-4f24-b9f6-e4856e45bd6b",
-                    "title": "CSC152",
-                    "startTime": [
+{
+    "content": [
+        {
+            "_id": "0c1eff56-bd75-427a-94d8-67a4e710456f",
+            "name": "Social Life",
+            "isEnabled": false,
+            "appointments": [
+                {
+                    "_id": "d07c262a-2804-4f06-b3d0-789e225802dd",
+                    "isEnabled": true,
+                    "repeatsOn": [
+                        "SUNDAY"
+                    ],
+                    "appointment": {
+                        "_id": "53ef35ba-f080-4ca2-b64b-80e2a735c73e",
+                        "title": "D&D",
+                        "startTime": [
+                            2022,
+                            10,
+                            9,
+                            12,
+                            30
+                        ],
+                        "endTime": [
+                            2022,
+                            10,
+                            9,
+                            13,
+                            30
+                        ],
+                        "location": "Home",
+                        "description": "Dungeons and Dragons",
+                        "restrictions": "",
+                        "cancelled": false,
+                        "totalSlots": 1,
+                        "participants": []
+                    }
+                }
+            ]
+        },
+        {
+            "_id": "81a39a60-1b34-473d-812b-a2eee3471158",
+            "name": "Classes",
+            "isEnabled": true,
+            "appointments": [
+                {
+                    "_id": "a10c8b68-1444-42a0-999d-cdc3ac3a4756",
+                    "isEnabled": true,
+                    "repeatsOn": [
+                        "TUESDAY",
+                        "THURSDAY"
+                    ],
+                    "appointment": {
+                        "_id": "419f3aba-4678-4c66-94cd-643ce27c84ce",
+                        "title": "CSC152",
+                        "startTime": [
+                            2022,
+                            10,
+                            11,
+                            15,
+                            0
+                        ],
+                        "endTime": [
+                            2022,
+                            10,
+                            11,
+                            16,
+                            15
+                        ],
+                        "location": "Sac State",
+                        "description": "Cryptography",
+                        "restrictions": "",
+                        "cancelled": false,
+                        "totalSlots": 1,
+                        "participants": []
+                    },
+                    "lastGenerated": [
                         2022,
                         10,
-                        11,
+                        31,
                         15,
-                        0
-                    ],
-                    "endTime": [
-                        2022,
-                        10,
-                        11,
-                        16,
-                        15
+                        12,
+                        33,
+                        204812400
                     ]
                 },
-                "enabled": true
-            },
-            {
-                "_id": "9e93c78c-b92a-457e-920e-defe33ae9640",
-                "repeatsOn": [
-                    "WEDNESDAY"
-                ],
-                "appointment": {
-                    "_id": "0a83c84f-5dd9-4b65-b61b-69a6a09c4736",
-                    "title": "CSC191",
-                    "startTime": [
-                        2022,
-                        10,
-                        12,
-                        19,
-                        0
+                {
+                    "_id": "e2b2ec37-e4d8-47b3-b4ec-43d5d018f9b9",
+                    "isEnabled": true,
+                    "repeatsOn": [
+                        "WEDNESDAY"
                     ],
-                    "endTime": [
+                    "appointment": {
+                        "_id": "5475d4ef-9e8e-4abd-bfd5-7965d1f0299d",
+                        "title": "CSC191",
+                        "startTime": [
+                            2022,
+                            10,
+                            12,
+                            19,
+                            0
+                        ],
+                        "endTime": [
+                            2022,
+                            10,
+                            12,
+                            19,
+                            50
+                        ],
+                        "location": "Online",
+                        "description": "Senior project",
+                        "restrictions": "",
+                        "cancelled": false,
+                        "totalSlots": 1,
+                        "participants": []
+                    },
+                    "lastGenerated": [
                         2022,
                         10,
+                        31,
+                        15,
                         12,
-                        19,
-                        50
+                        33,
+                        204812400
                     ]
-                },
-                "enabled": true
-            }
-        ],
-        "enabled": true
+                }
+            ]
+        }
+    ],
+    "pageable": "INSTANCE",
+    "totalPages": 1,
+    "totalElements": 2,
+    "last": true,
+    "size": 2,
+    "number": 0,
+    "numberOfElements": 2,
+    "sort": {
+        "empty": true,
+        "unsorted": true,
+        "sorted": false
     },
-    {
-        "_id": "ba615223-c661-4592-b9b3-2aa5c549f12b",
-        "name": "Social Life",
-        "appointments": [
-            {
-                "_id": "0a5d9c41-4eca-43e5-80da-106083290981",
-                "repeatsOn": [
-                    "SUNDAY"
-                ],
-                "appointment": {
-                    "_id": "63e6bbf2-6dee-4b48-9912-22bf812bc59e",
-                    "title": "D&D",
-                    "startTime": [
-                        2022,
-                        10,
-                        9,
-                        12,
-                        30
-                    ],
-                    "endTime": [
-                        2022,
-                        10,
-                        9,
-                        13,
-                        30
-                    ]
-                },
-                "enabled": true
-            }
-        ],
-        "enabled": false
-    }
-]
+    "first": true,
+    "empty": false
+}
