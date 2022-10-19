@@ -1,0 +1,33 @@
+.main-container{
+    width: 100%;
+    height: 100%;
+    background: chocolate;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.avail-container {
+    font-family: "Lato";
+}
+
+.avail-to-select{
+    margin-left: 30px;
+}
+
+.daysofweek {
+    margin: 12px 0;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.event-container{
+    font-family: 'Lato';
+    margin-left: 10px;
+}
+
+.confirmation-container{
+    margin-left: 10px;;
+}

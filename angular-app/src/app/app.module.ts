@@ -30,6 +30,7 @@ import { NavComponent } from './pages/nav/nav.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
+import { ScheduleConfigurationComponent } from './pages/schedule-configuration/schedule-configuration.component';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
 import { SignInComponent } from './pages/auth/signin/signin.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
@@ -44,6 +45,7 @@ import { UserService } from './services/UserService.service';
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -84,6 +86,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     LandingPageConfigurationComponent,
     NavComponent,
     PageNotFoundComponent,
+    ScheduleConfigurationComponent,
     SetupWizardComponent,
     SignInComponent,
     SignInFormComponent,
@@ -100,6 +103,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     HttpClientModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatButtonModule,
     MatExpansionModule,
@@ -130,6 +134,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'calender-view',component: CalenderViewComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
+      { path: 'schedule-configuration', component: ScheduleConfigurationComponent },
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
       { path: 'site-header', component: SiteHeaderComponent },
