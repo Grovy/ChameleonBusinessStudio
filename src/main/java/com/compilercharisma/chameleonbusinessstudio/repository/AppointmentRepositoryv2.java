@@ -7,6 +7,7 @@ import com.compilercharisma.chameleonbusinessstudio.client.VendiaSort;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -31,6 +32,33 @@ public class AppointmentRepositoryv2
 
     public AppointmentRepositoryv2(VendiaClient vendiaClient){
         this.vendiaClient = vendiaClient;
+    }
+
+    /**
+     * Gets all appointments in Vendia
+     *
+     * @return {@link AppointmentResponse}
+     */
+    public Mono<AppointmentResponse> findAllAppointments() {
+        var query = """
+                  query {
+                  list_AppointmentItems {
+                    _AppointmentItems {
+                      _id
+                      _owner
+                      cancelled
+                      description
+                      endTime
+                      location
+                      participants
+                      restrictions
+                      startTime
+                      title
+                      totalSlots
+                    }
+                  }
+                }""";
+        return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class);
     }
 
     /**
