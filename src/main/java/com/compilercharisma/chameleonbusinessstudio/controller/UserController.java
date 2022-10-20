@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +79,24 @@ public class UserController {
         return userService.deleteUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User deleted in Vendia share!"))
+                .doOnError(u -> log.error("Something unexpected happened!"));
+    }
+
+    /**
+     * WIP
+     *
+     * @param _id of the user we want to pull from
+     * @return the appointments associated with the _id
+     * from the user.
+     */
+    @GetMapping("/getUserAppointments/{id}")
+    public Mono<ResponseEntity<UserAppointments>> getUserAppointments(@PathVariable(value="id") String _id)
+    {
+        log.info("Fetching User's appointment(s)...");
+
+        return userService.getUserAppointments(_id)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User's appointment(s) have been received!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 

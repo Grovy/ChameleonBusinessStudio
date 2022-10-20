@@ -2,10 +2,12 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+
 
 @Slf4j
 @Repository
@@ -149,5 +151,23 @@ public class UserRepository {
                 }""".formatted(id);
         return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , String.class)
                 .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
+    }
+
+    /**
+     * Grab a user's appointments via their id.
+     *
+     * @param _id The id to look up.
+     * @return (@link List}
+     */
+    public Mono<UserAppointments> getUserAppointments(String _id)
+    {
+        String getUserAppointmentArray = """
+                query {
+                  get_User(id: "%s") {
+                    appointments
+                  }
+                }
+                """.formatted(_id);
+        return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
     }
 }

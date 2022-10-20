@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
@@ -86,6 +87,16 @@ public class UserService {
         return userRepository.findId(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
+    }
+
+    /**
+     *
+     * @param _id The _id to look up.
+     * @return {@link UserAppointments}
+     */
+    public Mono<UserAppointments> getUserAppointments(String _id)
+    {
+        return userRepository.getUserAppointments(_id);
     }
 
 }
