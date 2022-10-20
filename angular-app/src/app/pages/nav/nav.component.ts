@@ -43,6 +43,10 @@ export class NavComponent {
         label: 'Appointment Details',
         link: './appointment-details',
         index: 6,
+      }, {
+        label: 'Schedule Configuration Page',
+        link: './schedule-configuration',
+        index: 7,
       }
     ]
   }
