@@ -1,18 +1,16 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Service;
+
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.exception.NoUserLoggedInException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 
 import reactor.core.publisher.Mono;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Service;
 
 /**
  * Use this class to get the logged in user.
@@ -36,27 +34,44 @@ public class AuthenticationService {
     }
 
     /**
-     * This method may replace some of our other methods, as it sounds like
-     * SecurityContextHolder is unreliable in Webflux: 
-     * https://stackoverflow.com/q/70050719
+     * Migrating towards using this method instead of others, as it is both
+     * mockable and does not rely on any static contexts
      * 
-     * @return a mono containing the logged in user, or an error if no user is
-     *  logged in
+     * @param token an authentication token
+     * @return the user denoted by the token, or nothing if such a user does not
+     *  exist.
      */
-    public Mono<User> getLoggedInUserReactive(){
-        return ReactiveSecurityContextHolder
-            .getContext()
-            .map(SecurityContext::getAuthentication)
-            .handle((auth, sink)->{
-                // https://stackoverflow.com/a/53596358
-                if(isAuthenticatedUser(auth)){
-                    sink.next(auth.getPrincipal());
-                } else {
-                    sink.error(new NoUserLoggedInException());
-                }
-            })
-            .map(this::principalToGoogleUser)
-            .flatMap(this::googleUserToOurUser);           
+    public Mono<User> getLoggedInUserFrom(Authentication token){
+        var email = getEmailFrom(token);
+        return users.get(email)
+            .map(opt -> opt.orElseThrow(()->new UserNotRegisteredException(email)));
+    }
+
+    /**
+     * Migrating towards using this method instead of others, as it is mockable,
+     * supports polymorphism, and doesn't rely on static contexts.
+     * 
+     * @param token an authentication token
+     * 
+     * @return the email contained in the given token
+     */
+    public String getEmailFrom(Authentication token){
+        if(!isAuthenticatedUser(token)){
+            throw new NoUserLoggedInException();
+        }
+
+        if(!(token instanceof OAuth2AuthenticationToken)){
+            throw new RuntimeException("Unsupported token type: " + token.getClass().getName());
+        }
+
+        var principal = ((OAuth2AuthenticationToken)token).getPrincipal();
+        var email = principal.getAttribute("email");
+
+        if(email == null){
+            throw new RuntimeException("Principle does not contain email");
+        }
+
+        return email.toString();
     }
 
     private boolean isAuthenticatedUser(Authentication auth){
@@ -64,24 +79,5 @@ public class AuthenticationService {
             && auth.isAuthenticated() 
             && auth.getPrincipal() != null 
             && !(auth instanceof AnonymousAuthenticationToken);
-    }
-
-    private OAuth2User principalToGoogleUser(Object principal){
-        if(!(principal instanceof OAuth2User)){
-            throw new RuntimeException();
-        }
-        return (OAuth2User)principal;
-    }
-
-    private Mono<User> googleUserToOurUser(OAuth2User googleUser){
-        String email = googleUser.getAttribute("email");
-        return users.get(email)
-            .handle((maybeUser, sink)->{
-                if(maybeUser.isPresent()){
-                    sink.next(maybeUser.get());
-                } else {
-                    sink.error(new UserNotRegisteredException(email));
-                }
-            });
     }
 }

@@ -22,6 +22,10 @@ public class SecurityConfiguration {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.POST, "/api/appointments/**").access(userAuthorizationManager)
                 .pathMatchers(HttpMethod.DELETE, "/api/appointments/**").access(userAuthorizationManager)
+                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
+                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/**").access(userAuthorizationManager)
+                .pathMatchers(HttpMethod.PUT, "/api/v1/appointments/**").access(userAuthorizationManager)
+                .pathMatchers(HttpMethod.POST, "/api/v1/config/**").access(userAuthorizationManager)
                 .pathMatchers(
                         "/",
                         "/index",
