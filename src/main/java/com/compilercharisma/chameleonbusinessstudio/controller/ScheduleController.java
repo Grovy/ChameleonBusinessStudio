@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
 import com.compilercharisma.chameleonbusinessstudio.service.ScheduleService;
@@ -66,12 +66,15 @@ public class ScheduleController {
      *  can be found.
      */
     @PostMapping()
-    public Mono<ResponseEntity<Schedule>> createSchedule(@RequestBody Schedule schedule){
-        URI at = ServletUriComponentsBuilder
-            .fromCurrentContextPath() // relative to application root
-            .pathSegment("/api/v1/schedules/" + schedule.get_id())
+    public Mono<ResponseEntity<Schedule>> createSchedule(
+            UriComponentsBuilder root,
+            @RequestBody Schedule schedule
+    ){
+        URI at = root // relative to application root
+            .pathSegment("api", "v1", "schedules", schedule.get_id())
             .build()
             .toUri();
+        
         return schedules.saveSchedule(schedule) // service handles validation
             .then(Mono.just(schedule))
             .map(sched->ResponseEntity.created(at).body(schedule));
