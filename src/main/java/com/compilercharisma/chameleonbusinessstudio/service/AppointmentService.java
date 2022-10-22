@@ -4,13 +4,10 @@ import static com.compilercharisma.chameleonbusinessstudio.entity.appointment.Ap
 import static com.compilercharisma.chameleonbusinessstudio.entity.appointment.AppointmentSpecifications.occursWithin;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Service
-public class AppointmentService implements ApplicationListener<ApplicationReadyEvent>{
+public class AppointmentService {
     
     private final AppointmentRepository repo;
     private final AppointmentRepositoryv2 repoV2;
@@ -44,45 +41,6 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
         this.repo = repo;
         this.repoV2 = repoV2;
         this.validator = validator;
-    }
-    
-    /**
-     * temporary until we have actual data to test with
-     * @param event 
-     */
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime later = now.plusDays(30);
-        List<AppointmentEntity> data = getAppointmentsBetween(now, later);
-        if(data.isEmpty()){
-            System.out.println("Creating test appointment data...");
-            createTestData();
-            System.out.println("done creating test appointment data");
-        }
-    }
-    
-    /**
-     * temporary until we have actual data to test with
-     */
-    private void createTestData(){
-        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-        AppointmentEntity appt;
-        for(int i = 1; i <= 50; ++i){
-            appt = new AppointmentEntity();
-            // year, month, day, hour, minute
-            appt.setStartTime(now.plusDays(i - 10).plusHours(i % 4).plusMinutes(i / 15));
-            appt.setEndTime(appt.getStartTime().plusHours(i % 4 + 1));
-            appt.setTitle(String.format("Appt. #%d", i));
-            appt.setLocation(String.format("%d J Street", i * 20));
-            appt.setTotalSlots(i % 10 + 1);
-            createAppointment(appt);
-        }
-    }
-    
-    // phasing this out
-    public void createAppointment(AppointmentEntity appt){
-        repo.save(appt);
     }
 
     public Mono<Appointment> createAppointment(Appointment appt){
@@ -111,35 +69,29 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
         return repoV2.getAppointmentsForUser(email, pageable);
     }
     
-    public List<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime){
-        return repo.findAll(occursWithin(startTime, endTime));
-    }
-    
-    public Page<AppointmentEntity> getAppointmentsBetween(LocalDateTime startTime, LocalDateTime endTime, Pageable pageable){
-        return repo.findAll(occursWithin(startTime, endTime), pageable);
-    }
-    
-    public List<AppointmentEntity> getAvailableAppointments(LocalDateTime startTime, LocalDateTime endTime){
-        return repo.findAll(occursWithin(startTime, endTime).and(isAvailable()));
-    }
-    
-    public Page<AppointmentEntity> getAvailableAppointments(LocalDateTime startTime, LocalDateTime endTime, Pageable page){
+    public Page<AppointmentEntity> getAvailableAppointments(
+            LocalDateTime startTime, 
+            LocalDateTime endTime, 
+            Pageable page
+    ){
         return repo.findAll(occursWithin(startTime, endTime).and(isAvailable()), page);
     }
     
-    public void updateAppointment(AppointmentEntity appt){
-        // this might also send notifications to users subscribed to the appointment
-        repo.save(appt);
-    }
-    
     /**
-     * Checks if the given appointment is valid, and thus can be stored.
+     * Updates the given appointment in Vendia.
      * 
-     * @param e the appointment to validate
-     * @return whether or not the appointment is valid
+     * @param appt the appointment in Vendia
+     * @return the updated appointment
      */
-    public boolean isAppointmentValid(AppointmentEntity e){
-        return validator.isValid(e);
+    public Mono<Appointment> updateAppointment(Appointment appt){
+        // this might also send notifications to users subscribed to the appointment
+        return repoV2.updateAppointment(appt);
+    }
+
+    public Mono<Appointment> deleteAppointment(Appointment appt){
+        // this might also send notifications to users subscribed to the appointment
+        return repoV2.deleteAppointment(appt.get_id())
+            .then(Mono.just(appt));
     }
 
     /**
@@ -148,7 +100,7 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
      * 
      * @param e the appointment to validate
      */
-    public void validateAppointment(AppointmentEntity e){
+    public void validateAppointment(Appointment e){
         validator.validate(e);
     }
     

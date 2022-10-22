@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,16 +25,19 @@ import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.SynchronousSink;
 
 /**
  * This controller handles routes associated with appointments.
  * 
+ * @author Ariel Camargo
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @RestController
 @RequestMapping("/api/v1/appointments")
+@Slf4j
 public class AppointmentController {
 
     private final AppointmentService appointments;
@@ -49,6 +53,90 @@ public class AppointmentController {
         this.authentication = authentication;
         this.users = users;
     }
+
+    /**
+     * Creates and stores a new appointment, if it is valid.
+     * Note that using RequestBody means it works as an API endpoint, but might 
+     * not handle a form submission.
+     * 
+     * @param root contains the URI component of the app root, such as
+     *  http://localhost:8080
+     * @param token the current context's authentication token
+     * @param appointment the appointment to create
+     * @return a 201 Created At response if successful
+     */
+    @PostMapping
+    public Mono<ResponseEntity<Appointment>> createAppointment(
+            UriComponentsBuilder root,
+            Authentication token,
+            @RequestBody Appointment appointment
+    ){
+        appointments.validateAppointment(appointment);
+
+        log.info("Creating an appointment", appointment);
+
+        URI at = root // relative to application root
+            .pathSegment("api", "v1", "appointments")
+            .build()
+            .toUri();
+        
+        return appointments.createAppointment(appointment)
+                .map(r -> ResponseEntity.created(at).body(appointment))
+                .doOnNext(u -> log.info("Appointment created in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error creating appointment in Vendia"));
+    }
+
+    /**
+     * Updates or creates the given appointment based upon its ID, if allowed.
+     * 
+     * @param token the current context's authentication token
+     * @param appointment the appointment to create or update
+     * @return a response containing the updated or created appointment
+     */
+    @PutMapping
+    public Mono<ResponseEntity<Appointment>> updateVendiaAppointment(
+            Authentication token,
+            @RequestBody Appointment appointment
+    ){
+        appointments.validateAppointment(appointment);
+        log.info("Updating an appointment", appointment);
+
+        var id = appointment.get_id();
+        var action = (id == "" || id == null)
+            ? appointments.createAppointment(appointment)
+            : appointments.updateAppointment(appointment);
+
+        return action
+                .map(r -> ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment))
+                .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error updating appointment in Vendia"));
+    }
+
+    /**
+     * This deletes the appointment called in Vendia
+     * @param appointment The appointment you want to delete
+     * @return The (@link DeletionResponse} of the appointment being updated.
+     */
+    @DeleteMapping
+    public Mono<ResponseEntity<Appointment>> deleteVendiaAppointment(
+            @RequestBody Appointment appointment
+    ){
+        log.info("Deleting an appointment");
+        return appointments.deleteAppointment(appointment)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
+    }
+    
+    private boolean isValidEmail(String email){
+        var isValid = true;
+        // how to validate properly?
+        return isValid;
+    }
+
+    /*
+     * old stuff below here
+     */
     
     /** 
      * @param days the number of days to check for. A value of 3 means 
@@ -72,37 +160,6 @@ public class AppointmentController {
         var response = ResponseEntity.ok(appts);
         return Mono.just(response);
     }
-    
-    /**
-     * Creates and stores a new appointment, if it is valid.
-     * Note that using RequestBody means it works as an API endpoint, but might 
-     * not handle a form submission.
-     * 
-     * @param root contains the URI component of the app root, such as
-     *  http://localhost:8080
-     * @param token the current context's authentication token
-     * @param appointment the appointment to create
-     * @return a 201 Created At response if successful
-     */
-    @PostMapping
-    public Mono<ResponseEntity<AppointmentEntity>> create(
-            UriComponentsBuilder root,
-            Authentication token,
-            @RequestBody AppointmentEntity appointment
-    ){
-        if(!appointments.isAppointmentValid(appointment) || appointment.getId() != 0){
-            return Mono.just(ResponseEntity.badRequest().body(appointment));
-        }
-        
-        appointments.createAppointment(appointment);
-
-        URI at = root // relative to application root
-            .pathSegment("api", "v1", "appointments")
-            .build()
-            .toUri();
-        
-        return Mono.just(ResponseEntity.created(at).body(appointment));
-    }
 
     /**
      * GET /api/v1/appointments/mine
@@ -123,31 +180,6 @@ public class AppointmentController {
         return appointments
             .getAppointmentsForUser(email, pageable)
             .map(page -> ResponseEntity.ok(page));
-    }
-    
-    /**
-     * Updates or creates the given appointment based upon its ID, if allowed.
-     * 
-     * @param token the current context's authentication token
-     * @param appointment the appointment to create or update
-     * @return a response containing the updated or created appointment
-     */
-    @PutMapping
-    public Mono<ResponseEntity<AppointmentEntity>> update(
-            Authentication token,
-            @RequestBody AppointmentEntity appointment
-    ){
-        appointments.validateAppointment(appointment);
-        
-        if(appointment.getId() == 0){ // new appointment
-            appointments.createAppointment(appointment);
-        } else { // updating an old appointment
-            appointments.updateAppointment(appointment);
-        }
-
-        return Mono.just(
-            ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment)
-        );
     }
 
     /**
@@ -224,11 +256,5 @@ public class AppointmentController {
                     sink.error(new IllegalArgumentException("Email is not registered as a user: " + email));
                 }
             });
-    }
-
-    private boolean isValidEmail(String email){
-        var isValid = true;
-        // how to validate properly?
-        return isValid;
     }
 }

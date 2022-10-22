@@ -1,11 +1,14 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,20 +19,77 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.compilercharisma.chameleonbusinessstudio.service.WebsiteAppearanceService;
 
 /**
- * Handles configuration requests that require authentication. This includes
- * requests to change the appearance of the website, such as its splash page or
- * landing page details.
+ * Handles requests regarding customized website elements, such as its splash 
+ * page or landing page details.
+ * 
+ * Note that all users, including those not logged in, can access the GET 
+ * endpoints, while only authorized users can access the other HTTP verbs.
+ * To customize who can access each enpoint, {@link com.compilercharisma.chameleonbusinessstudio.config.SecurityConfiguration SecurityConfiguration}
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @RestController
 @RequestMapping(path="/api/v1/config")
 public class WebsiteAppearanceController {
+
     private final WebsiteAppearanceService serv;
     
     @Autowired
     public WebsiteAppearanceController(WebsiteAppearanceService serv){
         this.serv = serv;
+    }
+
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
+     * @return {
+     *  color: string
+     * }
+     */
+    @GetMapping("/banner")
+    public Map<String, Object> getBannerColor(){
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("color", serv.getBannerColor());
+        return json;
+    }
+
+    @GetMapping("/landing-page")
+    public Map<String, Object> getLandingPageContent(){
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("content", serv.getLandingPageContent());
+        return json;
+    }
+
+    /**
+     * <img src="/api/v1/config/logo"/>
+     * @return logo bytes
+     */
+    @GetMapping("/logo")
+    public byte[] getLogo(){
+        return serv.getLogo();
+    }
+    
+    /**
+     * @return {
+     *  name: String
+     * }
+     */
+    @GetMapping("/organization")
+    public Map<String, Object> getOrganizationName(){
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("name", serv.getOrganizationName());
+        return json;
+    }
+
+    /**
+     * @return {
+     *  content: string // HTML content
+     * }
+     */
+    @GetMapping("/splash")
+    public Map<String, Object> getSplashPageContent(){
+        HashMap<String, Object> json = new HashMap<>();
+        json.put("content", serv.getSplashPageContent());
+        return json;
     }
     
     @PostMapping

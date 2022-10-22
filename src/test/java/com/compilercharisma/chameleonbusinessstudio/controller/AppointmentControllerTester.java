@@ -53,9 +53,6 @@ public class AppointmentControllerTester {
 
         var anInvalidAppointment = new AppointmentEntity();
 
-        Mockito.doNothing().when(appointments).validateAppointment(anInvalidAppointment);
-        Mockito.when(appointments.isAppointmentValid(anInvalidAppointment)).thenReturn(false);
-        
         Assertions.assertThrows(IllegalArgumentException.class, ()->{
             sut.bookMe(token, anInvalidAppointment.getId()).block();
         });
@@ -113,8 +110,6 @@ public class AppointmentControllerTester {
         appointment.setStartTime(LocalDateTime.now());
         appointment.setEndTime(appointment.getStartTime().plusHours(1));
 
-        Mockito.doNothing().when(appointments).validateAppointment(appointment);
-        Mockito.when(appointments.isAppointmentValid(appointment)).thenReturn(true);
         Mockito.when(appointments.getAppointmentById(appointment.getId())).thenReturn(Optional.of(appointment));
         Mockito.when(appointments.isSlotAvailable(appointment)).thenReturn(true);
     }
