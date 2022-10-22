@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -29,8 +31,8 @@ public class AuthenticationController {
      * @return the email of the user
      */
     @GetMapping("/getPrincipal")
-    public String getPrincipal(Authentication authentication) {
-        return ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
+    public String getPrincipal(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        return oAuth2User.getAttribute("email");
     }
 
     /**
