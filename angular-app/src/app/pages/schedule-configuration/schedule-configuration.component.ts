@@ -1,8 +1,11 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AvailableTimes } from 'src/app/models/mock/mock-availabile-times';
 import { Component } from '@angular/core';
-import { IAvailability } from 'src/app/models/interfaces/IAvailability';
+import { DaysOfWeek, IAvailability } from 'src/app/models/interfaces/IAvailability';
 import { IEvent } from 'src/app/models/interfaces/IEvent';
+import { IAppointment } from 'src/app/models/interfaces/IAppointment';
+import { IRepeatingAppointment } from 'src/app/models/interfaces/IRepeatingAppointment';
+import { ISchedule } from 'src/app/models/interfaces/ISchedule';
 
 
 @Component({
@@ -28,6 +31,19 @@ export class ScheduleConfigurationComponent {
     location: "",
     description: "",
   };
+
+  myAvailability: IAvailability = {
+    title: "",
+    hoursFrom: "",
+    hoursTo: "",
+    daysOfWeek: [],
+  }
+
+  mySchedule: ISchedule = {
+    title: "",
+    isEnabled: true,
+    appointments: []
+  }
   
   daysOfTheWeek = this.formBuilder.group({
     monday: false,
@@ -65,6 +81,8 @@ export class ScheduleConfigurationComponent {
       daysOfWeek: data.daysOfTheWeek,
     }
 
+    this.myAvailability = newAvailability;
+
     console.log("Generated a new availability");
     console.log(
       "Title: " + newAvailability.title + " " + 
@@ -92,6 +110,38 @@ export class ScheduleConfigurationComponent {
       "Location: " + newEvent.location + " " + newEvent.locationDetails + " " + 
       "Description: " + newEvent.description 
     );
+
+    this.constructSchedule();
+
+    console.log("Schedule Constructed with the following properties: ");
+    console.log(this.mySchedule.title + " " + this.mySchedule.appointments);
+    console.log(this.mySchedule.appointments[0].appointment.title);
+
+  }
+
+  public constructSchedule(): void {
+    const theAppointment: IAppointment = {
+      startTime: "2022-10-25T09:00:00",
+      endTime: "2022-10-25T09:30:00",
+      title: this.myEvent.title,
+      location: this.myEvent.location + " " + this.myEvent.locationDetails,
+      description: this.myEvent.description ? this.myEvent.description : "",
+      registeredUsers: [],
+    };
+
+    const theRepeatingAppointment: IRepeatingAppointment = {
+      isEnabled: true,
+      repeatsOn: ["TUESDAY" as DaysOfWeek, "THURSDAY" as DaysOfWeek],
+      appointment: theAppointment,
+    }
+
+    const theSchedule: ISchedule = {
+      title: this.myAvailability.title,
+      isEnabled: true,
+      appointments: [theRepeatingAppointment],
+    }
+
+    this.mySchedule = theSchedule;
 
   }
 
