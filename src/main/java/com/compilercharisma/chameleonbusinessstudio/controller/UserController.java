@@ -28,8 +28,8 @@ public class UserController {
      *
      * @return {@link UserResponse}
      */
-    @GetMapping("/getUser")
-    public Mono<User> getUser(@RequestParam  String email) {
+    @GetMapping("/{email}")
+    public Mono<User> getUser(@PathVariable String email) {
         log.info("Retrieving user with email [{}] from Vendia", email);
         return userService.getUser(email)
                 .doOnNext(l -> log.info("Finished retrieving user from Vendia with email [{}]", email))

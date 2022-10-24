@@ -29,3 +29,4 @@
         /                             | POST   | user          | accepts user
         /                             | PUT    | user          | updates user
         /                             | DELETE | string        | accepts user, deletes user
+        /{email}                      | GET    |user           | user with given email
