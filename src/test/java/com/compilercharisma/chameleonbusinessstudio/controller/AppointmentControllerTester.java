@@ -1,5 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -8,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
@@ -25,7 +27,7 @@ public class AppointmentControllerTester {
     private final AuthenticationService authentication = Mockito.mock(AuthenticationService.class);
     private final UserService users = Mockito.mock(UserService.class);
     private final AppointmentController sut;
-    private final AppointmentEntity appointment = new AppointmentEntity();
+    private final Appointment appointment = new Appointment();
     private final User user = new User();
     private final Authentication token = null;
 
@@ -41,8 +43,11 @@ public class AppointmentControllerTester {
     public void bookMe_givenAValidAppointment_registersLoggedInUser(){
         givenTheAppointmentIsValid();
         givenTheUserIsValid();
+        when(appointments.isSlotAvailable(appointment)).thenReturn(true);
+        when(appointments.registerUser(appointment, user.getEmail())).thenReturn(Mono.just(appointment));
         
-        sut.bookMe(token, appointment.getId()).block();
+        
+        sut.bookMe(token, appointment.get_id()).block();
 
         Mockito.verify(appointments).registerUser(appointment, user.getEmail());
     }
@@ -51,27 +56,14 @@ public class AppointmentControllerTester {
     public void bookMe_givenAnInvalidAppointment_doesNotRegisterAnyone() throws InvalidAppointmentException{
         givenTheUserIsValid();
 
-        var anInvalidAppointment = new AppointmentEntity();
+        var anInvalidAppointment = new Appointment();
+        when(appointments.getAppointmentById(anInvalidAppointment.get_id()))
+            .thenThrow(IllegalArgumentException.class);
 
         Assertions.assertThrows(IllegalArgumentException.class, ()->{
-            sut.bookMe(token, anInvalidAppointment.getId()).block();
+            sut.bookMe(token, anInvalidAppointment.get_id()).block();
         });
 
-        Mockito
-            .verify(appointments, Mockito.never())
-            .registerUser(Mockito.eq(anInvalidAppointment), Mockito.any(String.class));
-    }
-
-    @Test
-    public void bookThem_givenAnInvalidAppointmentId_doesNotRegisterAnyone(){
-        givenTheUserIsValid();
-        var anInvalidAppointment = new AppointmentEntity();
-        anInvalidAppointment.setId(-1);
-
-        Assertions.assertThrows(IllegalArgumentException.class, ()->{
-            sut.bookThem(null, anInvalidAppointment.getId(), "foo.bar@baz.qux").block();
-        });
-        
         Mockito
             .verify(appointments, Mockito.never())
             .registerUser(Mockito.eq(anInvalidAppointment), Mockito.any(String.class));
@@ -83,12 +75,12 @@ public class AppointmentControllerTester {
         givenTheUserIsValid();
 
         Assertions.assertThrows(IllegalArgumentException.class, ()->{
-            sut.bookThem(token, appointment.getId(), "an invalid email");
+            sut.bookThem(token, appointment.get_id(), "an invalid email");
         });
 
         Mockito
             .verify(appointments, Mockito.never())
-            .registerUser(Mockito.any(AppointmentEntity.class), Mockito.any(String.class));
+            .registerUser(Mockito.any(Appointment.class), Mockito.any(String.class));
     }
 
     private void givenTheUserIsValid(){
@@ -97,10 +89,10 @@ public class AppointmentControllerTester {
         user.set_id("foo");
         user.setRole(UserRole.PARTICIPANT);
 
-        Mockito.when(users.get(user.getEmail())).thenReturn(Mono.just(Optional.of(user)));
-        Mockito.when(users.isRegistered(user.getEmail())).thenReturn(Mono.just(true));
-        Mockito.when(authentication.getLoggedInUserFrom(token)).thenReturn(Mono.just(user));
-        Mockito.when(authentication.getEmailFrom(token)).thenReturn(user.getEmail());
+        when(users.get(user.getEmail())).thenReturn(Mono.just(Optional.of(user)));
+        when(users.isRegistered(user.getEmail())).thenReturn(Mono.just(true));
+        when(authentication.getLoggedInUserFrom(token)).thenReturn(Mono.just(user));
+        when(authentication.getEmailFrom(token)).thenReturn(user.getEmail());
     }
 
     private void givenTheAppointmentIsValid(){
@@ -110,7 +102,7 @@ public class AppointmentControllerTester {
         appointment.setStartTime(LocalDateTime.now());
         appointment.setEndTime(appointment.getStartTime().plusHours(1));
 
-        Mockito.when(appointments.getAppointmentById(appointment.getId())).thenReturn(Optional.of(appointment));
-        Mockito.when(appointments.isSlotAvailable(appointment)).thenReturn(true);
+        when(appointments.getAppointmentById(appointment.get_id())).thenReturn(Mono.just(appointment));
+        when(appointments.isSlotAvailable(appointment)).thenReturn(true);
     }
 }

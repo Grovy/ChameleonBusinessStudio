@@ -33,6 +33,18 @@ public class VendiaField {
         return VendiaFilter.fieldContains(name, value);
     }
 
+    public VendiaFilter eq(Object value){
+        return VendiaFilter.fieldEquals(name, value.toString());
+    }
+
+    public VendiaFilter ge(Object value){
+        return VendiaFilter.fieldGreaterThanOrEqualTo(name, value.toString());
+    }
+
+    public VendiaFilter le(Object value){
+        return VendiaFilter.fieldLessThanOrEqualTo(name, value.toString());
+    }
+
     /**
      * Throws an InvalidVendiaFieldException if the given name cannot be used as
      *  a field name
