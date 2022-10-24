@@ -43,8 +43,8 @@ public class AuthenticationService {
      */
     public Mono<User> getLoggedInUserFrom(Authentication token){
         var email = getEmailFrom(token);
-        return users.get(email)
-            .map(opt -> opt.orElseThrow(()->new UserNotRegisteredException(email)));
+        return users.getUser(email)
+            .switchIfEmpty(Mono.error(new UserNotRegisteredException(email)));
     }
 
     /**

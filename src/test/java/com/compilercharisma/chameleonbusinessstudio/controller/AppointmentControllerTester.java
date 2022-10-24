@@ -3,7 +3,6 @@ package com.compilercharisma.chameleonbusinessstudio.controller;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -89,10 +88,10 @@ public class AppointmentControllerTester {
         user.set_id("foo");
         user.setRole(UserRole.PARTICIPANT);
 
-        when(users.get(user.getEmail())).thenReturn(Mono.just(Optional.of(user)));
         when(users.isRegistered(user.getEmail())).thenReturn(Mono.just(true));
         when(authentication.getLoggedInUserFrom(token)).thenReturn(Mono.just(user));
         when(authentication.getEmailFrom(token)).thenReturn(user.getEmail());
+        when(users.getUser(user.getEmail())).thenReturn(Mono.just(user));
     }
 
     private void givenTheAppointmentIsValid(){

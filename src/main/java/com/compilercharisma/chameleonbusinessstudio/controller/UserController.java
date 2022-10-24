@@ -2,13 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
@@ -26,6 +20,20 @@ public class UserController {
 
     public UserController(UserService userService){
         this.userService = userService;
+    }
+
+    /**
+     * Get a user from Vendia by their email
+     * @param email User's email
+     *
+     * @return {@link UserResponse}
+     */
+    @GetMapping("/getUser")
+    public Mono<User> getUser(@RequestParam  String email) {
+        log.info("Retrieving user with email [{}] from Vendia", email);
+        return userService.getUser(email)
+                .doOnNext(l -> log.info("Finished retrieving user from Vendia with email [{}]", email))
+                .doOnError(e -> log.error("Could not retrieve user from Vendia with email [{}]", email));
     }
 
     /**
