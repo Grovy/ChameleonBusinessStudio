@@ -91,7 +91,7 @@ public class AppointmentControllerTester {
         user.set_id("foo");
         user.setRole(UserRole.PARTICIPANT);
 
-        Mockito.when(users.get(user.getEmail())).thenReturn(Mono.just(Optional.of(user)));
+        Mockito.when(users.getUser(user.getEmail())).thenReturn(Mono.just(user));
         Mockito.when(users.isRegistered(user.getEmail())).thenReturn(Mono.just(true));
         Mockito.when(authentication.getLoggedInUserReactive()).thenReturn(Mono.just(user));
     }
