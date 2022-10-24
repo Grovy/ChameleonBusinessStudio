@@ -3,9 +3,8 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-
-import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,11 +43,18 @@ public class UserService {
                     .anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
     }
 
-    // temporary method by Matt
-    public Mono<Optional<User>> get(String email){
+    /**
+     * Get a single user from Vendia based on their email, null if it doesn't exist
+     *
+     * @param email User's email
+     * @return {@link User}
+     */
+    public Mono<User> getUser(String email){
         return getAllUsers()
             .map(UserResponse::getUsers)
-            .map(lu -> lu.stream().filter(u -> u.getEmail().equalsIgnoreCase(email)).findFirst());
+            .mapNotNull(lu -> lu.stream()
+                    .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                        .findFirst().orElseThrow());
     }
 
     /**

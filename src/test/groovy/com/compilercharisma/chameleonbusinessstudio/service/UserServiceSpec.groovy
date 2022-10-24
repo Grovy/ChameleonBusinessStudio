@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.service
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse
+import com.compilercharisma.chameleonbusinessstudio.entity.user.Role
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository
 import reactor.core.publisher.Mono
@@ -64,6 +65,27 @@ class UserServiceSpec extends Specification {
 
         and: "the expected interactions occur"
         1 * userRepository.findAllUsers() >> Mono.just(users)
+        0 * _
+    }
+
+    def "getUser is successful"() {
+        given: "an email"
+        def email = "danielR@chameleon.com"
+        def expected = new User(_id: "0184068e-4e86-5eaf-1f1f-71fc9f829887", displayName: "Daniel Ramos",
+                email: "danielR@chameleon.com", role: UserRole.ADMIN, appointments: [])
+
+        when: "getUser is called"
+        def response = sut.getUser(email).block()
+
+        then: "the response is correct"
+        response._id == expected._id
+        response.email == expected.email
+        response.displayName == expected.displayName
+        response.role == expected.role
+        response.appointments == expected.appointments
+
+        and: "the expected interactions occur"
+        1 * userRepository.findAllUsers() >> Mono.just(new UserResponse([expected]))
         0 * _
     }
 }

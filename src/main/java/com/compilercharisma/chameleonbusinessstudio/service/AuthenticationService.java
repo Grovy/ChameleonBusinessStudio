@@ -75,10 +75,10 @@ public class AuthenticationService {
 
     private Mono<User> googleUserToOurUser(OAuth2User googleUser){
         String email = googleUser.getAttribute("email");
-        return users.get(email)
+        return users.getUser(email)
             .handle((maybeUser, sink)->{
-                if(maybeUser.isPresent()){
-                    sink.next(maybeUser.get());
+                if(maybeUser != null){
+                    sink.next(maybeUser);
                 } else {
                     sink.error(new UserNotRegisteredException(email));
                 }
