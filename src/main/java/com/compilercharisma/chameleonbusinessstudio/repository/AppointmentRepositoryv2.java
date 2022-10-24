@@ -45,7 +45,6 @@ public class AppointmentRepositoryv2
                   list_AppointmentItems {
                     _AppointmentItems {
                       _id
-                      _owner
                       cancelled
                       description
                       endTime
