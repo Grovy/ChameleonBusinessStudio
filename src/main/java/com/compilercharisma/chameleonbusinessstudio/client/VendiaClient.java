@@ -9,7 +9,13 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public record VendiaClient(HttpGraphQlClient httpGraphQlClient) {
+public class VendiaClient {
+
+    private final HttpGraphQlClient httpGraphQlClient;
+
+    public VendiaClient(HttpGraphQlClient httpGraphQlClient) {
+        this.httpGraphQlClient = httpGraphQlClient;
+    }
 
     /**
      * Method used to execute a GraphQl query

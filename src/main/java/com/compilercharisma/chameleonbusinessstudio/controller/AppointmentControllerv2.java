@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -24,6 +25,20 @@ public class AppointmentControllerv2 {
     public AppointmentControllerv2(AppointmentServicev2 appointmentService)
     {
         this.appointmentService = appointmentService;
+    }
+
+    /**
+     * Gets all appointments in Vendia
+     *
+     * @return {@link AppointmentResponse}
+     */
+    @GetMapping("/getAppointments")
+    public Mono<ResponseEntity<AppointmentResponse>> fetchAllAppointmentsFromVendia() {
+        log.info("Retrieving all user appointments from Vendia...");
+        return appointmentService.getAllAppointments()
+                .map(r -> new ResponseEntity<>(r, HttpStatus.ACCEPTED))
+                .doOnNext(r -> log.info("Finished retrieving all user appointments from Vendia!"))
+                .doOnError(e -> log.error("Could not retrieve user appointments from Vendia"));
     }
 
     /**

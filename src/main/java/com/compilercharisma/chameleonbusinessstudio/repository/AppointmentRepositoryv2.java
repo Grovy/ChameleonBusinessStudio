@@ -7,6 +7,7 @@ import com.compilercharisma.chameleonbusinessstudio.client.VendiaSort;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -18,11 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import reactor.core.publisher.Mono;
 
-/**
- *
- *
- * @author Ariel Camargo
- */
 @Slf4j
 @Repository
 public class AppointmentRepositoryv2
@@ -31,6 +27,32 @@ public class AppointmentRepositoryv2
 
     public AppointmentRepositoryv2(VendiaClient vendiaClient){
         this.vendiaClient = vendiaClient;
+    }
+
+    /**
+     * Gets all appointments in Vendia
+     *
+     * @return {@link AppointmentResponse}
+     */
+    public Mono<AppointmentResponse> findAllAppointments() {
+        var query = """
+                  query {
+                  list_AppointmentItems {
+                    _AppointmentItems {
+                      _id
+                      cancelled
+                      description
+                      endTime
+                      location
+                      participants
+                      restrictions
+                      startTime
+                      title
+                      totalSlots
+                    }
+                  }
+                }""";
+        return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class);
     }
 
     /**
@@ -137,7 +159,7 @@ public class AppointmentRepositoryv2
     }
 
     /**
-     * @param appointment The appointment that is getting deleted
+     * @param id The appointment that is getting deleted
      * @return The {@link DeletionResponse} of the appointment getting deleted
      */
     public Mono<DeletionResponse> deleteAppointment(String id) {
