@@ -14,10 +14,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 @SpringBootApplication
+@EnableScheduling // allows appointment generation to run
 public class ChameleonApplication {
 
     public static void main(String[] args) {

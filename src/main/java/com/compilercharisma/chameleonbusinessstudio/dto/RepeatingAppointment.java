@@ -26,7 +26,7 @@ public class RepeatingAppointment {
      * if set to false, the appointment contained herein will not be copied when
      * creating new appointments
      */
-    private boolean isEnabled;
+    private Boolean isEnabled;
 
     /**
      * the days the appointment repeats on
@@ -41,6 +41,9 @@ public class RepeatingAppointment {
 
     /**
      * The last time this has been used to generate appointments.
+     * For example, if lastGenerated is set to January 1st, then this was used
+     * to generate an appointment on January 1st, and likely dates before that.
+     * 
      * This should be set to null whenever any other data changes.
      */
     private LocalDateTime lastGenerated;

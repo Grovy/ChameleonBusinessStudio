@@ -1,7 +1,8 @@
 package com.compilercharisma.chameleonbusinessstudio.entity.appointment;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.validators.AppointmentValidator;
 import com.compilercharisma.chameleonbusinessstudio.entity.*;
+import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;

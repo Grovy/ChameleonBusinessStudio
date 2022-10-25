@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
@@ -85,7 +85,10 @@ public class AppointmentController {
      * @return a 201 Created At response if successful
      */
     @PostMapping
-    public Mono<ResponseEntity<AppointmentEntity>> create(@RequestBody AppointmentEntity appointment){
+    public Mono<ResponseEntity<AppointmentEntity>> create(
+            UriComponentsBuilder root,
+            @RequestBody AppointmentEntity appointment
+    ){
         if(!appointments.isAppointmentValid(appointment) || appointment.getId() != 0){
             return Mono.just(ResponseEntity.badRequest().body(appointment));
         }
@@ -102,11 +105,11 @@ public class AppointmentController {
             }).map((whatever)->{
                 appointments.createAppointment(appointment);
         
-                URI at = ServletUriComponentsBuilder
-                        .fromCurrentContextPath() // relative to application root
-                        .pathSegment("api", "v1", "appointments")
-                        .build()
-                        .toUri();
+                URI at = root // relative to application root
+                    .pathSegment("api", "v1", "appointments")
+                    .build()
+                    .toUri();
+                
                 return ResponseEntity.created(at).body(appointment);
             });
     }

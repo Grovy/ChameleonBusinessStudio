@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.validators.AppointmentValidator;
-import com.compilercharisma.chameleonbusinessstudio.dto.validators.ScheduleValidator;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidScheduleException;
+import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
+import com.compilercharisma.chameleonbusinessstudio.validators.ScheduleValidator;
 
 public class ScheduleValidatorTester {
     

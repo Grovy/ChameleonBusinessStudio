@@ -16,10 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.validators.AppointmentValidator;
 import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
 import reactor.core.publisher.Mono;
 
@@ -76,22 +76,17 @@ public class AppointmentService implements ApplicationListener<ApplicationReadyE
             appt.setTitle(String.format("Appt. #%d", i));
             appt.setLocation(String.format("%d J Street", i * 20));
             appt.setTotalSlots(i % 10 + 1);
-            if(i % 5 == 0){
-                for(int j = 0; j <= i / 5; ++j){
-                    addTag(appt, "Tag " + j);
-                }
-            }
-            if(i % 3 == 0){
-                for(int j = 0; j <= i / 3 && appt.getRegisteredUsers().size() < appt.getTotalSlots(); ++j){
-                    registerUser(appt, "email " + j);
-                }
-            }
             createAppointment(appt);
         }
     }
     
+    // phasing this out
     public void createAppointment(AppointmentEntity appt){
         repo.save(appt);
+    }
+
+    public Mono<Appointment> createAppointment(Appointment appt){
+        return repoV2.createAppointment(appt);
     }
 
     /**
