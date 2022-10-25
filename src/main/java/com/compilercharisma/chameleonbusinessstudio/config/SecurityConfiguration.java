@@ -32,9 +32,10 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity security, UserAuthorizationManager userAuthorizationManager) {
         return security
-                .oauth2Login()/*.clientRegistrationRepository(clientRegistrations()) */
+                .oauth2Login()
                 .and()
                 .authorizeExchange()
+                .pathMatchers("/api/v2/users/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/appointments/**").access(userAuthorizationManager)
                 .pathMatchers(HttpMethod.DELETE, "/api/appointments/**").access(userAuthorizationManager)
                 .pathMatchers(

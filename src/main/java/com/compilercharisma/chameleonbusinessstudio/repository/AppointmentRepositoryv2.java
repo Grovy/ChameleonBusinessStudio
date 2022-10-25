@@ -43,22 +43,9 @@ public class AppointmentRepositoryv2
         var query = """
                 mutation {
                   add_Appointment(
-                    input: {cancelled: %s, endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
-                  ) {
-                    result {
-                      cancelled
-                      description
-                      endTime
-                      location
-                      participants
-                      restrictions
-                      startTime
-                      title
-                      totalSlots
-                    }
-                  }
-                }
-                """.formatted(appointment.getCancelled(), appointment.getEndTime(),
+                    input: {cancelled: %s, endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d} )
+                     { result { cancelled description endTime location participants restrictions startTime title totalSlots } } }"""
+                .formatted(appointment.getCancelled(), appointment.getEndTime(),
                 appointment.getDescription(), appointment.getLocation(),
                 appointment.getRestrictions(),
                 appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
