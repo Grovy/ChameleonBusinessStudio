@@ -19,11 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import reactor.core.publisher.Mono;
 
-/**
- *
- *
- * @author Ariel Camargo
- */
 @Slf4j
 @Repository
 public class AppointmentRepositoryv2
@@ -164,7 +159,7 @@ public class AppointmentRepositoryv2
     }
 
     /**
-     * @param appointment The appointment that is getting deleted
+     * @param id The appointment that is getting deleted
      * @return The {@link DeletionResponse} of the appointment getting deleted
      */
     public Mono<DeletionResponse> deleteAppointment(String id) {
