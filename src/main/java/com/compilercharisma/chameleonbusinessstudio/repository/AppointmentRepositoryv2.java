@@ -1,14 +1,5 @@
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaField;
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaQueryBuilder;
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaSort;
-import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,44 +8,77 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaField;
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaQueryBuilder;
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaSort;
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/**
- *
- *
- * @author Ariel Camargo
- */
 @Slf4j
 @Repository
 public class AppointmentRepositoryv2 {
-  private final VendiaClient vendiaClient;
+    private final VendiaClient vendiaClient;
 
-  public AppointmentRepositoryv2(VendiaClient vendiaClient) {
-    this.vendiaClient = vendiaClient;
-  }
+    public AppointmentRepositoryv2(VendiaClient vendiaClient){
+        this.vendiaClient = vendiaClient;
+    }
 
-  /**
-   *
-   * @param appointment the appointment that will be created
-   * @return The {@link} of the appointment created
-   */
-  public Mono<Appointment> createAppointment(Appointment appointment) {
-    var query = """
-            mutation {
-                add_Appointment(
-                input: {cancelled: %s, endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
-            ) {
-                result {
-                    cancelled
-                    description
-                    endTime
-                    location
-                    participants
-                    restrictions
-                    startTime
-                    title
-                    totalSlots
+    /**
+     * Gets all appointments in Vendia
+     *
+     * @return {@link AppointmentResponse}
+     */
+    public Mono<AppointmentResponse> findAllAppointments() {
+        var query = """
+                  query {
+                  list_AppointmentItems {
+                    _AppointmentItems {
+                      _id
+                      cancelled
+                      description
+                      endTime
+                      location
+                      participants
+                      restrictions
+                      startTime
+                      title
+                      totalSlots
+                    }
+                  }
+                }""";
+        return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class);
+    }
+
+    /**
+     *
+     * @param appointment the appointment that will be created
+     * @return The {@link} of the appointment created
+     */
+    public Mono<Appointment> createAppointment(Appointment appointment)
+    {
+        var query = """
+                mutation {
+                  add_Appointment(
+                    input: {cancelled: %s, endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
+                  ) {
+                    result {
+                      cancelled
+                      description
+                      endTime
+                      location
+                      participants
+                      restrictions
+                      startTime
+                      title
+                      totalSlots
+                    }
+                  }
                 }
             }
         }
@@ -171,49 +195,44 @@ public class AppointmentRepositoryv2 {
                     title
                     totalSlots
                 }
-            }
-        }
-        """
-        .formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
-            appointment.getEndTime(), appointment.getLocation(), appointment.getRestrictions(),
-            appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
-    return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class);
-  }
+                """.formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
+                    appointment.getEndTime(),appointment.getLocation(), appointment.getRestrictions(),
+                    appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
+        return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class);
+    }
 
-  /**
-   * @param appointment The appointment that is getting deleted
-   * @return The {@link DeletionResponse} of the appointment getting deleted
-   */
-  public Mono<DeletionResponse> deleteAppointment(String id) {
-    var deleteAppointmentMutation = """
-        mutation {
-            remove_Appointment(id: "%s") {
-                transaction {
-                    _id
-                }
-            }
-        }""".formatted(id);
-    return vendiaClient
-        .executeQuery(deleteAppointmentMutation, "remove_Appointment.transaction", DeletionResponse.class)
-        .doOnError(
-            l -> log.error("Something bad happened when executing mutation for deleting appointment, check syntax"));
-  }
+    /**
+     * @param id The appointment that is getting deleted
+     * @return The {@link DeletionResponse} of the appointment getting deleted
+     */
+    public Mono<DeletionResponse> deleteAppointment(String id) {
+        var deleteAppointmentMutation = """
+                mutation {
+                  remove_Appointment(id: "%s") {
+                    transaction {
+                      _id
+                    }
+                  }
+                }""".formatted(id);
+        return vendiaClient.executeQuery(deleteAppointmentMutation, "remove_Appointment.transaction" , DeletionResponse.class)
+                .doOnError(l -> log.error("Something bad happened when executing mutation for deleting appointment, check syntax"));
+    }
 
-  /**
-   *
-   * This would be to help parse arrays into strings for the vendia queries.
-   *
-   * @param array Array that you want as a string
-   * @return A string that can be used to up Vendia
-   */
-  // public String arrayToString(Set<String> array)
-  // {
-  // Integer max = array.size();
-  // String output = "[";
-  // for(int i = 0; i < max; i++)
-  // {
-  // //.forEach
-  // }
-  // }
+    /**
+     *
+     * This would be to help parse arrays into strings for the vendia queries.
+     *
+     * @param array Array that you want as a string
+     * @return A string that can be used to up Vendia
+     */
+//    public String arrayToString(Set<String> array)
+//    {
+//        Integer max = array.size();
+//        String output = "[";
+//        for(int i = 0; i < max; i++)
+//        {
+//            //.forEach
+//        }
+//    }
 
 }

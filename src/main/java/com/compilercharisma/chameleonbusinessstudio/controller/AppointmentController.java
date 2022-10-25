@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +51,15 @@ public class AppointmentController {
         this.appointments = appointments;
         this.authentication = authentication;
         this.users = users;
+    }
+
+    @GetMapping
+    public Mono<ResponseEntity<List<Appointment>>> getAllAppointments(){
+        log.info("Retrieving all user appointments from Vendia...");
+        return appointments.getAllAppointments()
+                .map(r -> ResponseEntity.ok(r))
+                .doOnNext(r -> log.info("Finished retrieving all user appointments from Vendia!"))
+                .doOnError(e -> log.error("Could not retrieve user appointments from Vendia"));
     }
 
     /**

@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,16 @@ public class AppointmentService {
      */
     public Mono<Appointment> getAppointmentById(String appointmentId){
         return repo.getAppointmentById(appointmentId);
+    }
+
+    /**
+     * Method returns all appointments in Vendia
+     *
+     * @return a list of all the Vendia appointments
+     */
+    public Mono<List<Appointment>> getAllAppointments() {
+        return repo.findAllAppointments()
+            .map(ar -> ar.getAppointments());
     }
 
     /**

@@ -2,6 +2,7 @@
 ======================================#========#===============#====================================
 /api/v1                               |        |               |
     /appointments                     |        |               |
+        /                             | GET    | appt[]        | all appts
         /                             | POST   |               | accepts an AppointmentEntity
         /                             | PUT    |               | accepts an AppointmentEntity
         /available                    | GET    | appt-page     | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
