@@ -21,9 +21,8 @@ import com.compilercharisma.chameleonbusinessstudio.service.ScheduleService;
 import reactor.core.publisher.Mono;
 
 /**
- * Handles HTTP requests related to schedules of repeating appointments
+ * Handles HTTP requests related to schedules of repeating appointment templates
  */
-// only talents, admins, or organizers should access this
 @RequestMapping("/api/v1/schedules")
 @RestController
 public class ScheduleController {

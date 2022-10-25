@@ -3,7 +3,6 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
-import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
