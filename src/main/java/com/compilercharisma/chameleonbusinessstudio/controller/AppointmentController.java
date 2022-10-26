@@ -136,6 +136,91 @@ public class AppointmentController {
     }
 
     /**
+     * POST /api/v1/appointments/123?email=foo.bar@baz.qux
+     * Books a user for an appointment.
+     * 
+     * @param token the current context's authentication token
+     * @param appointmentId the ID of the appointment to book the given email 
+     *  for
+     * @param email the email of the user to book an appointment for
+     * @return either an OK response with the updated appointment as its body, 
+     *  or one of several error responses
+     */
+    @PostMapping("/book-them/{appointment-id}")
+    public Mono<ResponseEntity<Appointment>> bookThem(
+            @PathVariable("appointment-id") String appointmentId,
+            @RequestParam("email") String email
+    ){
+        if(email == null){
+            return Mono.error(new IllegalArgumentException("Email cannot be null"));
+        }
+        if(!isValidEmail(email)){
+            return Mono.error(new IllegalArgumentException("Invalid email: " + email));
+        }
+
+        var getAppt = appointments.getAppointmentById(appointmentId);
+        var checkUser = users.isRegistered(email);
+        
+        return Mono.zip(getAppt, checkUser)
+            .flatMap(tuple -> {
+                var appt = tuple.getT1();
+                var isUserRegistered = tuple.getT2();
+                if(!isUserRegistered){
+                    throw new IllegalArgumentException("Email is not registered as a user: " + email);
+                }
+                return appointments.bookEmail(appt, email);
+            })
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    @PostMapping("/unbook-them/{appointment-id}")
+    public Mono<ResponseEntity<Appointment>> unbookThem(
+            @PathVariable("appointment-id") String appointmentId,
+            @RequestParam("email") String email
+    ){
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> appointments.unbookEmail(appt, email))
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
+     * Books the currently logged in user for the given appointment.
+     * 
+     * @param token the current context's authentication token
+     * @param appointmentId the ID of theappointment to book the logged-in user 
+     *  for.
+     * @return either a bad request or an OK response containing the updated 
+     *  appointment
+     */
+    @PostMapping("/book-me/{id}")
+    public Mono<ResponseEntity<Appointment>> bookMe(
+            Authentication token,
+            @PathVariable("id") String appointmentId
+    ){
+        var email = authentication.getEmailFrom(token);
+
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> {
+                if(!appointments.isSlotAvailable(appt)){
+                    return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
+                }
+                return appointments.bookEmail(appt, email);
+            })
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    @PostMapping("/unbook-me/{id}")
+    public Mono<ResponseEntity<Appointment>> unbookMe(
+            Authentication token,
+            @PathVariable("id") String appointmentId
+    ){
+        var email = authentication.getEmailFrom(token);
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> appointments.unbookEmail(appt, email))
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
      * Cancels the appointment with the given ID, if it exists.
      * Throws an exception if no such appointment exists.
      * 
@@ -191,74 +276,6 @@ public class AppointmentController {
                 .map(r -> ResponseEntity.ok(r))
                 .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
                 .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
-    }
-
-    /**
-     * POST /api/v1/appointments/123?email=foo.bar@baz.qux
-     * Books a user for an appointment.
-     * 
-     * @param token the current context's authentication token
-     * @param appointmentId the ID of the appointment to book the given email 
-     *  for
-     * @param email the email of the user to book an appointment for
-     * @return either an OK response with the updated appointment as its body, 
-     *  or one of several error responses
-     */
-    @PostMapping("/book-them/{appointment-id}")
-    public Mono<ResponseEntity<Appointment>> bookThem(
-            Authentication token,
-            @PathVariable("appointment-id") String appointmentId,
-            @RequestParam("email") String email
-    ){
-        if(email == null){
-            return Mono.error(new IllegalArgumentException("Email cannot be null"));
-        }
-        if(!isValidEmail(email)){
-            return Mono.error(new IllegalArgumentException("Invalid email: " + email));
-        }
-
-        var getAppt = appointments.getAppointmentById(appointmentId);
-        var checkUser = users.isRegistered(email);
-        
-        return Mono.zip(getAppt, checkUser)
-            .flatMap(tuple -> {
-                var appt = tuple.getT1();
-                var isUserRegistered = tuple.getT2();
-                if(!isUserRegistered){
-                    throw new IllegalArgumentException("Email is not registered as a user: " + email);
-                }
-                if(!appointments.isSlotAvailable(appt)){
-                    throw new UnsupportedOperationException("Appointment is full; it cannot have any more participants");
-                }
-                return appointments.registerUser(appt, email);
-            })
-            .map(appt -> ResponseEntity.ok(appt));
-    }
-
-    /**
-     * Books the currently logged in user for the given appointment.
-     * 
-     * @param token the current context's authentication token
-     * @param appointmentId the ID of theappointment to book the logged-in user 
-     *  for.
-     * @return either a bad request or an OK response containing the updated 
-     *  appointment
-     */
-    @PostMapping("/book-me/{appointment-id}")
-    public Mono<ResponseEntity<Appointment>> bookMe(
-            Authentication token,
-            @PathVariable("appointment-id") String appointmentId
-    ){
-        var email = authentication.getEmailFrom(token);
-
-        return appointments.getAppointmentById(appointmentId)
-            .flatMap(appt -> {
-                if(!appointments.isSlotAvailable(appt)){
-                    return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
-                }
-                return appointments.registerUser(appt, email);
-            })
-            .map(appt -> ResponseEntity.ok(appt));
     }
     
     private boolean isValidEmail(String email){
