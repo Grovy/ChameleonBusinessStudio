@@ -105,6 +105,24 @@ public class AppointmentService {
     }
 
     /**
+     * Cancels the given appointment. This operation is idempotent.
+     * 
+     * @param appt the appointment to cancel.
+     * @return a mono containing the canceled appointment, or nothing if an
+     *  error occurs.
+     */
+    public Mono<Appointment> cancelAppointment(Appointment appt){
+        validateAppointment(appt);
+        if(appt.getCancelled() == true){
+            // already canceled. Don't waste Vendia's time
+            return Mono.just(appt);
+        }
+        
+        appt.setCancelled(true);
+        return updateAppointment(appt);
+    }
+
+    /**
      * Checks if the given appointment is valid, throwing an 
      * InvalidAppointmentException if it isn't.
      * 

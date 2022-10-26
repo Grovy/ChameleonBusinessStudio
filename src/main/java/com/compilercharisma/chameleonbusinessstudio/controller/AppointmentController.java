@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -137,6 +136,22 @@ public class AppointmentController {
     }
 
     /**
+     * Cancels the appointment with the given ID, if it exists.
+     * Throws an exception if no such appointment exists.
+     * 
+     * @param id the ID of the appointment to cancel
+     * @return a response containing the status of the request after processing
+     */
+    @PostMapping("/cancel/{id}")
+    public Mono<ResponseEntity<Appointment>> cancelAppointmentById(
+            @PathVariable String id
+    ) {
+        return appointments.getAppointmentById(id)
+            .flatMap(appointments::cancelAppointment)
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
      * Updates or creates the given appointment based upon its ID, if allowed.
      * 
      * @param token the current context's authentication token
@@ -157,7 +172,7 @@ public class AppointmentController {
             : appointments.updateAppointment(appointment);
 
         return action
-                .map(r -> ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment))
+                .map(r -> ResponseEntity.ok(appointment))
                 .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
                 .onErrorMap(e -> new Exception("Error updating appointment in Vendia"));
     }
@@ -173,7 +188,7 @@ public class AppointmentController {
     ){
         log.info("Deleting an appointment");
         return appointments.deleteAppointment(appointment)
-                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .map(r -> ResponseEntity.ok(r))
                 .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
                 .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
     }
