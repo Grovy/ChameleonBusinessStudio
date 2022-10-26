@@ -34,7 +34,7 @@ public class UserRepository {
      * @return The {@link User} that was created
      */
     public Mono<User> createUser(User user) {
-        var query = "mutation { add_User(input: {appointments: [], displayName: %s, email: %s, role: %s}) { result { _id appointments displayName email role } } }"
+        var query = "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", role: %s}) { result { _id appointments displayName email role } } }"
                 .formatted(user.getDisplayName(), user.getEmail(), user.getRole());
         return vendiaClient.executeQuery(query, "add_User.result", User.class);
     }
@@ -46,19 +46,8 @@ public class UserRepository {
      * @return The first occurrence of {@link User}
      */
     public Mono<UserResponse> findId(String email) {
-        var query = """
-                query {
-                  list_UserItems(filter: {email: {eq: "%s"}}) {
-                    _UserItems {
-                      _id
-                      displayName
-                      email
-                      role
-                      appointments
-                    }
-                  }
-                }
-                """.formatted(email);
+        var query = "query { list_UserItems(filter: {email: {eq: \"%s\"}}) { _UserItems { _id displayName email role appointments } } }"
+                .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
     }
 
@@ -70,17 +59,8 @@ public class UserRepository {
      */
     public Mono<Boolean> isUserRegistered(String email) {
         var query = """
-                query {
-                  list_UserItems(filter: {email: {eq: "%s"}}) {
-                    _UserItems {
-                      _id
-                      email
-                      displayName
-                      role
-                    }
-                  }
-                }
-                """.formatted(email);
+                query { list_UserItems(filter: {email: {eq: "%s"}}) { _UserItems { _id email displayName role } } }"""
+                .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class)
                 .map(r -> !r.getUsers().isEmpty());
     }

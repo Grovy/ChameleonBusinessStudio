@@ -1,5 +1,0 @@
-{
-  "query": "query { list_UserItems { _UserItems { _id email displayName appointments } }",
-  "variables": null,
-  "operationName": null
-}
