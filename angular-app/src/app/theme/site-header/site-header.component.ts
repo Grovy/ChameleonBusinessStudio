@@ -12,10 +12,10 @@ export class SiteHeaderComponent {
     name="";
     
     constructor(private http: HttpClient){
-        http.get<{name: string}>("/custom/organization").subscribe((obj: {name: string})=>{
+        http.get<{name: string}>("/api/v1/config/organization").subscribe((obj: {name: string})=>{
             this.name = obj.name;
         });
-        http.get<{color: string}>("/custom/banner").subscribe((obj: {color: string})=>{
+        http.get<{color: string}>("/api/v1/config/banner").subscribe((obj: {color: string})=>{
             const h = <HTMLElement>document.querySelector("#site-header");
             h.style.backgroundColor = obj.color;
         });

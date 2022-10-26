@@ -18,7 +18,6 @@ import org.mockito.stubbing.Answer;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidScheduleException;
 import com.compilercharisma.chameleonbusinessstudio.repository.ScheduleRepository;
 import com.compilercharisma.chameleonbusinessstudio.util.TestScheduleBuilder;
@@ -132,7 +131,7 @@ public class ScheduleServiceTester {
 
     private void thenNoAppointmentsWereGenerated(){
         // verify no appointments were created
-        verify(appointments, never()).createAppointment(any(AppointmentEntity.class));
+        verify(appointments, never()).createAppointment(any(Appointment.class));
 
         // verify no schedules were updated
         verify(repo, never()).storeSchedule(any(Schedule.class));

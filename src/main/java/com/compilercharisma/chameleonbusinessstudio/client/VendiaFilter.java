@@ -35,6 +35,30 @@ public class VendiaFilter {
         return new VendiaFilter(q);
     }
 
+    /**
+     * @param field the field to filter
+     * @param value the value the given field must be greater than or equal to
+     * @return a filter matching records whose field is greater than the given
+     *  value
+     */
+    public static VendiaFilter fieldGreaterThanOrEqualTo(String field, String value){
+        VendiaField.validate(field);
+        var q = String.format("%s:{ge:\"%s\"}", field, escape(value));
+        return new VendiaFilter(q);
+    }
+
+    /**
+     * @param field the field to filter
+     * @param value the value the given field must be less than or equal to
+     * @return a filter matching records whose field is less than the given
+     *  value
+     */
+    public static VendiaFilter fieldLessThanOrEqualTo(String field, String value){
+        VendiaField.validate(field);
+        var q = String.format("%s:{le:\"%s\"}", field, escape(value));
+        return new VendiaFilter(q);
+    }
+
     private static String escape(String in){
         return in.replaceAll("\"", "\\\""); //escape quotes 
     }
