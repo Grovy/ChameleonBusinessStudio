@@ -5,13 +5,13 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AuthenticationService {
 
-    private readonly apiUrl = '/api/v2/auth';
+    private readonly apiUrl = '/api/v1/auth';
 
     constructor (private httpClient: HttpClient) { }
 
     // Returns the email address of the authenticated user
     public getPrincipal(): Observable<string> {
-        return this.httpClient.get(`${this.apiUrl}/getPrincipal`, { responseType: 'text'})
+        return this.httpClient.get(`${this.apiUrl}/principal`, { responseType: 'text'})
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
