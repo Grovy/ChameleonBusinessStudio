@@ -21,6 +21,7 @@ import { BookingPageComponent} from './pages/appointments/booking-page/booking-p
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { CalenderViewComponent } from './pages/appointments/appointment-calender/calender-view/calender-view.component';
 import { CustomBannerDirective } from './theme/directives/custom-banner.directive';
+import { DateManager } from './services/DateManager';
 import { DefaultHeaderComponent } from './theme/default-header/default-header.component';
 import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { FormsModule} from "@angular/forms";
@@ -31,6 +32,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { ScheduleConfigurationComponent } from './pages/schedule-configuration/schedule-configuration.component';
+import { ScheduleService } from './services/ScheduleService.service';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
 import { SignInComponent } from './pages/auth/signin/signin.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
@@ -64,8 +66,6 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-
 
 
 @NgModule({
@@ -149,6 +149,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
   providers: [
     AuthenticationService,
+    DateManager,
+    ScheduleService,
     UserService
   ],
   bootstrap: [AppComponent]
