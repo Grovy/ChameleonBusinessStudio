@@ -42,7 +42,7 @@ public class UserController {
      *
      * @return {@link UserResponse}
      */
-    @GetMapping() // implies "all"
+    @GetMapping("/getAllUsers")
     public Mono<ResponseEntity<UserResponse>> getAllUsers() {
         log.info("Retrieving all users from Vendia...");
         return userService.getAllUsers()
@@ -57,7 +57,7 @@ public class UserController {
      * @param user the user to be created
      * @return The {@link User} that was created
      */
-    @PostMapping()
+    @PostMapping("/createUser")
     public Mono<ResponseEntity<User>> createUser(@RequestBody User user){
         log.info("Creating user in Vendia with parameters [{}]", user);
         return userService.createUser(user)

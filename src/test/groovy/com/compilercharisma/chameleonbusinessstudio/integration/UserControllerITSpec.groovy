@@ -11,13 +11,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import static com.github.tomakehurst.wiremock.client.WireMock.verify
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOidcLogin
 
 @WithMockUser
 class UserControllerITSpec extends BaseITSpec{
 
     def "getAllUsers is successful"() {
         given: "a request"
-        def request = client.get().uri("/api/v2/users/getAllUsers")
+        def request = client.mutateWith(mockOidcLogin()).get().uri("/api/v1/users/getAllUsers")
 
         stubFor(post("/graphql/")
                 .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
@@ -49,7 +50,7 @@ class UserControllerITSpec extends BaseITSpec{
         given: "a valid request"
         def user = new User(_id: "", displayName: "ChameleonTest", email: "Chameleon@email.com", role: UserRole.PARTICIPANT, appointments: [])
         def body = objectMapper.writeValueAsString(user)
-        def request = client.post().uri("/api/v2/users/createUser")
+        def request = client.mutateWith(mockOidcLogin()).post().uri("/api/v1/users/createUser")
                 .bodyValue(body)
                 .header("content-type", "application/json")
 
@@ -91,44 +92,6 @@ class UserControllerITSpec extends BaseITSpec{
         and: "two requests to /graphql/ are sent"
         verify(2, postRequestedFor(urlEqualTo("/graphql/")))
 
-    }
-
-    // TODO: When endpoint is fixed we need to come back to this integration test
-    def "deleteUser in Vendia is succesful"() {
-        given: "An existing user and a valid request"
-        def user = new User(_id: "0184113a-0870-cd1b-271d-ccfb801204dd", displayName: "Daniel V",
-                email: "Daniel@gmail.com", role: UserRole.ORGANIZER, appointments: [])
-        def body = objectMapper.writeValueAsString(user)
-        def findIdByEmailQuery = """{"query":"query { list_UserItems(filter: {email: {eq: \\\"$user.email\\\"}}) { _UserItems { _id displayName email role appointments } } }"}"""
-        def deleteByIdQuery = """{"query":"mutation { remove_User(id: \\\"$user._id\\\") { transaction { _id } } }"}"""
-        def request = client.delete().uri("/api/v2/users/deleteUser")
-                .header("content-type", "application/json")
-
-        stubFor(post("/graphql/")
-                .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
-                .withRequestBody(equalTo(findIdByEmailQuery))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("vendiaResponses/findIdByEmailResponse.json")))
-
-        stubFor(post("/graphql/")
-                .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
-                .withHeader("Content-Type", equalTo("application/json"))
-                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
-                .withRequestBody(equalTo(deleteByIdQuery))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBodyFile("vendiaResponses/userDeletionResponse.json")))
-
-        when: "the request is sent"
-        def response = request.exchange()
-
-        then: "an OK response is returned"
-        response.expectStatus().isOk()
     }
 
 }
