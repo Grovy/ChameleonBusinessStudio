@@ -45,7 +45,7 @@ public class UserRepository {
      * @param email email of the user
      * @return The first occurrence of {@link User}
      */
-    public Mono<UserResponse> findId(String email) {
+    public Mono<UserResponse> findUserIdByEmail(String email) {
         var query = "query { list_UserItems(filter: {email: {eq: \"%s\"}}) { _UserItems { _id displayName email role appointments } } }"
                 .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
@@ -98,14 +98,7 @@ public class UserRepository {
      * @return {@link String}
      */
     public Mono<String> deleteUser(String id) {
-        String deleteUserMutation = """
-                mutation {
-                  remove_User(id: "%s") {
-                    transaction {
-                      _id
-                    }
-                  }
-                }""".formatted(id);
+        String deleteUserMutation = "mutation { remove_User(id: \"%s\") { transaction { _id } } }".formatted(id);
         return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , String.class)
                 .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
     }

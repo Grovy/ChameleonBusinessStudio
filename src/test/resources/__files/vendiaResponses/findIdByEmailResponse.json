@@ -1,0 +1,15 @@
+{
+  "data": {
+    "list_UserItems": {
+      "_UserItems": [
+        {
+          "_id": "0184113a-0870-cd1b-271d-ccfb801204dd",
+          "displayName": "Daniel Villavicencio",
+          "email": "daniel@gmail.com",
+          "role": "ORGANIZER",
+          "appointments": []
+        }
+      ]
+    }
+  }
+}

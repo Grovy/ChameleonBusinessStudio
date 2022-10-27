@@ -76,7 +76,7 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user){
-        return userRepository.findId(user.getEmail())
+        return userRepository.findUserIdByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.updateUser(user, u.get_id()));
     }
@@ -88,7 +88,7 @@ public class UserService {
      * @return {@link UserResponse}
      */
     public Mono<String> deleteUser(User user) {
-        return userRepository.findId(user.getEmail())
+        return userRepository.findUserIdByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
     }
