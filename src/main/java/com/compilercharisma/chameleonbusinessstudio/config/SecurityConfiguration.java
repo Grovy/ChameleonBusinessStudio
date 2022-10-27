@@ -19,16 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfiguration {
 
     @Bean
-    ReactiveClientRegistrationRepository clientRegistrations() {
-        ClientRegistration clientRegistration = ClientRegistrations
-                .fromOidcIssuerLocation("https://accounts.google.com")
-                .clientId("621729563946-2bnana80rude278barj2a3eft2l27n3c.apps.googleusercontent.com")
-                .clientSecret("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")
-                .build();
-        return new InMemoryReactiveClientRegistrationRepository(clientRegistration);
-    }
-
-    @Bean
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity security, UserAuthorizationManager userAuthorizationManager) {
         return security
