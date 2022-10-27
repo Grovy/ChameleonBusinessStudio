@@ -18,12 +18,12 @@ export class AppointmentListComponent {
     temp:IAppointment ={
       id: 123,
       date: "masdf",
-      startTime: '',
-      endTime: '',
+      startTime: new Date(),
+      endTime: new Date(),
       title: 'Hair cut',
       location: 'jasdfjsd',
       description: 'sdfasdf',
-      registeredUsers: []
+      participants: []
     };
     constructor(){
         this.appointments = [this.temp];

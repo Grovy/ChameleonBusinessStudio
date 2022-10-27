@@ -24,13 +24,15 @@ const routes: Routes = [
   { path: 'appointment-list',component:AppointmentListComponent},
   { path: 'appointment-creation',component:AppointmentCreateFormComponent},
   { path: 'appointment-details', component: AppointmentDetailsComponent },
-  { path: 'calender-view',component: CalenderViewComponent },
   { path: 'booking-page', component: BookingPageComponent },
+  { path: 'calender-view',component: CalenderViewComponent },
   { path: 'landing-page-configuration', component: LandingPageConfigurationComponent },
   { path: 'schedule-configuration', component: ScheduleConfigurationComponent },
   { path: 'setup-wizard', component: SetupWizardComponent },
   { path: 'sign-in', component: SignInFormComponent },
   { path: 'site-header', component: SiteHeaderComponent },
+
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
