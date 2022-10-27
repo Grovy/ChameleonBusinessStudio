@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -97,9 +98,9 @@ public class UserRepository {
      * @param id The id of the user to be deleted.
      * @return {@link String}
      */
-    public Mono<String> deleteUser(String id) {
+    public Mono<DeletionResponse> deleteUser(String id) {
         String deleteUserMutation = "mutation { remove_User(id: \"%s\") { transaction { _id } } }".formatted(id);
-        return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , String.class)
+        return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , DeletionResponse.class)
                 .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
     }
 }

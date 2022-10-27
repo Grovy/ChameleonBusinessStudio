@@ -1,5 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
@@ -87,7 +88,7 @@ public class UserService {
      * @param user The user to be deleted.
      * @return {@link UserResponse}
      */
-    public Mono<String> deleteUser(User user) {
+    public Mono<DeletionResponse> deleteUser(User user) {
         return userRepository.findUserIdByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));

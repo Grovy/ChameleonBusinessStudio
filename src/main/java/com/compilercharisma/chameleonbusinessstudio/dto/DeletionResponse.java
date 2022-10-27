@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-
 public class DeletionResponse {
-    private String _id;
 
+    private String _id;
 }

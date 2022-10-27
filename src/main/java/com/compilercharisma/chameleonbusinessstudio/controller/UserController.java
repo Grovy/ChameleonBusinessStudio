@@ -1,5 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,13 +80,14 @@ public class UserController {
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
+    // TODO: Need to refactor this endpoint, a request body isn't allowed here
     /**
      * Deletes user in Vendia
      * @param user the user being removed
      * @return Id of the deleted user
      */
     @DeleteMapping()
-    public Mono<ResponseEntity<String>> deleteUser(@RequestBody User user) {
+    public Mono<ResponseEntity<DeletionResponse>> deleteUser(@RequestBody User user) {
         log.info("Deleting user in Vendia with email [{}]", user.getEmail());
         return userService.deleteUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))

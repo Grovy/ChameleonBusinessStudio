@@ -191,8 +191,7 @@ public class AppointmentRepositoryv2 {
                     startTime
                     title
                     totalSlots
-                }
-                """.formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
+                }""".formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
                     appointment.getEndTime(),appointment.getLocation(), appointment.getRestrictions(),
                     appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
         return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class);
