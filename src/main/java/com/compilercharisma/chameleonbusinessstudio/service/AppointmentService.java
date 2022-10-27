@@ -14,6 +14,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Service
+@Slf4j
 public class AppointmentService {
 
     private final AppointmentRepositoryv2 repo;
@@ -94,6 +96,9 @@ public class AppointmentService {
      * @return the updated appointment
      */
     public Mono<Appointment> updateAppointment(Appointment appt){
+        validateAppointment(appt);
+        log.info("Updating an appointment", appt);
+
         // this might also send notifications to users subscribed to the appointment
         return repo.updateAppointment(appt);
     }

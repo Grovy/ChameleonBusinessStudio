@@ -52,23 +52,7 @@ public class AppointmentRepositoryv2 {
      * @return {@link AppointmentResponse}
      */
     public Mono<AppointmentResponse> findAllAppointments() {
-        var query = """
-                	query {
-                	list_AppointmentItems {
-                		_AppointmentItems {
-                			_id
-                			cancelled
-                			description
-                			endTime
-                			location
-                			participants
-                			restrictions
-                			startTime
-                			title
-                			totalSlots
-                		}
-                	}
-                }""";
+        var query = "query {list_AppointmentItems {_AppointmentItems {_id,cancelled,description,endTime,location,participants,restrictions,startTime,title,totalSlots}}}";
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class);
     }
 
@@ -78,31 +62,11 @@ public class AppointmentRepositoryv2 {
      * @return The {@link} of the appointment created
      */
     public Mono<Appointment> createAppointment(Appointment appointment) {
-        var query = """
-                				mutation {
-                					add_Appointment(
-                						input: {cancelled: %s, endTime: "%s", description: "%s", location: "%s", participants: [], restrictions: "%s", startTime: "%s", title: "%s", totalSlots: %d}
-                					) {
-                						result {
-                							cancelled
-                							description
-                							endTime
-                							location
-                							participants
-                							restrictions
-                							startTime
-                							title
-                							totalSlots
-                						}
-                					}
-                				}
-                		}
-                }
-                """
-                .formatted(appointment.getCancelled(), appointment.getEndTime(),
-                        appointment.getDescription(), appointment.getLocation(),
-                        appointment.getRestrictions(),
-                        appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
+        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: [], restrictions: \"%s\", startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,restrictions,startTime,title,totalSlots}}}}}"
+            .formatted(appointment.getCancelled(), appointment.getEndTime(),
+                    appointment.getDescription(), appointment.getLocation(),
+                    appointment.getRestrictions(),
+                    appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
     }
 
@@ -175,29 +139,13 @@ public class AppointmentRepositoryv2 {
      * @return The {@link} of the appointment getting updated
      */
     public Mono<Appointment> updateAppointment(Appointment appointment) {
-        var query = """
-                mutation {
-                		update_Appointment(
-                				id: "%s"
-                				input: {cancelled: %s, description: "%s", endTime: "%s", location: "%s", participants: ["test@gmail.com", "test2@gmail.com"], restrictions: "%s", title: "%s", totalSlots: %d, startTime: "%s"}
-                		) {
-                				result {
-                						_id
-                						cancelled
-                						description
-                						endTime
-                						location
-                						participants
-                						restrictions
-                						startTime
-                						title
-                						totalSlots
-                				}
-                				"""
+        var query = "mutation {update_Appointment(id: \"%s\"input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: [\"test@gmail.com\", \"test2@gmail.com\"], restrictions: \"%s\", title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,restrictions,startTime,title,totalSlots}"
                 .formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
                         appointment.getEndTime(), appointment.getLocation(), appointment.getRestrictions(),
                         appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
-        return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class);
+        return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class)
+                .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error updating appointment in Vendia"));
     }
 
     /**
@@ -205,14 +153,7 @@ public class AppointmentRepositoryv2 {
      * @return The {@link DeletionResponse} of the appointment getting deleted
      */
     public Mono<DeletionResponse> deleteAppointment(String id) {
-        var deleteAppointmentMutation = """
-                mutation {
-                	remove_Appointment(id: "%s") {
-                		transaction {
-                			_id
-                		}
-                	}
-                }""".formatted(id);
+        var deleteAppointmentMutation = "mutation {remove_Appointment(id: \"%s\") {transaction {_id}}}".formatted(id);
         return vendiaClient
                 .executeQuery(deleteAppointmentMutation, "remove_Appointment.transaction", DeletionResponse.class)
                 .doOnError(l -> log.error(

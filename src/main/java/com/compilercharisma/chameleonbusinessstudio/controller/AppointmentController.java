@@ -237,29 +237,20 @@ public class AppointmentController {
     }
 
     /**
-     * Updates or creates the given appointment based upon its ID, if allowed.
+     * Updates the given appointment.
+     * Throws an exception if the appointment is not yet stored in Vendia.
      * 
      * @param token the current context's authentication token
      * @param appointment the appointment to create or update
      * @return a response containing the updated or created appointment
      */
     @PutMapping
-    public Mono<ResponseEntity<Appointment>> updateVendiaAppointment(
+    public Mono<ResponseEntity<Appointment>> updateAppointment(
             Authentication token,
             @RequestBody Appointment appointment
     ){
-        appointments.validateAppointment(appointment);
-        log.info("Updating an appointment", appointment);
-
-        var id = appointment.get_id();
-        var action = (id == "" || id == null)
-            ? appointments.createAppointment(appointment)
-            : appointments.updateAppointment(appointment);
-
-        return action
-                .map(r -> ResponseEntity.ok(appointment))
-                .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
-                .onErrorMap(e -> new Exception("Error updating appointment in Vendia"));
+        return appointments.updateAppointment(appointment)
+            .map(r -> ResponseEntity.ok(appointment));
     }
 
     /**
