@@ -42,7 +42,7 @@ public class UserAuthorizationManager implements ReactiveAuthorizationManager<Au
 
     private Mono<Boolean> isUserAuthorized(Mono<String> email) {
         return email.flatMap(e -> {
-            var users = userRepository.findId(e);
+            var users = userRepository.findUserIdByEmail(e);
             return users.flatMap(userResponse -> {
                 if (CollectionUtils.isEmpty(userResponse.getUsers())) {
                     var msg = "User with email [%s] not registered".formatted(e);

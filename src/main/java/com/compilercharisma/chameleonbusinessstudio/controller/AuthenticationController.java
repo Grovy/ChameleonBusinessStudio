@@ -64,7 +64,7 @@ public class AuthenticationController {
         var email = authService.getEmailFrom(authentication);
         log.info("Checking to see if user with email [{}] is registered in Vendia", email);
         return Mono.just(Objects.requireNonNull(email))
-                .flatMap(s -> userService.isRegistered(s))
+                .flatMap(userService::isRegistered)
                 .map(bool -> new ResponseEntity<>(bool, HttpStatus.OK));
     }
 }

@@ -4,6 +4,7 @@ import com.compilercharisma.chameleonbusinessstudio.authorization.UserAuthorizat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -17,8 +18,7 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity security, UserAuthorizationManager userAuthorizationManager) {
         return security
-                .oauth2Login()
-                .and()
+                .oauth2Login(Customizer.withDefaults())
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.POST, "/api/v1/users").authenticated() // allow logged-in users to register themselves
                 .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
@@ -46,6 +46,7 @@ public class SecurityConfiguration {
                 .cors().configurationSource(cs -> new CorsConfiguration().applyPermitDefaultValues())
                 .and()
                 .csrf()
-                .disable().build(); // not sure what this does
+                .disable()
+                .build(); // not sure what this does
     }
 }

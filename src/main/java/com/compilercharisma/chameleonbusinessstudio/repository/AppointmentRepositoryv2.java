@@ -1,3 +1,4 @@
+
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import java.time.LocalDate;
@@ -57,22 +58,21 @@ public class AppointmentRepositoryv2 {
     }
 
     /**
-     *
      * @param appointment the appointment that will be created
      * @return The {@link} of the appointment created
      */
     public Mono<Appointment> createAppointment(Appointment appointment) {
         var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: [], restrictions: \"%s\", startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,restrictions,startTime,title,totalSlots}}}}}"
-            .formatted(appointment.getCancelled(), appointment.getEndTime(),
-                    appointment.getDescription(), appointment.getLocation(),
-                    appointment.getRestrictions(),
-                    appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
+                .formatted(appointment.getCancelled(), appointment.getEndTime(),
+                        appointment.getDescription(), appointment.getLocation(),
+                        appointment.getRestrictions(),
+                        appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
     }
 
     /**
      * retrieves the appointments for which the given user is a participant
-     * 
+     *
      * @param email the user's email
      * @param page  sorting options
      * @return a page containing the user's appointments
