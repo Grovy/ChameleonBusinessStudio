@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -137,48 +136,6 @@ public class AppointmentController {
     }
 
     /**
-     * Updates or creates the given appointment based upon its ID, if allowed.
-     * 
-     * @param token the current context's authentication token
-     * @param appointment the appointment to create or update
-     * @return a response containing the updated or created appointment
-     */
-    @PutMapping
-    public Mono<ResponseEntity<Appointment>> updateVendiaAppointment(
-            Authentication token,
-            @RequestBody Appointment appointment
-    ){
-        appointments.validateAppointment(appointment);
-        log.info("Updating an appointment", appointment);
-
-        var id = appointment.get_id();
-        var action = (id == "" || id == null)
-            ? appointments.createAppointment(appointment)
-            : appointments.updateAppointment(appointment);
-
-        return action
-                .map(r -> ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment))
-                .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
-                .onErrorMap(e -> new Exception("Error updating appointment in Vendia"));
-    }
-
-    /**
-     * This deletes the appointment called in Vendia
-     * @param appointment The appointment you want to delete
-     * @return The (@link DeletionResponse} of the appointment being updated.
-     */
-    @DeleteMapping
-    public Mono<ResponseEntity<Appointment>> deleteVendiaAppointment(
-            @RequestBody Appointment appointment
-    ){
-        log.info("Deleting an appointment");
-        return appointments.deleteAppointment(appointment)
-                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
-                .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
-                .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
-    }
-
-    /**
      * POST /api/v1/appointments/123?email=foo.bar@baz.qux
      * Books a user for an appointment.
      * 
@@ -191,7 +148,6 @@ public class AppointmentController {
      */
     @PostMapping("/book-them/{appointment-id}")
     public Mono<ResponseEntity<Appointment>> bookThem(
-            Authentication token,
             @PathVariable("appointment-id") String appointmentId,
             @RequestParam("email") String email
     ){
@@ -212,11 +168,18 @@ public class AppointmentController {
                 if(!isUserRegistered){
                     throw new IllegalArgumentException("Email is not registered as a user: " + email);
                 }
-                if(!appointments.isSlotAvailable(appt)){
-                    throw new UnsupportedOperationException("Appointment is full; it cannot have any more participants");
-                }
-                return appointments.registerUser(appt, email);
+                return appointments.bookEmail(appt, email);
             })
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    @PostMapping("/unbook-them/{appointment-id}")
+    public Mono<ResponseEntity<Appointment>> unbookThem(
+            @PathVariable("appointment-id") String appointmentId,
+            @RequestParam("email") String email
+    ){
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> appointments.unbookEmail(appt, email))
             .map(appt -> ResponseEntity.ok(appt));
     }
 
@@ -229,10 +192,10 @@ public class AppointmentController {
      * @return either a bad request or an OK response containing the updated 
      *  appointment
      */
-    @PostMapping("/book-me/{appointment-id}")
+    @PostMapping("/book-me/{id}")
     public Mono<ResponseEntity<Appointment>> bookMe(
             Authentication token,
-            @PathVariable("appointment-id") String appointmentId
+            @PathVariable("id") String appointmentId
     ){
         var email = authentication.getEmailFrom(token);
 
@@ -241,9 +204,69 @@ public class AppointmentController {
                 if(!appointments.isSlotAvailable(appt)){
                     return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
                 }
-                return appointments.registerUser(appt, email);
+                return appointments.bookEmail(appt, email);
             })
             .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    @PostMapping("/unbook-me/{id}")
+    public Mono<ResponseEntity<Appointment>> unbookMe(
+            Authentication token,
+            @PathVariable("id") String appointmentId
+    ){
+        var email = authentication.getEmailFrom(token);
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> appointments.unbookEmail(appt, email))
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
+     * Cancels the appointment with the given ID, if it exists.
+     * Throws an exception if no such appointment exists.
+     * 
+     * @param id the ID of the appointment to cancel
+     * @return a response containing the status of the request after processing
+     */
+    @PostMapping("/cancel/{id}")
+    public Mono<ResponseEntity<Appointment>> cancelAppointmentById(
+            @PathVariable String id
+    ) {
+        return appointments.getAppointmentById(id)
+            .flatMap(appointments::cancelAppointment)
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
+     * Updates the given appointment.
+     * Throws an exception if the appointment is not yet stored in Vendia.
+     * 
+     * @param token the current context's authentication token
+     * @param appointment the appointment to create or update
+     * @return a response containing the updated or created appointment
+     */
+    @PutMapping
+    public Mono<ResponseEntity<Appointment>> updateAppointment(
+            Authentication token,
+            @RequestBody Appointment appointment
+    ){
+        return appointments.updateAppointment(appointment)
+            .map(r -> ResponseEntity.ok(appointment));
+    }
+
+    /**
+     * This deletes the appointment called in Vendia
+     * @param appointment The appointment you want to delete
+     * @return The (@link DeletionResponse} of the appointment being updated.
+     */
+    @DeleteMapping
+    public Mono<ResponseEntity<Appointment>> deleteVendiaAppointment(
+            @RequestBody Appointment appointment
+    ){
+        log.info("Deleting an appointment");
+        return appointments.deleteAppointment(appointment)
+                .map(r -> ResponseEntity.ok(r))
+                .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
     }
     
     private boolean isValidEmail(String email){
