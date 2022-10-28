@@ -27,7 +27,7 @@ public class VendiaClient {
      */
     public <T> Mono<T> executeQuery(String graphQlQuery, final String path, final Class<T> responseClass) {
         System.out.printf("Executing query \"%s\"...\n", graphQlQuery); // rm once we enable logging
-        log.debug("Executing query \"%s\"...\n", graphQlQuery);
+        log.info("Executing query \"%s\"...\n", graphQlQuery);
         return httpGraphQlClient
                 .document(graphQlQuery)
                 .execute()

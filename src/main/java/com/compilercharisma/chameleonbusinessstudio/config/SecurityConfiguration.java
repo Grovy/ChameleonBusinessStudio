@@ -4,6 +4,7 @@ import com.compilercharisma.chameleonbusinessstudio.authorization.UserAuthorizat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -17,18 +18,12 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity security, UserAuthorizationManager userAuthorizationManager) {
         return security
-                .oauth2Login()
-                .and()
+                .oauth2Login(Customizer.withDefaults())
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.GET,    "/api/v1/**").authenticated()                   // by default, allow any logged-in user to GET
-                .pathMatchers(HttpMethod.POST,   "/api/v1/**").access(userAuthorizationManager)  // by default, only authorized users can POST
-                .pathMatchers(HttpMethod.PUT,    "/api/v1/**").access(userAuthorizationManager)  // by default, only authorized users can PUT
-                .pathMatchers(HttpMethod.DELETE, "/api/v1/**").access(userAuthorizationManager)  // by default, only authorized users can DELETE
-                .pathMatchers(HttpMethod.POST,   "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
-                .pathMatchers(HttpMethod.GET,    "/api/v1/auth/principal").permitAll()           // not sure if this will crash?
-                .pathMatchers(HttpMethod.GET,    "/api/v1/auth/isAuthenticated").permitAll()     // crash?
-                .pathMatchers(HttpMethod.GET,    "/api/v1/auth/isUserRegistered").permitAll()    // crash?
-                .pathMatchers(HttpMethod.GET,    "/api/v1/config/**").permitAll()                // need to allow unauthenticated users
+                .pathMatchers(HttpMethod.POST, "/api/v1/users").authenticated() // allow logged-in users to register themselves
+                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
+                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/unbook-me").authenticated() // allow any role to unbook-me
+                .pathMatchers(HttpMethod.GET, "/api/v1/config/**").permitAll() // need to allow unauthenticated users
                 .pathMatchers(
                         "/",
                         "/index",
@@ -42,14 +37,16 @@ public class SecurityConfiguration {
                         "/site-header",
                         "/assets/images/**.svg")
                 .permitAll()
-                .anyExchange()
-                .authenticated()
+                .pathMatchers(HttpMethod.GET, "/api/v1/**").authenticated() // by default, allow any logged-in user to GET
+                .pathMatchers(HttpMethod.POST, "/api/v1/**").access(userAuthorizationManager) // by default, only authorized users can POST
+                .pathMatchers(HttpMethod.PUT, "/api/v1/**").access(userAuthorizationManager) // by default, only authorized users can PUT
+                .pathMatchers(HttpMethod.DELETE, "/api/v1/**").access(userAuthorizationManager) // by default, only authorized users can DELETE
+                .anyExchange().authenticated()
                 .and()
-                .cors().configurationSource(cs-> new CorsConfiguration().applyPermitDefaultValues())
+                .cors().configurationSource(cs -> new CorsConfiguration().applyPermitDefaultValues())
                 .and()
                 .csrf()
-                .disable().build(); // not sure what this does
+                .disable()
+                .build(); // not sure what this does
     }
-
-
 }
