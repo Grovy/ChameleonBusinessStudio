@@ -16,12 +16,14 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 @WithMockUser
 class UserControllerITSpec extends BaseITSpec{
 
+    def static VENDIA_API_KEY = "F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"
+
     def "getAllUsers is successful"() {
         given: "a request"
         def request = client.mutateWith(mockOidcLogin()).get().uri("/api/v1/users")
 
         stubFor(post("/graphql/")
-                .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
                 .withHeader("Content-Type", equalTo("application/json"))
                 .withHeader("Accept", equalTo("application/json, application/graphql+json"))
                 .withRequestBody(equalTo("{\"query\":\"query { list_UserItems { _UserItems { _id email displayName appointments } } }\"}"))
@@ -58,7 +60,7 @@ class UserControllerITSpec extends BaseITSpec{
         def vendiaQuery2 = """{"query":"mutation { add_User(input: {appointments: [], displayName: \\"$user.displayName\\", email: \\"$user.email\\", role: $user.role}) { result { _id appointments displayName email role } } }"}"""
 
         stubFor(post("/graphql/")
-                .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
                 .withHeader("Content-Type", equalTo("application/json"))
                 .withHeader("Accept", equalTo("application/json, application/graphql+json"))
                 .withRequestBody(equalTo(vendiaQuery1))
@@ -68,7 +70,7 @@ class UserControllerITSpec extends BaseITSpec{
                         .withBodyFile("vendiaResponses/emptyUsersResponse.json")))
 
         stubFor(post("/graphql/")
-                .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
                 .withHeader("Content-Type", equalTo("application/json"))
                 .withHeader("Accept", equalTo("application/json, application/graphql+json"))
                 .withRequestBody(equalTo(vendiaQuery2))
