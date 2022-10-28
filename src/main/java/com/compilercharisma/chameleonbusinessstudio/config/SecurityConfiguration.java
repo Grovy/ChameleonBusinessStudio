@@ -15,41 +15,38 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity security, UserAuthorizationManager userAuthorizationManager) {
-        return security
-                .oauth2Login()
-                .and()
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.GET,    "/api/v1/**").authenticated()                   // by default, allow any logged-in user to GET
-                .pathMatchers(HttpMethod.POST,   "/api/v1/**").access(userAuthorizationManager)  // by default, only authorized users can POST
-                .pathMatchers(HttpMethod.PUT,    "/api/v1/**").access(userAuthorizationManager)  // by default, only authorized users can PUT
-                .pathMatchers(HttpMethod.DELETE, "/api/v1/**").access(userAuthorizationManager)  // by default, only authorized users can DELETE
-                .pathMatchers(HttpMethod.POST,   "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
-                .pathMatchers(HttpMethod.GET,    "/api/v1/auth/principal").permitAll()           // not sure if this will crash?
-                .pathMatchers(HttpMethod.GET,    "/api/v1/auth/isAuthenticated").permitAll()     // crash?
-                .pathMatchers(HttpMethod.GET,    "/api/v1/auth/isUserRegistered").permitAll()    // crash?
-                .pathMatchers(HttpMethod.GET,    "/api/v1/config/**").permitAll()                // need to allow unauthenticated users
-                .pathMatchers(
-                        "/",
-                        "/index",
-                        "/index.html",
-                        "/styles.**.css", // Angular files
-                        "/runtime.**.js",
-                        "/polyfills.**.js",
-                        "/main.**.js",
-                        "/oauth/**", // needed for login
-                        "/**.ico", // angular icon
-                        "/site-header",
-                        "/assets/images/**.svg")
-                .permitAll()
-                .anyExchange()
-                .authenticated()
-                .and()
-                .cors().configurationSource(cs-> new CorsConfiguration().applyPermitDefaultValues())
-                .and()
-                .csrf()
-                .disable().build(); // not sure what this does
+            ServerHttpSecurity security,
+            UserAuthorizationManager userAuthorizationManager
+    ) {
+        return security // needs to be arranged from most-to-least specific
+            .oauth2Login()
+            .and()
+            .authorizeExchange()
+            .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
+            .pathMatchers(HttpMethod.POST, "/api/v1/appointments/unbook-me").authenticated() // allow any role to unbook-me
+            .pathMatchers(HttpMethod.GET, "/api/v1/config/**").permitAll() // need to allow unauthenticated users
+            .pathMatchers(
+                "/",
+                "/index",
+                "/index.html",
+                "/styles.**.css", // Angular files
+                "/runtime.**.js",
+                "/polyfills.**.js",
+                "/main.**.js",
+                "/oauth/**", // needed for login
+                "/**.ico", // angular icon
+                "/site-header",
+                "/assets/images/**.svg")
+            .permitAll()
+            .pathMatchers(HttpMethod.GET, "/api/v1/**").authenticated() // by default, allow any logged-in user to GET
+            .pathMatchers(HttpMethod.POST, "/api/v1/**").access(userAuthorizationManager) // by default, only authorized users can POST
+            .pathMatchers(HttpMethod.PUT, "/api/v1/**").access(userAuthorizationManager) // by default, only authorized users can PUT
+            .pathMatchers(HttpMethod.DELETE, "/api/v1/**").access(userAuthorizationManager) // by default, only authorized users can DELETE
+            .anyExchange().authenticated()
+            .and()
+            .cors().configurationSource(cs -> new CorsConfiguration().applyPermitDefaultValues())
+            .and()
+            .csrf()
+            .disable().build(); // not sure what this does
     }
-
-
 }

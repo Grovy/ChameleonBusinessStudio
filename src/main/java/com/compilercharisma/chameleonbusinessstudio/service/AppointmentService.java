@@ -14,6 +14,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Service
+@Slf4j
 public class AppointmentService {
 
     private final AppointmentRepositoryv2 repo;
@@ -94,6 +96,9 @@ public class AppointmentService {
      * @return the updated appointment
      */
     public Mono<Appointment> updateAppointment(Appointment appt){
+        validateAppointment(appt);
+        log.info("Updating an appointment", appt);
+
         // this might also send notifications to users subscribed to the appointment
         return repo.updateAppointment(appt);
     }
@@ -102,6 +107,24 @@ public class AppointmentService {
         // this might also send notifications to users subscribed to the appointment
         return repo.deleteAppointment(appt.get_id())
             .then(Mono.just(appt));
+    }
+
+    /**
+     * Cancels the given appointment. This operation is idempotent.
+     * 
+     * @param appt the appointment to cancel.
+     * @return a mono containing the canceled appointment, or nothing if an
+     *  error occurs.
+     */
+    public Mono<Appointment> cancelAppointment(Appointment appt){
+        validateAppointment(appt);
+        if(appt.getCancelled() == true){
+            // already canceled. Don't waste Vendia's time
+            return Mono.just(appt);
+        }
+
+        appt.setCancelled(true);
+        return updateAppointment(appt);
     }
 
     /**
@@ -122,8 +145,10 @@ public class AppointmentService {
      * @param email the participant's email
      * @return a mono containing the appointment, with the user as a participant
      */
-    public Mono<Appointment> registerUser(Appointment appt, String email){
-        if(isUserRegistered(appt, email)){
+    public Mono<Appointment> bookEmail(Appointment appt, String email){
+        validateAppointment(appt);
+
+        if(appt.getParticipants().contains(email)){
             return Mono.just(appt);
         }
         if(!isSlotAvailable(appt)){
@@ -135,6 +160,24 @@ public class AppointmentService {
 
         return repo.updateAppointment(appt);
     }
+
+    /**
+     * Removes the given email from the given appointment's list of participants
+     * This method is idempotent
+     * 
+     * @param appt the appointment to remove the email from
+     * @param email the user's email
+     * @return a mono containing the updated appointment
+     */
+    public Mono<Appointment> unbookEmail(Appointment appt, String email){
+        validateAppointment(appt);
+        if(!appt.getParticipants().contains(email)){
+            // already unbooked. Don't waste Vendia's time
+            return Mono.just(appt);
+        }
+        appt.getParticipants().remove(email);
+        return updateAppointment(appt);
+    }
     
     /**
      * Checks if the given appointment can accept more users.
@@ -144,9 +187,5 @@ public class AppointmentService {
      */
     public boolean isSlotAvailable(Appointment appt){
         return appt.getTotalSlots() > appt.getParticipants().size();
-    }
-    
-    public boolean isUserRegistered(Appointment appt, String email){
-        return appt.getParticipants().contains(email);
     }
 }

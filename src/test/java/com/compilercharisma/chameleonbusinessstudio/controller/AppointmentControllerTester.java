@@ -43,12 +43,12 @@ public class AppointmentControllerTester {
         givenTheAppointmentIsValid();
         givenTheUserIsValid();
         when(appointments.isSlotAvailable(appointment)).thenReturn(true);
-        when(appointments.registerUser(appointment, user.getEmail())).thenReturn(Mono.just(appointment));
+        when(appointments.bookEmail(appointment, user.getEmail())).thenReturn(Mono.just(appointment));
         
         
         sut.bookMe(token, appointment.get_id()).block();
 
-        Mockito.verify(appointments).registerUser(appointment, user.getEmail());
+        Mockito.verify(appointments).bookEmail(appointment, user.getEmail());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class AppointmentControllerTester {
 
         Mockito
             .verify(appointments, Mockito.never())
-            .registerUser(Mockito.eq(anInvalidAppointment), Mockito.any(String.class));
+            .bookEmail(Mockito.eq(anInvalidAppointment), Mockito.any(String.class));
     }
 
     //@Test we need email validation
@@ -74,12 +74,12 @@ public class AppointmentControllerTester {
         givenTheUserIsValid();
 
         Assertions.assertThrows(IllegalArgumentException.class, ()->{
-            sut.bookThem(token, appointment.get_id(), "an invalid email");
+            sut.bookThem(appointment.get_id(), "an invalid email");
         });
 
         Mockito
             .verify(appointments, Mockito.never())
-            .registerUser(Mockito.any(Appointment.class), Mockito.any(String.class));
+            .bookEmail(Mockito.any(Appointment.class), Mockito.any(String.class));
     }
 
     private void givenTheUserIsValid(){

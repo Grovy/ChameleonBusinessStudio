@@ -4,7 +4,6 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
