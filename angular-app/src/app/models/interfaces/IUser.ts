@@ -8,7 +8,7 @@ export enum UserRole {
 export interface IUser {
     displayName: string;
     email: string;
-    role: UserRole;
+    role: UserRole | string;
     id?: string; 
     appointments?: string[];
     

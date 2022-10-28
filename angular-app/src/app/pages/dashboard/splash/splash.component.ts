@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from "@angular/material/icon";
 import { SignupModalComponent } from 'src/app/theme/modals/signup-modal/signup-modal.component';
+import { AccountModalComponent } from 'src/app/theme/modals/account-modal/account-modal.component';
+import { UserService } from 'src/app/services/UserService.service';
+import { IUser } from 'src/app/models/interfaces/IUser';
 
 
 @Component({
@@ -18,8 +21,9 @@ export class SplashComponent implements OnInit {
   public isAuthenticatedValue: boolean;
   public shouldDisplayModal: boolean;
   public userEmail: string;
+  public currentUser: IUser;
 
-  constructor(private http: HttpClient, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer, public dialog: MatDialog, private authenticationService: AuthenticationService) {
+  constructor(private http: HttpClient, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer, public dialog: MatDialog, private authenticationService: AuthenticationService, private userService: UserService) {
     this.matIconRegistry.addSvgIcon(
       "calendar",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-calendar.svg")
@@ -44,7 +48,12 @@ export class SplashComponent implements OnInit {
       'edit',
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-edit.svg")
     );
+    this.matIconRegistry.addSvgIcon(
+      'accountIcon',
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/accountIcon.svg")
+    );
   }
+
 
   ngOnInit(): void {
     this.checkIfAuthenticated();
@@ -52,11 +61,23 @@ export class SplashComponent implements OnInit {
     this.shouldDisplayModal = (this.isAuthenticatedValue && this.isRegisteredValue === false);
   }
 
+  onPress() {
+    let user;
+    this.userService.getUser(this.userEmail).subscribe(
+      data => { 
+        user = data;
+        console.log(user);
+      }
+    );
+  }
+
   getUserEmail() {
     this.authenticationService.getPrincipal().subscribe(
       data => { 
         this.userEmail = data.valueOf(); 
         this.updateShouldDisplayModal(this.isRegisteredValue, this.userEmail);
+        this.userService.getUser(this.userEmail).subscribe(data => {this.currentUser = data});
+        
     });  
   }
 
@@ -76,7 +97,6 @@ export class SplashComponent implements OnInit {
     });
   }
 
-
   updateShouldDisplayModal(newRegisteredValue: boolean, email: string): void {
     if(this.shouldDisplayModal = (this.isAuthenticatedValue && newRegisteredValue === false) && email !== undefined){
       this.displayModal(email);
@@ -84,11 +104,29 @@ export class SplashComponent implements OnInit {
   }
 
   displayModal(email: string): void {
-    console.log("About to build the modal. The value of the email here is: " + email);
     const dialogRef = this.dialog.open(SignupModalComponent, { 
       disableClose: true,
       data: { userEmailValue: email } 
     });
-  } 
+  }
+  
+  onClickProfile(): void {
+    this.displayProfileModal(this.currentUser);
+  }
+
+  displayProfileModal(user: IUser) {
+    const dialogRef = this.dialog.open(AccountModalComponent, {
+      width: '450px',
+      height: '150px',
+      disableClose: false,
+      position: {
+        right: "5px",
+        top: "100px"
+      },
+      hasBackdrop: false,
+      data: { theUser: user }
+    }); 
+
+  }
 
 }

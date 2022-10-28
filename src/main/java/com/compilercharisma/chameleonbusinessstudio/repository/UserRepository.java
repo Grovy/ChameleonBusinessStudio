@@ -29,6 +29,7 @@ public class UserRepository {
                     _UserItems {
                       _id
                       email
+                      role
                       displayName
                       appointments
                     }
