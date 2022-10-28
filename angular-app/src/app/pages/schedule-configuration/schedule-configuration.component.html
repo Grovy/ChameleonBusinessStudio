@@ -33,15 +33,17 @@
             
 
                     <!-- Choosing which days of the week you're available -->
-                    <section class="daysofweek" [formGroup]="daysOfTheWeek">
-                        <h4>Select the days of the week you're available</h4>
-                        <p><mat-checkbox formControlName="monday">Monday</mat-checkbox></p>
-                        <p><mat-checkbox formControlName="tuesday">Tuesday</mat-checkbox></p>
-                        <p><mat-checkbox formControlName="wednesday">Wednesday</mat-checkbox></p>
-                        <p><mat-checkbox formControlName="thursday">Thursday</mat-checkbox></p>
-                        <p><mat-checkbox formControlName="friday">Friday</mat-checkbox></p>
-                        <p><mat-checkbox formControlName="saturday">Saturday</mat-checkbox></p>
-                        <p><mat-checkbox formControlName="friday">Sunday</mat-checkbox></p>
+                    <section class="daysofweek">
+                        <h4>Select your days:</h4>
+                        <ul *ngFor="let day of mydaysOfWeek">
+                            <input 
+                                type="checkbox"
+                                [value]="day.id"
+                                [checked]="day.select"
+                                (change)="onChecked($event)"
+                            />
+                            {{day.viewName}}
+                        </ul>
                     </section>
     
                     <section>
@@ -163,7 +165,7 @@
             <mat-card-content>
                 <h4>Here are the details of your event/service</h4>
                 <h4>Title: {{ myEvent.title ? myEvent.title : " " }}</h4>
-                <h4>Duration: {{ myEvent.duration ? myEvent.duration : " " }}</h4>
+                <h4>Duration: {{ myEvent.duration ? myEvent.duration + " minutes" : " " }}</h4>
                 <h4>Location: {{ myEvent.location ? myEvent.location : " " }} {{ myEvent.locationDetails }}</h4>
                 <h4>Description: {{myEvent.description ? myEvent.description : " " }}</h4>
             </mat-card-content>

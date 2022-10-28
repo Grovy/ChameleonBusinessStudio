@@ -1,33 +1,36 @@
-       ROUTE                          | Method | Resource      | comments
-======================================#========#===============#====================================
-/api/v1                               |        |               |
-    /appointments                     |        |               |
-        /                             | GET    | appt[]        | all appts
-        /                             | POST   |               | accepts an AppointmentEntity
-        /                             | PUT    |               | accepts an AppointmentEntity
-        /available                    | GET    | appt-page     | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
-        /book-me/{id}                 | POST   | appt          | books current user
-        /book-them/{id}?email={email} | POST   | appt          |
-        /mine                         | GET    | appt-page     | supports pagination. See resource-examples folder. Sort currently broken 
-    /auth                             |        |               |
-        /principal                    | GET    | email address |
-        /isAuthenticated              | GET    | boolean       |
-        /isUserRegistered             | GET    | boolean       |
-    /config                           |        |               |
-        /banner                       | GET    | banner        |
-        /landing-page                 | GET    | landing-page  |
-        /logo                         | GET    | image         |
-        /organization                 | GET    | org           |
-        /splash                       | GET    | splash        |
-        /landing-page                 | POST   |               |
-    /schedules                        |        |               |
-        /                             | GET    | schedule-page |
-        /{id}                         | GET    | schedule      |
-        /                             | POST   | schedule      | accepts schedule. creates/updates schedule
-        /                             | PUT    | schedule-page | accepts schedules, creates/updates schedules
-    /users                            |        |               |
-        /                             | GET    | user[]        | gets all users
-        /                             | POST   | user          | accepts user
-        /                             | PUT    | user          | updates user
-        /                             | DELETE | string        | accepts user, deletes user
-        /{email}                      | GET    |user           | user with given email
+       ROUTE                            | Method | Resource      | comments
+========================================#========#===============#====================================
+/api/v1                                 |        |               |
+    /appointments                       |        |               |
+        /                               | GET    | appt[]        | all appts
+        /                               | POST   |               | accepts an AppointmentEntity
+        /                               | PUT    |               | accepts an AppointmentEntity
+        /available                      | GET    | appt-page     | params days=#&size=3&page=2&sort=startTime,asc (comma before asc)
+        /book-me/{id}                   | POST   | appt          | books current user
+        /book-them/{id}?email={email}   | POST   | appt          |
+        /cancel/{id}                    | POST   | appt          |
+        /mine                           | GET    | appt-page     | supports pagination. See resource-examples folder. Sort currently broken 
+        /unbook-me/{id}                 | POST   | appt          |
+        /unbook-them/{id}?email={email} | POST   | appt          |
+    /auth                               |        |               |
+        /principal                      | GET    | email address |
+        /isAuthenticated                | GET    | boolean       |
+        /isUserRegistered               | GET    | boolean       |
+    /config                             |        |               |
+        /banner                         | GET    | banner        |
+        /landing-page                   | GET    | landing-page  |
+        /logo                           | GET    | image         |
+        /organization                   | GET    | org           |
+        /splash                         | GET    | splash        |
+        /landing-page                   | POST   |               |
+    /schedules                          |        |               |
+        /                               | GET    | schedule-page |
+        /{id}                           | GET    | schedule      |
+        /                               | POST   | schedule      | accepts schedule. creates/updates schedule
+        /                               | PUT    | schedule-page | accepts schedules, creates/updates schedules
+    /users                              |        |               |
+        /                               | GET    | user[]        | gets all users
+        /                               | POST   | user          | accepts user
+        /                               | PUT    | user          | updates user
+        /                               | DELETE | string        | accepts user, deletes user
+        /{email}                        | GET    | user          | user with given email

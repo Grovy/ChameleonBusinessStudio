@@ -1,9 +1,14 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AvailableTimes } from 'src/app/models/mock/mock-availabile-times';
 import { Component } from '@angular/core';
-import { IAvailability } from 'src/app/models/interfaces/IAvailability';
+import { DaysOfWeek, IAvailability } from 'src/app/models/interfaces/IAvailability';
+import { DateManager } from 'src/app/services/DateManager';
 import { IEvent } from 'src/app/models/interfaces/IEvent';
-
+import { IAppointment } from 'src/app/models/interfaces/IAppointment';
+import { IRepeatingAppointment } from 'src/app/models/interfaces/IRepeatingAppointment';
+import { ISchedule } from 'src/app/models/interfaces/ISchedule';
+import { ScheduleService } from 'src/app/services/ScheduleService.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-schedule-configuration',
@@ -11,35 +16,49 @@ import { IEvent } from 'src/app/models/interfaces/IEvent';
   styleUrls: ['./schedule-configuration.component.css']
 })
 export class ScheduleConfigurationComponent {
+  
+  // Availability Form variables
+  mydaysOfTheWeek: any[] = [];
+  selectedDays: DaysOfWeek[] = [];
+  selectedTimeFrame;
   availableTimes: AvailableTimes[] = AvailableTimes;
+  availabilityForm: FormGroup;
+  myAvailability: IAvailability = {
+    title: "",
+    hoursFrom: "",
+    hoursTo: "",
+    daysOfWeek: [],
+  }
+
+  // Event/Service Form variables
   selectedLocationValue = '';
-  selectedTimeFrame: number;
-  description: string;
   locationValues: string[] = ["In Person", "Phone", "Zoom", "Discord", "Google Hangouts", "Microsoft Teams"];
   timeFrameValues: number[] = [15, 30, 45, 60]; // Should only support increments of 15 mins
-  isLinear = false;
-  availabilityFormGroup: FormGroup;
-  availabilityForm: FormGroup;
-  eventFormGroup: FormGroup;
   eventForm: FormGroup;
   myEvent: IEvent = {
     title: "",
-    duration: "",
+    duration: 0,
     location: "",
     description: "",
   };
-  
-  daysOfTheWeek = this.formBuilder.group({
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false,
-  })
 
-  constructor(private formBuilder: FormBuilder) {
+  mySchedule: ISchedule = {
+    name: "",
+    isEnabled: true,
+    appointments: []
+  }
+  
+  mydaysOfWeek = [
+    { id: 1, select: false, name: "MONDAY", viewName: "Monday" },
+    { id: 2, select: false, name: "TUESDAY", viewName: "Tuesday" },
+    { id: 3, select: false, name: "WEDNESDAY", viewName: "Wednesday" },
+    { id: 4, select: false, name: "THURSDAY", viewName: "Thursday" },
+    { id: 5, select: false, name: "FRIDAY", viewName: "Friday" },
+    { id: 6, select: false, name: "SATURDAY", viewName: "Saturday" },
+    { id: 7, select: false, name: "SUNDAY", viewName: "Sunday" },
+  ];
+
+  constructor(private formBuilder: FormBuilder, private scheduleService: ScheduleService, private dateManager: DateManager) {
     this.availabilityForm = this.formBuilder.group({
       title: [''],
       hoursFrom: [''],
@@ -57,21 +76,44 @@ export class ScheduleConfigurationComponent {
 
   }
 
+  public onChecked($event): void {
+    const id = $event.target.value;
+    const isChecked = $event.target.checked;
+
+    this.mydaysOfWeek = this.mydaysOfWeek.map( d => {
+      if(d.id == id) {
+        d.select = isChecked;
+        return d;
+      } else {
+        return d;
+      }
+    });
+
+    this.onSaveDays();
+  }
+
+  private onSaveDays(): void {
+    let daysArray: DaysOfWeek[] = [];
+    this.mydaysOfWeek.map( d => {
+      if(d.select === true) {
+        daysArray.push(d.name as DaysOfWeek);
+        this.selectedDays = daysArray;
+        return d;
+      } else {
+        return d;
+      }  
+    }); 
+  }
+
   public saveAvailability(data): void {
     const newAvailability: IAvailability = {
       title: data.title,
       hoursFrom: data.hoursFrom,
       hoursTo: data.hoursTo,
-      daysOfWeek: data.daysOfTheWeek,
+      daysOfWeek: this.selectedDays
     }
 
-    console.log("Generated a new availability");
-    console.log(
-      "Title: " + newAvailability.title + " " + 
-      "Hours From: " + newAvailability.hoursFrom + " " + 
-      "Hours To: " + newAvailability.hoursTo + " " +
-      "Days of the Week: " + newAvailability.daysOfWeek
-    );
+    this.myAvailability = newAvailability;
   }
  
   public saveEvent(data): void {
@@ -85,13 +127,85 @@ export class ScheduleConfigurationComponent {
 
     this.myEvent = newEvent;
 
-    console.log("Generated a new event/service");
-    console.log(
-      "Title: " + newEvent.title + " " + 
-      "Duration: " + newEvent.duration + " " + " minutes " + 
-      "Location: " + newEvent.location + " " + newEvent.locationDetails + " " + 
-      "Description: " + newEvent.description 
+    this.constructSchedule();
+
+    // Update with reaction elements later
+    this.scheduleService.createSchedule(this.mySchedule).subscribe(
+      data => { console.log(data) }
     );
+
+  }
+
+  private constructSchedule(): void {
+    let listOfAppts: IRepeatingAppointment[] = [];
+
+
+    let dayIndex = this.dateManager.getDayIndex(this.selectedDays[0]);
+    let startDate = this.dateManager.nextDay(dayIndex).toISOString().split("T")[0];
+    let startingTime = this.dateManager.toTime(this.myAvailability.hoursFrom);
+
+    let durationToTime = this.dateManager.durationToTime(this.myEvent.duration);
+    let endingTime = this.dateManager.addTime(startingTime, durationToTime);
+    let finalTime  = this.dateManager.toTime(this.myAvailability.hoursTo);
+
+    const theAppointment: IAppointment = {
+      id: uuidv4(),
+      title: this.myEvent.title,
+      startTime: startDate + "T" + startingTime,
+      endTime: startDate + "T" + endingTime,
+      location: this.myEvent.location + " " + this.myEvent.locationDetails,
+      description: this.myEvent.description ? this.myEvent.description : "",
+      restrictions: "",
+      cancelled: false,
+      totalSlots: 1,
+      participants: [],
+    };
+
+    const theRepeatingAppointment: IRepeatingAppointment = {
+      id: uuidv4(),
+      isEnabled: true,
+      repeatsOn: this.selectedDays,
+      appointment: theAppointment,
+    };
+
+    listOfAppts.push(theRepeatingAppointment);
+
+    while( (endingTime != finalTime) && (this.dateManager.addTime(endingTime, durationToTime) < finalTime) ) {
+      startingTime = endingTime;
+      endingTime = this.dateManager.addTime(startingTime, durationToTime);
+
+      const theAppointment: IAppointment = {
+        id: uuidv4(),
+        title: this.myEvent.title,
+        startTime: startDate + "T" + startingTime,
+        endTime: startDate + "T" + endingTime,
+        location: this.myEvent.location + " " + this.myEvent.locationDetails,
+        description: this.myEvent.description ? this.myEvent.description : "",
+        restrictions: "",
+        cancelled: false,
+        totalSlots: 1,
+        participants: [],
+      };
+  
+      const theRepeatingAppointment: IRepeatingAppointment = {
+        id: uuidv4(),
+        isEnabled: true,
+        repeatsOn: this.selectedDays,
+        appointment: theAppointment,
+      };
+
+      listOfAppts.push(theRepeatingAppointment);
+    } 
+  
+
+    const theSchedule: ISchedule = {
+      id: uuidv4(),
+      name: this.myAvailability.title,
+      isEnabled: true,
+      appointments: listOfAppts,
+    }
+
+    this.mySchedule = theSchedule;
 
   }
 
