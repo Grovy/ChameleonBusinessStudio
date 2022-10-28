@@ -5,17 +5,15 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
-import org.springframework.cloud.contract.wiremock.WireMockConfiguration
 import org.springframework.context.ApplicationContext
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Shared
 import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = "spring.main.web-application-type=reactive")
-@AutoConfigureWireMock(port = 8081)
+@AutoConfigureWireMock(port = 6767)
 abstract class BaseITSpec extends Specification {
 
     @Autowired

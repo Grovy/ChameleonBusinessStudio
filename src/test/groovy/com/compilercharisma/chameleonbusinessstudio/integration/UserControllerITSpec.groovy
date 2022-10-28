@@ -18,7 +18,7 @@ class UserControllerITSpec extends BaseITSpec{
 
     def "getAllUsers is successful"() {
         given: "a request"
-        def request = client.mutateWith(mockOidcLogin()).get().uri("/api/v1/users/getAllUsers")
+        def request = client.mutateWith(mockOidcLogin()).get().uri("/api/v1/users")
 
         stubFor(post("/graphql/")
                 .withHeader("Authorization", equalTo("F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"))
@@ -50,7 +50,7 @@ class UserControllerITSpec extends BaseITSpec{
         given: "a valid request"
         def user = new User(_id: "", displayName: "ChameleonTest", email: "Chameleon@email.com", role: UserRole.PARTICIPANT, appointments: [])
         def body = objectMapper.writeValueAsString(user)
-        def request = client.mutateWith(mockOidcLogin()).post().uri("/api/v1/users/createUser")
+        def request = client.mutateWith(mockOidcLogin()).post().uri("/api/v1/users")
                 .bodyValue(body)
                 .header("content-type", "application/json")
 

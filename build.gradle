@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.82.Final:osx-aarch_64'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.4'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
