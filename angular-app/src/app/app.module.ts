@@ -3,6 +3,7 @@
 */
 import { NgModule } from '@angular/core';
 
+import { AccountModalComponent } from './theme/modals/account-modal/account-modal.component';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AdminConfigurationComponent } from './pages/admin-configuration/admin-configuration/admin-configuration.component';
 import { AdminGenUserComponent } from './pages/admin-panel/admin-gen-user/admin-gen-user.component';
@@ -94,6 +95,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SiteFooterComponent,
     SiteHeaderComponent,
     SplashComponent,
+    AccountModalComponent,
   ],
   imports: [
     AppRoutingModule,

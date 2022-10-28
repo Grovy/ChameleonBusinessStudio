@@ -24,7 +24,7 @@ public class UserRepository {
      * @return {@link UserResponse}
      */
     public Mono<UserResponse> findAllUsers() {
-        var query = "query { list_UserItems { _UserItems { _id email displayName appointments } } }";
+        var query = "query { list_UserItems { _UserItems { _id email displayName role appointments } } }";
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
     }
 

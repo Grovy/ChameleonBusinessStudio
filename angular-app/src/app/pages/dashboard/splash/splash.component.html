@@ -5,7 +5,15 @@
     <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
     <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
     <button mat-stroked-button class="icon">About Us</button>
-    <sign-in></sign-in>
+    <div *ngIf="!(isAuthenticatedValue)">
+      <sign-in></sign-in>
+    </div>
+    <div *ngIf="(isAuthenticatedValue)">
+      <button mat-stroked-button class="icon">Signed In With Google</button>
+    </div>
+    <div *ngIf="(isAuthenticatedValue && isRegisteredValue)">
+      <button mat-icon-button class="icon" (click)="onClickProfile()"><mat-icon class="accountSVG" svgIcon="accountIcon"></mat-icon></button>
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>
 

@@ -28,6 +28,15 @@ export class UserService {
             );
     }
 
+    // Function to get the user object from Vendia
+    public getUser(email: string): Observable<any> {
+        return this.httpClient.get(`${this.apiUrl}/${email}`)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
     private handleError(error: HttpErrorResponse): Observable<never> {
         console.log(error);
         return throwError(`An error occured - Error code: ${error.status}`);
