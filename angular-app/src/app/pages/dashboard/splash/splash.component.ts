@@ -61,23 +61,12 @@ export class SplashComponent implements OnInit {
     this.shouldDisplayModal = (this.isAuthenticatedValue && this.isRegisteredValue === false);
   }
 
-  onPress() {
-    let user;
-    this.userService.getUser(this.userEmail).subscribe(
-      data => { 
-        user = data;
-        console.log(user);
-      }
-    );
-  }
-
   getUserEmail() {
     this.authenticationService.getPrincipal().subscribe(
       data => { 
         this.userEmail = data.valueOf(); 
         this.updateShouldDisplayModal(this.isRegisteredValue, this.userEmail);
         this.userService.getUser(this.userEmail).subscribe(data => {this.currentUser = data});
-        
     });  
   }
 
