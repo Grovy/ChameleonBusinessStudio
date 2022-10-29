@@ -117,7 +117,15 @@ public class WebsiteAppearanceController {
     @PostMapping("/logo")
     public ResponseEntity<Void> setLogo(
             UriComponentsBuilder root,
-            @RequestParam("file") MultipartFile file){
+            @RequestParam("file") MultipartFile file
+    ){
+        var type = file.getContentType();
+        var split = (type == null) ? new String[]{} : type.split("/");
+        if(split.length < 1 || !split[0].equals("image")){
+            return ResponseEntity
+                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .build();
+        }
         // todo check mime type if image
         serv.setLogo(file);
         return ResponseEntity.created(makeUri(root, "logo")).build();
@@ -135,6 +143,15 @@ public class WebsiteAppearanceController {
         return json;
     }
 
+    @PostMapping("/organization")
+    public ResponseEntity<Void> setOrganizationName(
+            UriComponentsBuilder root,
+            @RequestParam String name
+    ){
+        serv.setOrganizationName(name);
+        return ResponseEntity.created(makeUri(root, "organization")).build();
+    }
+
     /**
      * @return {
      *  content: string // HTML content
@@ -145,6 +162,20 @@ public class WebsiteAppearanceController {
         HashMap<String, Object> json = new HashMap<>();
         json.put("content", serv.getSplashPageContent());
         return json;
+    }
+
+    @PostMapping("/splash")
+    public ResponseEntity<Void> setSplashPage(
+            UriComponentsBuilder root,
+            @RequestParam MultipartFile file
+    ){
+        if(!MimeTypeUtils.TEXT_HTML_VALUE.equals(file.getContentType())){
+            return ResponseEntity
+                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .build();
+        }
+        serv.setLandingPage(file);        
+        return ResponseEntity.created(makeUri(root, "splash")).build();
     }
     
     @PostMapping
