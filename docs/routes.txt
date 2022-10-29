@@ -18,11 +18,12 @@
         /isUserRegistered               | GET    | boolean       |
     /config                             |        |               |
         /banner                         | GET    | banner        |
+        /banner                         | POST   |               | accepts a string
         /landing-page                   | GET    | landing-page  |
+        /landing-page                   | POST   |               |
         /logo                           | GET    | image         |
         /organization                   | GET    | org           |
         /splash                         | GET    | splash        |
-        /landing-page                   | POST   |               |
     /schedules                          |        |               |
         /                               | GET    | schedule-page |
         /{id}                           | GET    | schedule      |

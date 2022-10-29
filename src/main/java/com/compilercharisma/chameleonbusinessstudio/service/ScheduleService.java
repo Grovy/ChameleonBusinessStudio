@@ -126,6 +126,8 @@ public class ScheduleService {
             .filter(this::canGenerateAppointmentFrom)
             .flatMapIterable(this::copyToDays)
             .map(appointments::createAppointment) // don't have a method for batch-creating appts in Vendia yet
+            .collectList()
+            .doOnSuccess(appts -> log.info("Created %d appointments".formatted(appts.size())))
             .then(Mono.just(s));
     }
 

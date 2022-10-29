@@ -52,11 +52,51 @@ public class WebsiteAppearanceController {
         return json;
     }
 
+    /**
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
+     * @param color the new color for the website banner
+     * @return a response containing the location of the new banner color
+     */
+    @PostMapping("/banner")
+    public ResponseEntity<Void> setBannerColor(
+            UriComponentsBuilder root,
+            @RequestParam String color){
+        serv.setBannerColor(color);
+        return ResponseEntity.created(makeUri(root, "banner")).build();
+    }
+
     @GetMapping("/landing-page")
     public Map<String, Object> getLandingPageContent(){
         HashMap<String, Object> json = new HashMap<>();
         json.put("content", serv.getLandingPageContent());
         return json;
+    }
+
+    /**
+     * Handles post request to /api/v1/config/landing-page
+     * 
+     * @param root a URI builder containing the current request root, such as
+     *  http://localhost:8080
+     * @param file an HTML file 
+     * @return a 201 Created At response if successful
+     */
+    @PostMapping("landing-page")
+    public ResponseEntity<Void> setLandingPage(
+            UriComponentsBuilder root,
+            @RequestParam("file") MultipartFile file
+    ){
+        if(!MimeTypeUtils.TEXT_HTML_VALUE.equals(file.getContentType())){
+            return ResponseEntity
+                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .build();
+        }
+        /*
+        Submit using:
+            <form action="/api/v1/config/landing-page" enctype="multipart/form-data" method="POST">
+            <input type="file" name="file"/>
+        */
+        serv.setLandingPage(file);        
+        return ResponseEntity.created(makeUri(root, "landing-page")).build();
     }
 
     /**
@@ -66,6 +106,21 @@ public class WebsiteAppearanceController {
     @GetMapping("/logo")
     public byte[] getLogo(){
         return serv.getLogo();
+    }
+
+    /**
+     * Sets the website logo
+     * @param root relative to website root
+     * @param file the image file to use as a logo
+     * @return a response containing the location of the new logo
+     */
+    @PostMapping("/logo")
+    public ResponseEntity<Void> setLogo(
+            UriComponentsBuilder root,
+            @RequestParam("file") MultipartFile file){
+        // todo check mime type if image
+        serv.setLogo(file);
+        return ResponseEntity.created(makeUri(root, "logo")).build();
     }
     
     /**
@@ -99,45 +154,16 @@ public class WebsiteAppearanceController {
             @RequestParam("logo") MultipartFile logo,
             @RequestParam("banner-color") String bannerColor
     ){
-        // need to do this way so the files get saved
-        // serv.setConfig won't do that
         serv.setOrganizationName(organizationName);
         serv.setSplashPageContent(splash);
         serv.setLogo(logo);
         serv.setBannerColor(bannerColor);
         return ResponseEntity.ok().build();
     }
-    
-    /**
-     * Handles post request to /api/v1/config/landing-page
-     * 
-     * @param root a URI builder containing the current request root, such as
-     *  http://localhost:8080
-     * @param file an HTML file 
-     * @return a 201 Created At response if successful
-     */
-    @PostMapping("landing-page")
-    public ResponseEntity<Void> postLandingPage(
-            UriComponentsBuilder root,
-            @RequestParam("file") MultipartFile file
-    ){
-        if(!MimeTypeUtils.TEXT_HTML_VALUE.equals(file.getContentType())){
-            return ResponseEntity
-                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build();
-        }
-        /*
-        Submit using:
-            <form action="/api/v1/config/landing-page" enctype="multipart/form-data" method="POST">
-            <input type="file" name="file"/>
-        */
-        serv.setLandingPage(file);
-        
-        URI at = root // relative to application root
-            .pathSegment("custom", "landing-page")
+
+    private URI makeUri(UriComponentsBuilder root, String resource){
+        return root.pathSegment("api", "v1", "config", resource)
             .build()
             .toUri();
-        
-        return ResponseEntity.created(at).build();
     }
 }

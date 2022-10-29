@@ -7,12 +7,9 @@ import java.util.Properties;
  * Using an interface allows us to decouple classes that require access to the
  * website's configuration from the implementation they use to access it.
  * 
- * We can decide whether we want to do the "IFooRepository & FooRepository"
- * naming convention.
- * 
  * @author Matt Crow
  */
-public interface IWebsiteConfigurationRepository {
+public interface WebsiteConfigurationRepository {
     /**
      * Use this to access the website configuration properties object.
      * 
@@ -26,20 +23,6 @@ public interface IWebsiteConfigurationRepository {
      * @param newProperties the new values for properties.
      */
     public void store(Properties newProperties);
-    
-    /**
-     * Adds the properties contained in the parameter to the existing 
-     * configuration.
-     * 
-     * @param newProperties the properties to add
-     */
-    public default void update(Properties newProperties){
-        Properties old = load();
-        newProperties.stringPropertyNames().forEach(key ->{
-            old.setProperty(key, newProperties.getProperty(key));
-        });
-        store(old);
-    }
     
     /**
      * Use this method to get configured properties of the website.
@@ -76,9 +59,35 @@ public interface IWebsiteConfigurationRepository {
      * @param property the name of the property to set
      * @param value the value to set the given property to
      */
-    public default void setValue(String property, String value){
+    public default void set(String property, String value){
         Properties props = load();
         props.setProperty(property, value);
         store(props);
+    }
+
+    /**
+     * Gets the value of the property with the given value, throwing an 
+     * exception if no such property exists.
+     */
+    public default String get(String property){
+        var props = load();
+        if(!props.containsKey(property)){
+            throw new RuntimeException("Key not configured: " + property);
+        }
+        return props.getProperty(property);
+    }
+
+    /**
+     * Gets the value for the given property, or the given defaultValue if it is
+     * not configured.
+     * 
+     * @param property the name of the property to get
+     * @param defaultValue the value to use if the given property is not set
+     * 
+     * @return the value for the given property or defaultValue if it is not set
+     */
+    public default String get(String property, String defaultValue){
+        var props = load();
+        return props.getProperty(property, defaultValue);
     }
 }
