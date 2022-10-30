@@ -11,11 +11,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import static com.github.tomakehurst.wiremock.client.WireMock.verify
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOAuth2Login
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOidcLogin
 
 class UserControllerITSpec extends BaseITSpec {
-
-    def static VENDIA_API_KEY = "F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"
 
     @WithMockUser
     def "getAllUsers is successful"() {
@@ -129,4 +128,44 @@ class UserControllerITSpec extends BaseITSpec {
 
     }
 
+    @WithMockUser
+    def "deleteUser is successful"() {
+        given: "a request"
+        def email = "greengrappler12@gmail.com"
+        def userId = "01839503-1f82-1357-c21b-20e73e8d5575"
+        def request = client.mutateWith(mockOAuth2Login().oauth2User(basicOAuth2User)).delete().uri("/api/v1/users/$email")
+        def vendiaQuery = "query { list_UserItems(filter: {email: {eq: \\\"$email\\\"}}) { _UserItems { _id displayName email role appointments } } }"
+        def vendiaQuery2 = "mutation { remove_User(id: \\\"$userId\\\") { transaction { _id } } }"
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo("{\"query\":\"$vendiaQuery\"}"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/findIdByEmailResponse.json")))
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo("{\"query\":\"$vendiaQuery2\"}"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/userDeletionResponse.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "an OK status is returned"
+        response.expectStatus().isOk()
+                .expectBody()
+                .jsonPath('$._id').isEqualTo("01839503-1f82-1357-c21b-20e73e8d5575")
+
+        and: "two calls to /graphql/ were made"
+        verify(3, postRequestedFor(urlEqualTo("/graphql/")))
+    }
 }
