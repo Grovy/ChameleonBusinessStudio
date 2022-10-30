@@ -15,9 +15,6 @@ import spock.lang.Specification
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import static com.github.tomakehurst.wiremock.client.WireMock.post
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.springSecurity
@@ -66,6 +63,5 @@ abstract class BaseITSpec extends Specification {
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("vendiaResponses/getLoggedInUserInfoResponse.json")))
     }
-
 
 }
