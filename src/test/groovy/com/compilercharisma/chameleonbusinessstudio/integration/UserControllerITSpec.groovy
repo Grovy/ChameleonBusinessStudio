@@ -96,4 +96,43 @@ class UserControllerITSpec extends BaseITSpec{
 
     }
 
+    def "deleteUser is successful"() {
+        given: "a request"
+        def email= "daniel@gmail.com"
+        def request = client.delete().uri("/api/v1/users/$email")
+        def vendiaQuery = "mutation { remove_User(id: \\\"%s\\\") { transaction { _id } } }"
+        def vendiaQuery2 = "query { list_UserItems(filter: {email: {eq: \\\"$email\\\"}}) { _UserItems { _id displayName email role appointments } } }"
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo("{\"query\":$vendiaQuery}"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/userDeletionResponse.json")))
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo("{\"query\":$vendiaQuery2}"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/findIdByEmailResponse.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "an OK status is returned"
+        response.expectStatus().isOk()
+                .expectBody().jsonPath('$._id').isEqualTo("0184113a-0870-cd1b-271d-ccfb801204dd")
+
+        and: "two calls to /graphql/ were made"
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+
+    }
+
+
 }
