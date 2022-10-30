@@ -83,13 +83,13 @@ public class UserController {
     // TODO: Need to refactor this endpoint, a request body isn't allowed here
     /**
      * Deletes user in Vendia
-     * @param user the user being removed
+     * @param email the email of user being removed
      * @return Id of the deleted user
      */
-    @DeleteMapping()
-    public Mono<ResponseEntity<DeletionResponse>> deleteUser(@RequestBody User user) {
-        log.info("Deleting user in Vendia with email [{}]", user.getEmail());
-        return userService.deleteUser(user)
+    @DeleteMapping("/{email}")
+    public Mono<ResponseEntity<DeletionResponse>> deleteUser(@PathVariable String email) {
+        log.info("Deleting user in Vendia with email [{}]", email);
+        return userService.deleteUser(email)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User deleted in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));

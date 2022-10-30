@@ -85,11 +85,11 @@ public class UserService {
     /**
      * Deletes a user from Vendia
      *
-     * @param user The user to be deleted.
+     * @param email The email of user to be deleted.
      * @return {@link UserResponse}
      */
-    public Mono<DeletionResponse> deleteUser(User user) {
-        return userRepository.findUserIdByEmail(user.getEmail())
+    public Mono<DeletionResponse> deleteUser(String email) {
+        return userRepository.findUserIdByEmail(email)
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
     }
