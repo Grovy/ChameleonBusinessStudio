@@ -80,7 +80,6 @@ public class UserController {
                 .doOnError(u -> log.error("Something unexpected happened!"));
     }
 
-    // TODO: Need to refactor this endpoint, a request body isn't allowed here
     /**
      * Deletes user in Vendia
      * @param email the email of user being removed
