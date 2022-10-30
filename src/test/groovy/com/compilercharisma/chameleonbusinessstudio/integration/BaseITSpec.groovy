@@ -45,7 +45,7 @@ abstract class BaseITSpec extends Specification {
 
     @Shared
     def basicOAuth2User = new DefaultOAuth2User(
-            [], Map.of("email", "daniel@gmail.com"), "email")
+            [], Map.of("email", "super@chameleon.com"), "email")
 
 
     def setup() {
