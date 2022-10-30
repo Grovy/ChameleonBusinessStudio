@@ -13,11 +13,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import static com.github.tomakehurst.wiremock.client.WireMock.verify
 import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOidcLogin
 
-@WithMockUser
-class UserControllerITSpec extends BaseITSpec{
+class UserControllerITSpec extends BaseITSpec {
 
     def static VENDIA_API_KEY = "F9v4MUqdQuWAh3Wqxe11mteqPfPedUqp78VaQNJt8DSt"
 
+    @WithMockUser
     def "getAllUsers is successful"() {
         given: "a request"
         def request = client.mutateWith(mockOidcLogin()).get().uri("/api/v1/users")
@@ -48,6 +48,7 @@ class UserControllerITSpec extends BaseITSpec{
 
     }
 
+    @WithMockUser
     def "createUser is successful"() {
         given: "a valid request"
         def user = new User(_id: "", displayName: "ChameleonTest", email: "Chameleon@email.com", role: UserRole.PARTICIPANT, appointments: [])
@@ -93,6 +94,38 @@ class UserControllerITSpec extends BaseITSpec{
 
         and: "two requests to /graphql/ are sent"
         verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+
+    }
+
+    @WithMockUser
+    def "getUser is successful"() {
+        given: "a valid request"
+        def email = "daniel@chameleon"
+        def request = client.get().uri("/api/v1/users/$email")
+
+        def vendiaQuery = "{\"query\":\"query { list_UserItems { _UserItems { _id email displayName role appointments } } }\"}"
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo(vendiaQuery))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/getAllUsersResponse.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "the response is correct"
+        response.expectStatus()
+                .isOk()
+                .expectBody()
+                .jsonPath('$._id').isEqualTo("0183764f-3b7d-2277-29d3-be7c8c43c93b")
+                .jsonPath('$.displayName').isEqualTo("Daniel Villavicencio")
+                .jsonPath('$.email').isEqualTo("daniel@chameleon")
+                .jsonPath('$.appointments').isEmpty()
 
     }
 

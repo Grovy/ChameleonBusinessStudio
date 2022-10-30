@@ -12,6 +12,8 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.springSecurity
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = "spring.main.web-application-type=reactive")
 @AutoConfigureWireMock(port = 6767)
 abstract class BaseITSpec extends Specification {
@@ -33,6 +35,7 @@ abstract class BaseITSpec extends Specification {
 
     def setup() {
         client = WebTestClient.bindToApplicationContext(context)
+                .apply(springSecurity())
                 .configureClient()
                 .build()
     }
