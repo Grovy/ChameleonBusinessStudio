@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "services.vendia")
-public class VendiaConfig {
+public class VendiaConfiguration {
 
     /**
      * The base url for GraphQl queries in Vendia

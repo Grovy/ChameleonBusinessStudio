@@ -32,11 +32,10 @@ public class VendiaClient {
                 .document(graphQlQuery)
                 .execute()
                 .map(response -> response.field(path).toEntity(responseClass))
-                .onErrorResume(error ->
-                        Mono.error(new ExternalServiceException("Something unexpected happened " +
-                                "when executing a query. Check the syntax!",
-                                HttpStatus.BAD_REQUEST,
-                                error)));
+                .onErrorResume(error -> {
+                    var msg = "Something unexpected happened when calling Vendia";
+                    return Mono.error(new ExternalServiceException(msg, HttpStatus.BAD_REQUEST, error));
+                });
     }
 
 }

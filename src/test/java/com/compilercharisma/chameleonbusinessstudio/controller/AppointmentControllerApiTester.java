@@ -18,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.compilercharisma.chameleonbusinessstudio.ChameleonApplication;
-import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfig;
+import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfiguration;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
@@ -47,7 +47,7 @@ public class AppointmentControllerApiTester {
     private UserService users;
 
     @MockBean
-    private VendiaConfig vendia;
+    private VendiaConfiguration vendia;
 
     @BeforeEach
     public void setup(){
