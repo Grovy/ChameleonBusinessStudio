@@ -38,6 +38,11 @@ public class User implements Serializable {
     private UserRole role;
 
     /**
+     * The phone number of the user
+     */
+    private String phoneNumber;
+
+    /**
      * List of appointment ids that the user has
      */
     private List<String> appointments;

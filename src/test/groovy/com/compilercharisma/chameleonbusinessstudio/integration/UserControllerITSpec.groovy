@@ -26,7 +26,7 @@ class UserControllerITSpec extends BaseITSpec{
                 .withHeader("Authorization", equalTo(VENDIA_API_KEY))
                 .withHeader("Content-Type", equalTo("application/json"))
                 .withHeader("Accept", equalTo("application/json, application/graphql+json"))
-                .withRequestBody(equalTo("{\"query\":\"query { list_UserItems { _UserItems { _id email displayName appointments } } }\"}"))
+                .withRequestBody(equalTo("{\"query\":\"query { list_UserItems { _UserItems { _id email displayName role appointments } } }\"}"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
