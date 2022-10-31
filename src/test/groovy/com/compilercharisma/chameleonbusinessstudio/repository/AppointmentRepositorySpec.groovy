@@ -30,10 +30,10 @@ class AppointmentRepositorySpec extends Specification {
         given: "some test data"
         def appointmentResponse = new AppointmentResponse(appointments: [
                 new Appointment(_id: "1", title: "Appointment1", startTime: LocalDateTime.now(), endTime: LocalDateTime.now(),
-                        location: "somewhere", restrictions: "none", cancelled: false, totalSlots: 2, participants: ["1", "2", "3"]),
+                        location: "somewhere", cancelled: false, totalSlots: 2, participants: ["1", "2", "3"]),
                 new Appointment(_id: "2", cancelled: false, description: "Some description",
                         endTime: LocalDateTime.now(), location: "Sacramento State", participants: ["2","1"],
-                        restrictions: "none", startTime: LocalDateTime.now(), title: "Ap2", totalSlots: 1)
+                        startTime: LocalDateTime.now(), title: "Ap2", totalSlots: 1)
         ])
 
         when: "findAllAppointments is called"
@@ -47,7 +47,6 @@ class AppointmentRepositorySpec extends Specification {
             startTime == appointmentResponse.appointments[0].startTime
             endTime == appointmentResponse.appointments[0].endTime
             location == appointmentResponse.appointments[0].location
-            restrictions == appointmentResponse.appointments[0].restrictions
             cancelled == appointmentResponse.appointments[0].cancelled
             totalSlots == appointmentResponse.appointments[0].totalSlots
             participants.size() == 3
@@ -60,7 +59,6 @@ class AppointmentRepositorySpec extends Specification {
             startTime == appointmentResponse.appointments[1].startTime
             endTime == appointmentResponse.appointments[1].endTime
             location == appointmentResponse.appointments[1].location
-            restrictions == appointmentResponse.appointments[1].restrictions
             cancelled == appointmentResponse.appointments[1].cancelled
             totalSlots == appointmentResponse.appointments[1].totalSlots
             participants.size() == 2

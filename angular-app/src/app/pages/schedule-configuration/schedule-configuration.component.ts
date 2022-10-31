@@ -19,7 +19,7 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService.se
   styleUrls: ['./schedule-configuration.component.css']
 })
 export class ScheduleConfigurationComponent {
-  
+
   // Availability Form variables
   mydaysOfTheWeek: any[] = [];
   selectedDays: DaysOfWeek[] = [];
@@ -52,7 +52,7 @@ export class ScheduleConfigurationComponent {
   }
 
   currentUser: IUser;
-  
+
   mydaysOfWeek = [
     { id: 1, select: false, name: "MONDAY", viewName: "Monday" },
     { id: 2, select: false, name: "TUESDAY", viewName: "Tuesday" },
@@ -63,7 +63,7 @@ export class ScheduleConfigurationComponent {
     { id: 7, select: false, name: "SUNDAY", viewName: "Sunday" },
   ];
 
-  constructor(private formBuilder: FormBuilder, private scheduleService: ScheduleService, private dateManager: DateManager, 
+  constructor(private formBuilder: FormBuilder, private scheduleService: ScheduleService, private dateManager: DateManager,
     private userService: UserService, private authenticationService: AuthenticationService) {
     this.availabilityForm = this.formBuilder.group({
       title: [''],
@@ -108,15 +108,15 @@ export class ScheduleConfigurationComponent {
         return d;
       } else {
         return d;
-      }  
-    }); 
+      }
+    });
   }
 
   private getCurrentUser(): void {
     this.authenticationService.getPrincipal().subscribe(
-      data => { 
+      data => {
         this.userService.getUser(data).subscribe(data => {this.currentUser = data});
-    }); 
+    });
   }
 
   public saveAvailability(data): void {
@@ -129,7 +129,7 @@ export class ScheduleConfigurationComponent {
 
     this.myAvailability = newAvailability;
   }
- 
+
   public saveEvent(data): void {
     const newEvent: IEvent = {
       title: data.title,
@@ -169,7 +169,6 @@ export class ScheduleConfigurationComponent {
       endTime: startDate + "T" + endingTime,
       location: this.myEvent.location + " " + this.myEvent.locationDetails,
       description: this.myEvent.description ? this.myEvent.description : "",
-      restrictions: "",
       cancelled: false,
       totalSlots: 1,
       participants: [this.currentUser.email],
@@ -195,12 +194,11 @@ export class ScheduleConfigurationComponent {
         endTime: startDate + "T" + endingTime,
         location: this.myEvent.location + " " + this.myEvent.locationDetails,
         description: this.myEvent.description ? this.myEvent.description : "",
-        restrictions: "",
         cancelled: false,
         totalSlots: 1,
         participants: [this.currentUser.email],
       };
-  
+
       const theRepeatingAppointment: IRepeatingAppointment = {
         id: uuidv4(),
         isEnabled: true,
@@ -209,8 +207,8 @@ export class ScheduleConfigurationComponent {
       };
 
       listOfAppts.push(theRepeatingAppointment);
-    } 
-  
+    }
+
 
     const theSchedule: ISchedule = {
       id: uuidv4(),
