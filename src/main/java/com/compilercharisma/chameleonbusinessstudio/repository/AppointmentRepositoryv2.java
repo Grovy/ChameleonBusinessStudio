@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaField;
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaQueryBuilder;
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaSort;
+import com.compilercharisma.chameleonbusinessstudio.utils.VendiaField;
+import com.compilercharisma.chameleonbusinessstudio.utils.VendiaQueryBuilder;
+import com.compilercharisma.chameleonbusinessstudio.utils.VendiaSort;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;

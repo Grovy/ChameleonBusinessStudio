@@ -3,7 +3,6 @@ package com.compilercharisma.chameleonbusinessstudio.client;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.client.HttpGraphQlClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -26,15 +25,14 @@ public class VendiaClient {
      * @return {@link Mono}
      */
     public <T> Mono<T> executeQuery(String graphQlQuery, final String path, final Class<T> responseClass) {
-        System.out.printf("Executing query \"%s\"...\n", graphQlQuery); // rm once we enable logging
-        log.info("Executing query \"%s\"...\n", graphQlQuery);
+        log.info("Executing query [{}]", graphQlQuery);
         return httpGraphQlClient
                 .document(graphQlQuery)
                 .execute()
                 .map(response -> response.field(path).toEntity(responseClass))
                 .onErrorResume(error -> {
                     var msg = "Something unexpected happened when calling Vendia";
-                    return Mono.error(new ExternalServiceException(msg, HttpStatus.BAD_REQUEST, error));
+                    return Mono.error(new ExternalServiceException(msg, error));
                 });
     }
 

@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 @Data
 @Builder
@@ -16,5 +17,10 @@ public class HttpErrorMessage {
      * Error message
      */
     private String message;
+
+    /**
+     * Http status code
+     */
+    private HttpStatus httpStatus;
 
 }
