@@ -9,6 +9,9 @@ import { IRepeatingAppointment } from 'src/app/models/interfaces/IRepeatingAppoi
 import { ISchedule } from 'src/app/models/interfaces/ISchedule';
 import { ScheduleService } from 'src/app/services/ScheduleService.service';
 import { v4 as uuidv4 } from 'uuid';
+import { IUser } from 'src/app/models/interfaces/IUser';
+import { UserService } from 'src/app/services/UserService.service';
+import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 
 @Component({
   selector: 'app-schedule-configuration',
@@ -47,6 +50,8 @@ export class ScheduleConfigurationComponent {
     isEnabled: true,
     appointments: []
   }
+
+  currentUser: IUser;
   
   mydaysOfWeek = [
     { id: 1, select: false, name: "MONDAY", viewName: "Monday" },
@@ -58,7 +63,8 @@ export class ScheduleConfigurationComponent {
     { id: 7, select: false, name: "SUNDAY", viewName: "Sunday" },
   ];
 
-  constructor(private formBuilder: FormBuilder, private scheduleService: ScheduleService, private dateManager: DateManager) {
+  constructor(private formBuilder: FormBuilder, private scheduleService: ScheduleService, private dateManager: DateManager, 
+    private userService: UserService, private authenticationService: AuthenticationService) {
     this.availabilityForm = this.formBuilder.group({
       title: [''],
       hoursFrom: [''],
@@ -74,6 +80,7 @@ export class ScheduleConfigurationComponent {
       description: [''],
     });
 
+    this.getCurrentUser();
   }
 
   public onChecked($event): void {
@@ -102,6 +109,13 @@ export class ScheduleConfigurationComponent {
       } else {
         return d;
       }  
+    }); 
+  }
+
+  private getCurrentUser(): void {
+    this.authenticationService.getPrincipal().subscribe(
+      data => { 
+        this.userService.getUser(data).subscribe(data => {this.currentUser = data});
     }); 
   }
 
@@ -158,7 +172,7 @@ export class ScheduleConfigurationComponent {
       restrictions: "",
       cancelled: false,
       totalSlots: 1,
-      participants: [],
+      participants: [this.currentUser.email],
     };
 
     const theRepeatingAppointment: IRepeatingAppointment = {
@@ -184,7 +198,7 @@ export class ScheduleConfigurationComponent {
         restrictions: "",
         cancelled: false,
         totalSlots: 1,
-        participants: [],
+        participants: [this.currentUser.email],
       };
   
       const theRepeatingAppointment: IRepeatingAppointment = {

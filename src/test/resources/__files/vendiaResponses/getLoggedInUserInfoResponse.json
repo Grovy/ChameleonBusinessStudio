@@ -4,9 +4,9 @@
       "_UserItems": [
         {
           "_id": "01839503-1f82-1357-c21b-20e73e8d5575",
-          "displayName": "Matt Crow",
-          "email": "greengrappler12@gmail.com",
-          "role": "PARTICIPANT",
+          "displayName": "Super user",
+          "email": "super@chameleon.com",
+          "role": "ORGANIZER",
           "appointments": []
         }
       ]
