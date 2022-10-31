@@ -63,7 +63,7 @@ public class UserController {
         return userService.createUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User created in Vendia share!"))
-                .onErrorMap(e -> new Exception("Error creating user in Vendia"));
+                .doOnError(e -> log.error("Could not create user in Vendia"));
     }
 
     /**

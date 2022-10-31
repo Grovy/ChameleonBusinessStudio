@@ -18,9 +18,4 @@ public class HttpErrorMessage {
      */
     private String message;
 
-    /**
-     * Http status code
-     */
-    private HttpStatus httpStatus;
-
 }

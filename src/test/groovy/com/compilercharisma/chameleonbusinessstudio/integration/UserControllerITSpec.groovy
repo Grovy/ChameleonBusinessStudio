@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.integration
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole
+import org.springframework.http.HttpStatus
 import org.springframework.security.test.context.support.WithMockUser
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -93,7 +94,41 @@ class UserControllerITSpec extends BaseITSpec {
 
         and: "two requests to /graphql/ are sent"
         verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+    }
 
+    @WithMockUser
+    def "createUser is unsuccessful if there is another user with the associated email in Vendia"() {
+        given: "a valid request"
+        def user = new User(_id: "", displayName: "userExistsAlready", email: "userAlreadyExists@gmail.com",
+                role: UserRole.PARTICIPANT, appointments: [])
+        def body = objectMapper.writeValueAsString(user)
+        def request = client.mutateWith(mockOidcLogin()).post().uri("/api/v1/users")
+                .bodyValue(body)
+                .header("content-type", "application/json")
+
+        def vendiaQuery1 = """{"query":"query { list_UserItems(filter: {email: {eq: \\"$user.email\\"}}) { _UserItems { _id email displayName role } } }"}"""
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo(vendiaQuery1))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/userAlreadyExistsResponse.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "an OK response is returned"
+        response.expectStatus().isEqualTo(409)
+                .expectBody()
+                .jsonPath('$.code').isEqualTo("error.message.alreadyExists")
+                .jsonPath('$.message').isEqualTo("User with email [userAlreadyExists@gmail.com] already exists")
+
+        and: "two requests to /graphql/ are sent"
+        verify(1, postRequestedFor(urlEqualTo("/graphql/")))
     }
 
     @WithMockUser
@@ -125,6 +160,34 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$.displayName').isEqualTo("Daniel Villavicencio")
                 .jsonPath('$.email').isEqualTo("daniel@chameleon")
                 .jsonPath('$.appointments').isEmpty()
+    }
+
+    @WithMockUser
+    def "getUser is unsuccessful if user is not found"() {
+        given: "a valid request"
+        def email = "userIsNotRegistered@gmail.com"
+        def request = client.get().uri("/api/v1/users/$email")
+
+        def vendiaQuery = "{\"query\":\"query { list_UserItems { _UserItems { _id email displayName role appointments } } }\"}"
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo(vendiaQuery))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/emptyUsersResponse.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "the response is correct"
+        response.expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath('$.message').isEqualTo("User with email [userIsNotRegistered@gmail.com] is not registered")
+                .jsonPath('$.code').isEqualTo("error.message.resourceNotFound")
 
     }
 
@@ -167,5 +230,36 @@ class UserControllerITSpec extends BaseITSpec {
 
         and: "two calls to /graphql/ were made"
         verify(3, postRequestedFor(urlEqualTo("/graphql/")))
+    }
+
+    @WithMockUser
+    def "deleteUser throws an error if user is not found"() {
+        given: "a request for a user that does not exist"
+        def email = "thisEmailDoesNotExist@gmail.com"
+        def request = client.mutateWith(mockOAuth2Login().oauth2User(basicOAuth2User)).delete().uri("/api/v1/users/$email")
+
+        def vendiaQuery = "query { list_UserItems(filter: {email: {eq: \\\"$email\\\"}}) { _UserItems { _id displayName email role appointments } } }"
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo("{\"query\":\"$vendiaQuery\"}"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/emptyFindIdByEmailResponse.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "an OK status is returned"
+        response.expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath('$.code').isEqualTo("error.message.resourceNotFound")
+                .jsonPath('$.message').isEqualTo("User with email [thisEmailDoesNotExist@gmail.com] was not found")
+
+        and: "two calls to /graphql/ were made"
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
     }
 }
