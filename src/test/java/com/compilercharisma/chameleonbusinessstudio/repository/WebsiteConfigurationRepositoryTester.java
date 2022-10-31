@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
  */
 public class WebsiteConfigurationRepositoryTester {
     
-    private IWebsiteConfigurationRepository makeSut(){
+    private WebsiteConfigurationRepository makeSut(){
         return makeSut(new Properties());
     }
     
-    private IWebsiteConfigurationRepository makeSut(Properties props){
+    private WebsiteConfigurationRepository makeSut(Properties props){
         // we can swap implementations here
         return new MockWebsiteConfigurationRepository(props);
     }
     
     @Test
     public void givenAnEmptyRepository_whenGetValueIsCalled_noResultIsPresent(){
-        IWebsiteConfigurationRepository sut = makeSut();
+        WebsiteConfigurationRepository sut = makeSut();
         
         Optional<String> value = sut.getValueFor("foo");
         
@@ -35,7 +35,7 @@ public class WebsiteConfigurationRepositoryTester {
         String expected = "bar";
         Properties props = new Properties();
         props.setProperty(key, expected);
-        IWebsiteConfigurationRepository sut = makeSut(props);
+        WebsiteConfigurationRepository sut = makeSut(props);
         
         Optional<String> value = sut.getValueFor(key);
         
@@ -48,9 +48,9 @@ public class WebsiteConfigurationRepositoryTester {
         String key = "foo";
         String expected = "bar";
         Properties props = new Properties();
-        IWebsiteConfigurationRepository sut = makeSut(props);
+        WebsiteConfigurationRepository sut = makeSut(props);
         
-        sut.setValue(key, expected);
+        sut.set(key, expected);
         
         Assertions.assertEquals(expected, props.getProperty(key));
     }
@@ -61,9 +61,9 @@ public class WebsiteConfigurationRepositoryTester {
         String expected = "bar";
         Properties props = new Properties();
         props.setProperty(key, expected);
-        IWebsiteConfigurationRepository sut = makeSut(props);
+        WebsiteConfigurationRepository sut = makeSut(props);
         
-        sut.setValue("baz", "qux");
+        sut.set("baz", "qux");
         Optional<String> actual = sut.getValueFor(key);
         
         Assertions.assertTrue(actual.isPresent());

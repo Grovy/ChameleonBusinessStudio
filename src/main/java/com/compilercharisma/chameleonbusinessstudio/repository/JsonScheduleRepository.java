@@ -10,8 +10,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Repository;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
@@ -32,7 +30,7 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Repository // comment this out, then add to VendiaScheduleRepository once we use that
-public class JsonScheduleRepository implements ScheduleRepository, ApplicationListener<ApplicationReadyEvent> {
+public class JsonScheduleRepository implements ScheduleRepository {
     public static final String DEFAULT_STORE_NAME = "schedules.json";
 
     private final ApplicationFolder folder;
@@ -48,8 +46,10 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
         this.storeName = storeName;
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    /**
+     * If no schedules are stored on the local file system, creates test data
+     */
+    public void createAbsentSchedules() {
         getAllSchedules()
             .collectList()
             .handle((schedules, dummy)->{
@@ -180,12 +180,11 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
     public Flux<Schedule> getAllSchedules() {
         Flux<Schedule> schedules = Flux.empty();
 
-        var f = folder.getFolder(ApplicationFolder.SCHED_DIR);
-        if(!f.doesFileExist(storeName)){
+        var file = folder.getFile(ApplicationFolder.SCHED_DIR, storeName);
+        if(!file.exists() || !file.isFile()){
             return Flux.just(new Schedule[0]);
         }
         
-        var file = f.getFile(storeName);
         try (var stream = Files.lines(file.toPath())) {
             var text = stream.collect(Collectors.joining("\n"));
             if(!(text.startsWith("[") && text.endsWith("]"))){ // not JSON array
@@ -229,8 +228,7 @@ public class JsonScheduleRepository implements ScheduleRepository, ApplicationLi
         schedules.forEach(this::setIds);
 
         Mono<Void> result = Mono.empty();
-        var schedFolder = folder.getFolder(ApplicationFolder.SCHED_DIR);
-        var f = schedFolder.getFile(storeName);
+        var f = folder.getFile(ApplicationFolder.SCHED_DIR, storeName);
 
         try {
             var asStr = makeMapper().writeValueAsString(schedules);

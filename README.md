@@ -4,12 +4,7 @@ An open source scheduling application, usable and maintainable without an extens
 Technology department.
 
 ## Synopsis
-Chameleon Business Studio aspires to adapt to its users, changing itself to “blend into�? their needs until it supports their vital information systems. Our project provides an open-source scheduling application template that can be tailored to an individual or organization’s needs. After a brief configuration process, the application is usable “out of the box�?, with [Vendia](https://www.vendia.net/) providing data-layer hosting, perfect for individuals and organizers with little technical support.
-
-/logout to log out
-see AuthenticationService for getting logged-in user
-If Angular doesn't look like it's working, try rebuilding.
-After logging in, you can check the logged in user in /auth/principal
+Chameleon Business Studio aspires to adapt to its users, changing itself to "blend into" their needs until it supports their vital information systems. Our project provides an open-source scheduling application template that can be tailored to an individual or organization’s needs. After a brief configuration process, the application is usable "out of the box", with [Vendia](https://www.vendia.net/) providing data-layer hosting, perfect for individuals and organizers with little technical support.
 
 ## Application Screenshots
 
@@ -28,9 +23,7 @@ After logging in, you can check the logged in user in /auth/principal
 
 ## Setting up the application
 
-To start, go to the ```./src/main/resources/``` directory, then copy 
-```application.properties.txt``` as ```application.properties``` (essentially,
-remove the `.txt` from the end.) You'll put your application credentials here.
+TODO add instructions for setting environment variables
 
 ### Angular CLI
 
@@ -117,7 +110,13 @@ Sprint 8: Data Deletion Implementation </br>
 Sprint 9: Polish Up the Application </br>
 Sprint 10: Deliver Documentation (User Guide, Maintainance Manual, Test Doc) and Deployment
 
+## API Documentation
+
+While the app is running, you can view its documentation at http://localhost:8080/webjars/swagger-ui/index.html
+
 ## Misc
 
 The application stores website configuration information in your home folder, in
 ```ChameleonBusinessStudio```
+
+- [About springdoc](https://springdoc.org/)

@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * An implementation of IWebsiteConfigurationRepository that uses a file as its
@@ -17,13 +21,14 @@ import org.springframework.stereotype.Component;
  * @author Matt Crow
  */
 @Component
-public class FileSystemWebsiteConfigurationRepository implements IWebsiteConfigurationRepository {
+@Slf4j
+public class FileSystemWebsiteConfigurationRepository implements WebsiteConfigurationRepository {
     private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
     
     private final Path filePath;
     private Properties cache;
     
-    
+    @Autowired
     public FileSystemWebsiteConfigurationRepository(){
         this(ROOT);
     }
@@ -43,6 +48,9 @@ public class FileSystemWebsiteConfigurationRepository implements IWebsiteConfigu
             cache = new Properties();
             try(InputStream in = Files.newInputStream(filePath)){
                 cache.load(in);
+            } catch (NoSuchFileException ex){
+                log.info(filePath + " not found, so I'll create it.");
+                store(new Properties()); // not created yet, so create
             } catch (IOException ex) {
                 throw new RuntimeException(String.format(
                     "Failed to open \"%s\"", 
