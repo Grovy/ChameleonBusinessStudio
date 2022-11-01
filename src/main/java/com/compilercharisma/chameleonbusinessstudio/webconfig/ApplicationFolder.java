@@ -1,16 +1,21 @@
 package com.compilercharisma.chameleonbusinessstudio.webconfig;
 
-import com.compilercharisma.chameleonbusinessstudio.repository.FileSystemWebsiteConfigurationRepository;
-import com.compilercharisma.chameleonbusinessstudio.repository.IWebsiteConfigurationRepository;
-import java.io.*;
-import java.nio.file.*;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.extern.slf4j.Slf4j;
+import wiremock.org.apache.commons.io.IOUtils;
 
 /**
  * This class is responsible for providing access to the ChameleonBusinessStudio
@@ -19,49 +24,45 @@ import org.springframework.web.multipart.MultipartFile;
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @Component
+@Slf4j
 public class ApplicationFolder {
-    private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
+    public static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
     private static final String LANDING_PAGES_DIR = "landingPages";
     private static final String LOGO_DIR = "logos";
     private static final String SPLASH_DIR = "splashes";
     public static final String SCHED_DIR = "schedules"; // rm this once we store schedules in Vendia
 
-    private final IWebsiteConfigurationRepository websiteConfigRepo;
+    private final Path root;
 
-
+    @Autowired // marks this as the default CTOR
     public ApplicationFolder(){
-        try {
-            createAbsentFolders();
-        } catch (IOException ex) {
-            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-        websiteConfigRepo = new FileSystemWebsiteConfigurationRepository(ROOT);
+        this(ROOT);
     }
 
-    private void createAbsentFolders() throws IOException{
+    public ApplicationFolder(Path root){
+        this.root = root;
+    }
+
+    /**
+     * Creates the folders required by the application, if they do not already
+     * exist.
+     * 
+     * @throws IOException if any errors occur while creating folders
+     */
+    public void createAbsentFolders() throws IOException{
         String[] dirs = {SPLASH_DIR, LANDING_PAGES_DIR, LOGO_DIR, SCHED_DIR};
         Path p;
         for(String dir : dirs){
             p = getSubdir(dir);
             if(!p.toFile().exists()){
+                log.info("Creating " + p.toString());
                 Files.createDirectories(p);
             }
         }
     }
 
-    /**
-     * Gets access to the folder within this folder with the given name
-     * 
-     * @param name the name of the folder
-     * @return the subfolder with the given name
-     */
-    public Folder getFolder(String name){
-        return new Folder(getSubdir(name));
-    }
-
     private Path getSubdir(String dirName){
-        return Paths.get(ROOT.toString(), dirName);
+        return Paths.get(root.toString(), dirName);
     }
 
     public void saveLandingPage(MultipartFile file){
@@ -80,6 +81,10 @@ public class ApplicationFolder {
         return readFile(Paths.get(getSubdir(LANDING_PAGES_DIR).toString(), fileName).toFile());
     }
 
+    public File getFile(String subdir, String fileName){
+        return Paths.get(getSubdir(subdir).toString(), fileName).toFile();
+    }
+
     /**
      * Reads the entire contents of the given file and returns it.
      *
@@ -91,7 +96,7 @@ public class ApplicationFolder {
         try (var stream = Files.lines(f.toPath())){
             content = stream.collect(Collectors.joining("\n"));
         } catch (IOException ex) {
-            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error reading file " + f.getAbsolutePath(), ex);
             throw new RuntimeException(ex);
         }
         return content;
@@ -106,7 +111,7 @@ public class ApplicationFolder {
         try {
             in = Files.newInputStream(Paths.get(getSubdir(LOGO_DIR).toString(), fileName));
         } catch (IOException ex) {
-            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error reading logo " + fileName, ex);
             throw new RuntimeException(ex);
         }
         return in;
@@ -114,23 +119,14 @@ public class ApplicationFolder {
 
     private void save(String dirName, MultipartFile contents){
         File f = Paths.get(getSubdir(dirName).toString(), contents.getOriginalFilename()).toFile();
-        try (OutputStream out = new FileOutputStream(f)){
-            return;
+        try (
+                InputStream in = contents.getInputStream();
+                OutputStream out = new FileOutputStream(f);
+        ){
+            IOUtils.copy(in, out);
         } catch (IOException ex) {
-            Logger.getLogger(ApplicationFolder.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error saving file " + contents.getOriginalFilename(), ex);
             throw new RuntimeException(ex);
         }
-    }
-
-    public void saveConfig(Properties config){
-        websiteConfigRepo.store(config);
-    }
-
-    public Properties readConfig(){
-        return websiteConfigRepo.load();
-    }
-
-    public boolean fileExists(String fileName){
-        return Paths.get(ROOT.toString(), fileName).toFile().exists();
     }
 }
