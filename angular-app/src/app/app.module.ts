@@ -7,6 +7,7 @@ import { AccountModalComponent } from './theme/modals/account-modal/account-moda
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { AdminConfigurationComponent } from './pages/admin-configuration/admin-configuration/admin-configuration.component';
 import { AdminGenUserComponent } from './pages/admin-panel/admin-gen-user/admin-gen-user.component';
+import { AdminNavComponent } from './pages/nav/admin-nav/admin-nav.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel/admin-panel.component';
 import { AdminPanelTestComponent } from './pages/admin-panel/admin-panel-test/admin-panel-test.component';
 import { AppComponent } from './app.component';
@@ -28,8 +29,8 @@ import { FlexLayoutModule, MediaObserver } from '@angular/flex-layout';
 import { FormsModule} from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageConfigurationComponent } from './pages/admin-configuration/landing-page-configuration/landing-page-configuration.component';
-import { NavComponent } from './pages/nav/nav.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ParticipantNavComponent } from './pages/nav/participant-nav/participant-nav.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { ScheduleConfigurationComponent } from './pages/schedule-configuration/schedule-configuration.component';
@@ -41,6 +42,7 @@ import { SignupModalComponent } from './theme/modals/signup-modal/signup-modal.c
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
+import { TalentNavComponent } from './pages/nav/talent-nav/talent-nav.component';
 import { UserService } from './services/UserService.service';
 
 
@@ -85,7 +87,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CustomBannerDirective,
     DefaultHeaderComponent,
     LandingPageConfigurationComponent,
-    NavComponent,
     PageNotFoundComponent,
     ScheduleConfigurationComponent,
     SetupWizardComponent,
@@ -96,6 +97,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     SiteHeaderComponent,
     SplashComponent,
     AccountModalComponent,
+    TalentNavComponent,
+    AdminNavComponent,
+    ParticipantNavComponent,
   ],
   imports: [
     AppRoutingModule,

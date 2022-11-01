@@ -17,8 +17,16 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<div *ngIf="(isAuthenticatedValue && isRegisteredValue)">
-  <app-nav></app-nav>
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'ADMIN' || currentUser.role === 'ORGANIZER')">
+  <app-admin-nav></app-admin-nav>
+</div>
+
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'PARTICIPANT')">
+  <app-participant-nav></app-participant-nav>
+</div>
+
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')">
+  <app-talent-nav></app-talent-nav>
 </div>
 
 <div class="main-content">
