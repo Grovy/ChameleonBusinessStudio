@@ -4,7 +4,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
-import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfig;
+import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfiguration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -27,10 +27,10 @@ public class ChameleonApplication {
     }
 
     @Bean
-    public HttpGraphQlClient httpGraphQlClient(VendiaConfig vendiaConfig) {
+    public HttpGraphQlClient httpGraphQlClient(VendiaConfiguration vendiaConfiguration) {
         return HttpGraphQlClient.builder()
-                .url(vendiaConfig.getBaseUrl())
-                .header(HttpHeaders.AUTHORIZATION, vendiaConfig.getApiKey())
+                .url(vendiaConfiguration.getBaseUrl())
+                .header(HttpHeaders.AUTHORIZATION, vendiaConfiguration.getApiKey())
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .header(HttpHeaders.ACCEPT, "application/json")
                 .build();

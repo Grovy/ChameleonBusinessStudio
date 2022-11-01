@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.client;
+package com.compilercharisma.chameleonbusinessstudio.utils;
 
 /**
  * specifies a filtering condition to apply to a Vendia query

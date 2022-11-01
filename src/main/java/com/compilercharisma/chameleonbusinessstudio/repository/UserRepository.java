@@ -5,6 +5,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -56,14 +57,14 @@ public class UserRepository {
      * Checks if a user is already registered with their email in Vendia
      *
      * @param email email to check
-     * @return Mono wrapping {@link Boolean}
+     * @return True if the user is registered, False if the user is not registered
      */
     public Mono<Boolean> isUserRegistered(String email) {
         var query = """
                 query { list_UserItems(filter: {email: {eq: "%s"}}) { _UserItems { _id email displayName role } } }"""
                 .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class)
-                .map(r -> !r.getUsers().isEmpty());
+                .map(r -> CollectionUtils.isNotEmpty(r.getUsers()));
     }
 
     /**

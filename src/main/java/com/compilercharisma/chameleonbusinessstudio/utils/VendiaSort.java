@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.client;
+package com.compilercharisma.chameleonbusinessstudio.utils;
 
 /**
  * specifies the order a field should be sorted in

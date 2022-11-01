@@ -4,9 +4,11 @@ import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -17,7 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -36,11 +38,11 @@ public class UserService {
      * @param email email of the user
      * @return {@link Boolean}
      */
-    public Mono<Boolean> isRegistered(String email){
+    public Mono<Boolean> isRegistered(String email) {
         return userRepository.findAllUsers()
-            .map(UserResponse::getUsers)
-            .map(users -> users.stream()
-                    .anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
+                .map(UserResponse::getUsers)
+                .map(users -> users.stream()
+                        .anyMatch(u -> u.getEmail().equalsIgnoreCase(email)));
     }
 
     /**
@@ -49,12 +51,15 @@ public class UserService {
      * @param email User's email
      * @return {@link User}
      */
-    public Mono<User> getUser(String email){
+    public Mono<User> getUser(String email) {
         return getAllUsers()
-            .map(UserResponse::getUsers)
-            .mapNotNull(lu -> lu.stream()
-                    .filter(u -> u.getEmail().equalsIgnoreCase(email))
-                        .findFirst().orElseThrow());
+                .map(UserResponse::getUsers)
+                .filter(CollectionUtils::isNotEmpty)
+                .switchIfEmpty(Mono.error(new UserNotRegisteredException(
+                        "User with email [%s] is not registered".formatted(email))))
+                .mapNotNull(list -> list.stream()
+                        .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                        .findFirst().orElse(null));
     }
 
     /**
@@ -64,9 +69,10 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> createUser(User user) {
-        return Mono.just(user)
-                .filterWhen(u -> userRepository.isUserRegistered(u.getEmail()).map(b -> !b))
-                .switchIfEmpty(Mono.error(new ExternalServiceException("User already exists with given email", HttpStatus.BAD_REQUEST)))
+        return userRepository.isUserRegistered(user.getEmail())
+                .filter(Boolean.FALSE::equals)
+                .switchIfEmpty(Mono.error(new ExternalServiceException(
+                        "User with email [%s] already exists".formatted(user.getEmail()), HttpStatus.CONFLICT)))
                 .flatMap(u -> userRepository.createUser(user));
     }
 
@@ -76,7 +82,7 @@ public class UserService {
      * @param user the user whose info will be edited in Vendia
      * @return {@link User}
      */
-    public Mono<User> updateUser(User user){
+    public Mono<User> updateUser(User user) {
         return userRepository.findUserIdByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.updateUser(user, u.get_id()));
@@ -90,7 +96,13 @@ public class UserService {
      */
     public Mono<DeletionResponse> deleteUser(String email) {
         return userRepository.findUserIdByEmail(email)
-                .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
+                .mapNotNull(list -> {
+                    if (CollectionUtils.isEmpty(list.getUsers())) {
+                        log.error("User with email [{}] was not found in Vendia", email);
+                        throw new UserNotRegisteredException("User with email [%s] was not found".formatted(email));
+                    }
+                    return list.getUsers().stream().findFirst().orElse(null);
+                })
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
     }
 

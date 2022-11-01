@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.client;
+package com.compilercharisma.chameleonbusinessstudio.utils;
 
 import java.util.*;
 import java.util.stream.Collectors;
