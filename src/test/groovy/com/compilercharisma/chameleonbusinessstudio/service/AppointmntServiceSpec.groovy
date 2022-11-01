@@ -35,7 +35,7 @@ class AppointmentServiceSpec extends Specification {
                 new AppointmentResponse(appointments: [
                         new Appointment(_id: "5555555", cancelled : false, description: "Some description",
                                 endTime: endTime, location: "Sacramento State", participants: [],
-                                restrictions: "none", startTime: startTime, title: "Help", totalSlots: 1
+                                startTime: startTime, title: "Help", totalSlots: 1
                         )
                 ])
 

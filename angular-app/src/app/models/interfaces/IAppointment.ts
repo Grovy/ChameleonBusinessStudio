@@ -8,7 +8,6 @@ export interface IAppointment {
     date?: string;
     location: string;
     description: string;
-    restrictions?: string;
     cancelled?: boolean;
     totalSlots?: number;
     tags?: string[];

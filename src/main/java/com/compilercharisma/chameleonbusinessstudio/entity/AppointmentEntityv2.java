@@ -32,7 +32,6 @@ public class AppointmentEntityv2 implements Serializable {
     private String description = "";
 
 
-    private String restrictions = "";
 
 
     private Boolean isCanceled = false;

@@ -53,11 +53,7 @@ public class AppointmentEntity implements Serializable {
     @Getter
     @Column(nullable=false)
     private String description = "";
-    
-    @Setter
-    @Getter
-    @Column(nullable=false)
-    private String restrictions = "";
+
     
     @Setter
     @Getter
@@ -103,7 +99,6 @@ public class AppointmentEntity implements Serializable {
             String.format("endTime : %s", endTime.toString()),
             String.format("title : \"%s\"", title),
             String.format("description : \"%s\"", description),
-            String.format("restrictions : \"%s\"", restrictions),
             String.format("isCanceled : %b", isCanceled),
             String.format("location: \"%s\"", location),
             String.format("totalSlots: %d", totalSlots)

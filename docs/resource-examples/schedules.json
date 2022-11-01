@@ -30,7 +30,6 @@
                         ],
                         "location": "Home",
                         "description": "Dungeons and Dragons",
-                        "restrictions": "",
                         "cancelled": false,
                         "totalSlots": 1,
                         "participants": []
@@ -69,7 +68,6 @@
                         ],
                         "location": "Sac State",
                         "description": "Cryptography",
-                        "restrictions": "",
                         "cancelled": false,
                         "totalSlots": 1,
                         "participants": []
@@ -109,7 +107,6 @@
                         ],
                         "location": "Online",
                         "description": "Senior project",
-                        "restrictions": "",
                         "cancelled": false,
                         "totalSlots": 1,
                         "participants": []
