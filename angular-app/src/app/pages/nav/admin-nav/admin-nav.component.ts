@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import {ThemePalette} from '@angular/material/core';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css']
+  selector: 'app-admin-nav',
+  templateUrl: './admin-nav.component.html',
+  styleUrls: ['./admin-nav.component.css']
 })
-export class NavComponent {
+export class AdminNavComponent {
 
   navLinks: any[];
   activeLinkIndex = -1;
