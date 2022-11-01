@@ -19,6 +19,15 @@ export class ScheduleService {
             );
     }
 
+    // Function to get all the schedules
+    public getAllSchedules(): Observable<any> {
+        return this.httpClient.get(`${this.apiUrl}`)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
     private handleError(error: HttpErrorResponse): Observable<never> {
         console.log(error);
         return throwError(`An error occured - Error code: ${error.status}`);
