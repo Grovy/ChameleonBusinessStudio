@@ -62,7 +62,7 @@ public class AppointmentRepositoryv2 {
      * @return The {@link} of the appointment created
      */
     public Mono<Appointment> createAppointment(Appointment appointment) {
-        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: [], startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}}}"
+        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: [], startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.getCancelled(), appointment.getEndTime(),
                         appointment.getDescription(), appointment.getLocation(),
                         appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
