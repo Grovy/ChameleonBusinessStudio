@@ -1,18 +1,22 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
