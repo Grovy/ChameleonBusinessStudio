@@ -1,7 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.HttpErrorMessage;
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
 import com.compilercharisma.chameleonbusinessstudio.exception.NoUserLoggedInException;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
