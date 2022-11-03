@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.12'
     implementation 'org.springdoc:springdoc-openapi-security:1.6.12'
+    implementation group: "com.twilio.sdk", name: "twilio", version: "9.1.0"
     modules {
         module("org.springframework.boot:spring-boot-starter-tomcat") {
             replacedBy("org.springframework.boot:spring-boot-starter-reactor-netty", "Use Netty instead of Reactor Tomcat")

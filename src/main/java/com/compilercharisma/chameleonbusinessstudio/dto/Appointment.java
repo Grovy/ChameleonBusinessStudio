@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -49,7 +50,6 @@ public class Appointment implements Serializable {
      */
     @Builder.Default
     private String description= "";
-
 
     /**
      * If the appointment is cancelled or not

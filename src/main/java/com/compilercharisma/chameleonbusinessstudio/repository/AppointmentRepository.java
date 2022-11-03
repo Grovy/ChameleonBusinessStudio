@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-/** 
+/**
  * can use findAll(AppointmentSpecification.xyz)
  * @author Matt Crow <mattcrow19@gmail.com>
  */
