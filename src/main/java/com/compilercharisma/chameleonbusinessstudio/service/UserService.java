@@ -7,21 +7,35 @@ import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+import com.compilercharisma.chameleonbusinessstudio.dto.*;
+import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AppointmentRepositoryv2 appointmentRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AppointmentRepositoryv2 appointmentRepository){
         this.userRepository = userRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     /**
@@ -112,9 +126,19 @@ public class UserService {
      * @param _id The _id to look up.
      * @return {@link UserAppointments}
      */
+//    public Mono<UserAppointmentsResponse> getUserAppointments(String _id)
+//    {
+//       var test = userRepository.getUserAppointments(_id);
+//       List<Appointment> appointmentList = new ArrayList<>();
+//       test.map(ua -> ua.getAppointments().forEach(s -> appointmentRepository.getAppointment(s)
+//               .flatMap(appointmentList::add)));
+//       return Mono.just(new UserAppointmentsResponse(appointmentList));
+//    }
+
     public Mono<UserAppointments> getUserAppointments(String _id)
     {
         return userRepository.getUserAppointments(_id);
     }
+
 
 }

@@ -160,20 +160,17 @@ public class AppointmentRepositoryv2 {
     }
 
     /**
-     *
-     * This would be to help parse arrays into strings for the vendia queries.
-     *
-     * @param array Array that you want as a string
-     * @return A string that can be used to up Vendia
+     * New Endpoint to get a single appointment from Vendia
+     * @param _id The _id of the appointment you want to fully get
+     * @return The full details of the appointment gets returned
      */
-    // public String arrayToString(Set<String> array)
-    // {
-    // Integer max = array.size();
-    // String output = "[";
-    // for(int i = 0; i < max; i++)
-    // {
-    // //.forEach
-    // }
-    // }
+    public Mono<Appointment> getAppointment(String _id)
+    {
+        var query = """
+                query { get_Appointment(id: "%s") {cancelled, description, endTime, location, participants, startTime, title, totalSlots}}"""
+                .formatted(_id);
+        return(vendiaClient.executeQuery(query, "get_Appointment[0]", Appointment.class));
+
+    }
 
 }
