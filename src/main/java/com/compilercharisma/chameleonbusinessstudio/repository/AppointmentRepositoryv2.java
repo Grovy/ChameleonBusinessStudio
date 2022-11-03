@@ -176,4 +176,19 @@ public class AppointmentRepositoryv2 {
     // }
     // }
 
+    /**
+     *
+     * The preparation for these appointments must be handed
+     * to in the front end.
+     *
+     * @param appts List that has all the appointments you want to make.
+     */
+    public void createAppointments(List<Appointment> appts)
+    {
+        for (Appointment appt : appts)
+        {
+            createAppointment(appt);
+        }
+    }
+
 }
