@@ -137,7 +137,7 @@ public class AppointmentRepositoryv2
     }
 
     /**
-     * @param appointment The appointment that is getting deleted
+     * @param id The appointment that is getting deleted
      * @return The {@link DeletionResponse} of the appointment getting deleted
      */
     public Mono<DeletionResponse> deleteAppointment(String id) {
@@ -157,7 +157,7 @@ public class AppointmentRepositoryv2
      *
      * This would be to help parse arrays into strings for the vendia queries.
      *
-     * @param array Array that you want as a string
+     * @param Array that you want as a string
      * @return A string that can be used to up Vendia
      */
 //    public String arrayToString(Set<String> array)
@@ -169,5 +169,19 @@ public class AppointmentRepositoryv2
 //            //.forEach
 //        }
 //    }
+
+    /**
+     * New Endpoint to get a single appointment from Vendia
+     * @param _id The _id of the appointment you want to fully get
+     * @return The full details of the appointment gets returned
+     */
+    public Mono<Appointment> getAppointment(String _id)
+    {
+        var query = """
+                query { get_Appointment(id: "%s") {cancelled, description, endTime, location, participants, startTime, title, totalSlots}}"""
+                .formatted(_id);
+        return(vendiaClient.executeQuery(query, "get_Appointment[0]", Appointment.class));
+
+    }
 
 }

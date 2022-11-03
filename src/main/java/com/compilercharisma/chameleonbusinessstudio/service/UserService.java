@@ -4,6 +4,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 
 import java.util.Optional;
@@ -18,9 +19,10 @@ import reactor.core.publisher.Mono;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository){
+    private final AppointmentRepositoryv2 appointmentRepository;
+    public UserService(UserRepository userRepository, AppointmentRepositoryv2 appointmentRepository){
         this.userRepository = userRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     /**
@@ -94,9 +96,19 @@ public class UserService {
      * @param _id The _id to look up.
      * @return {@link UserAppointments}
      */
+//    public Mono<UserAppointmentsResponse> getUserAppointments(String _id)
+//    {
+//       var test = userRepository.getUserAppointments(_id);
+//       List<Appointment> appointmentList = new ArrayList<>();
+//       test.map(ua -> ua.getAppointments().forEach(s -> appointmentRepository.getAppointment(s)
+//               .flatMap(appointmentList::add)));
+//       return Mono.just(new UserAppointmentsResponse(appointmentList));
+//    }
+
     public Mono<UserAppointments> getUserAppointments(String _id)
     {
         return userRepository.getUserAppointments(_id);
     }
+
 
 }

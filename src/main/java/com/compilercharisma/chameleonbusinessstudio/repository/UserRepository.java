@@ -171,8 +171,7 @@ public class UserRepository {
                   }
                 }
                 """.formatted(_id);
-        Mono<UserAppointments> test = vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
-        for()
-        return ;
+
+        return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
     }
 }
