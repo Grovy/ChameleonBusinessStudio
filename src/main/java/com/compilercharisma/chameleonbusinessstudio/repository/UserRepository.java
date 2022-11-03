@@ -1,12 +1,15 @@
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 
 @Slf4j
@@ -168,6 +171,8 @@ public class UserRepository {
                   }
                 }
                 """.formatted(_id);
-        return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
+        Mono<UserAppointments> test = vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
+        for()
+        return ;
     }
 }
