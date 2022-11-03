@@ -8,7 +8,7 @@ import java.util.Properties;
  * 
  * @author Matt Crow
  */
-public class MockWebsiteConfigurationRepository implements IWebsiteConfigurationRepository{
+public class MockWebsiteConfigurationRepository implements WebsiteConfigurationRepository{
     private Properties cache;
     
     

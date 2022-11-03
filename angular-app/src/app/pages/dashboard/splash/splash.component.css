@@ -34,6 +34,22 @@ mat-toolbar{
   margin: auto;
 }
 
+.event-card {
+  margin: 15px;
+  margin-left: 50px;
+  width: 25%;
+  text-align: center;
+  background: greenyellow;
+}
+
+.upcoming-appointments-card{
+  margin: 15px;
+  margin-left: 50px;
+  width: 25%;
+  text-align: center;
+  background: greenyellow;
+}
+
 .card{
   margin: 15px;
   width: 25%;

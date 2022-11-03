@@ -2,15 +2,14 @@ import { IUser } from "./IUser";
 
 export interface IAppointment {
     id?: number;
-    date?: string;
-    startTime: string;
-    endTime: string;
     title: string;
+    startTime: Date | string;
+    endTime: Date | string;
+    date?: string;
     location: string;
     description: string;
-    //restrictions?: string;
+    cancelled?: boolean;
     totalSlots?: number;
     tags?: string[];
-    registeredUsers: string[] | IUser[];
-    canceled?: boolean;
+    participants: string[] | IUser[];
 }

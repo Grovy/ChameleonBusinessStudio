@@ -10,6 +10,7 @@ import { LandingPageConfigurationComponent } from "./pages/admin-configuration/l
 import { NgModule } from '@angular/core';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RouterModule, Routes } from '@angular/router';
+import { ScheduleConfigurationComponent } from './pages/schedule-configuration/schedule-configuration.component';
 import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
@@ -23,12 +24,15 @@ const routes: Routes = [
   { path: 'appointment-list',component:AppointmentListComponent},
   { path: 'appointment-creation',component:AppointmentCreateFormComponent},
   { path: 'appointment-details', component: AppointmentDetailsComponent },
-  { path: 'calender-view',component: CalenderViewComponent },
   { path: 'booking-page', component: BookingPageComponent },
+  { path: 'calender-view',component: CalenderViewComponent },
   { path: 'landing-page-configuration', component: LandingPageConfigurationComponent },
+  { path: 'schedule-configuration', component: ScheduleConfigurationComponent },
   { path: 'setup-wizard', component: SetupWizardComponent },
   { path: 'sign-in', component: SignInFormComponent },
   { path: 'site-header', component: SiteHeaderComponent },
+
+  { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({

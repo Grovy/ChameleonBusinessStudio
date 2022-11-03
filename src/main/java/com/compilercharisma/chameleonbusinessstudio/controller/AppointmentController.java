@@ -1,14 +1,14 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,25 +17,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
-import com.compilercharisma.chameleonbusinessstudio.entity.user.Role;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.SynchronousSink;
 
 /**
  * This controller handles routes associated with appointments.
  * 
+ * @author Ariel Camargo
  * @author Matt Crow <mattcrow19@gmail.com>
  */
 @RestController
 @RequestMapping("/api/v1/appointments")
+@Slf4j
 public class AppointmentController {
 
     private final AppointmentService appointments;
@@ -51,64 +51,14 @@ public class AppointmentController {
         this.authentication = authentication;
         this.users = users;
     }
-    
-    /**
-     * page is 0-indexed
-     *      *  attr is the name of one of AppointmentEntity's attributes
-     *      *  by is either asc or desc
-     * 
-     * @param days the number of days to check for. A value of 3 means 
-     *  available appointments occuring within the next 3 days.
-     * @param page size={size}&page={page}&sort={attr},{by}
-     *
-     * @return a response containing a page of available appintments
-     */
-    @GetMapping(path="available")
-    public Mono<ResponseEntity<Page<AppointmentEntity>>> getAvailableInDays(
-            @RequestParam(required=false, defaultValue="30") int days,
-            Pageable page
-    ){
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime later = now.plusDays(days);
-        
-        var appts = appointments.getAvailableAppointments(now, later, page);
-        var response = ResponseEntity.ok(appts);
-        return Mono.just(response);
-    }
-    
-    /**
-     * Creates and stores a new appointment, if it is valid.
-     * Note that using RequestBody means it works as an API endpoint, but might 
-     * not handle a form submission.
-     * 
-     * @param appointment the appointment to create
-     * @return a 201 Created At response if successful
-     */
-    @PostMapping
-    public Mono<ResponseEntity<AppointmentEntity>> create(@RequestBody AppointmentEntity appointment){
-        if(!appointments.isAppointmentValid(appointment) || appointment.getId() != 0){
-            return Mono.just(ResponseEntity.badRequest().body(appointment));
-        }
-        
-        return authentication
-            .getLoggedInUserReactive()
-            .handle((user, sink)->{
-                var role = user.getRole().getRoleName();
-                if(isRoleAllowedToCreateAppointments(role)){
-                    sink.next(user);
-                } else {
-                    sink.error(new AccessDeniedException(String.format("Users with role %s are not allowed to create appointments", role)));
-                }
-            }).map((whatever)->{
-                appointments.createAppointment(appointment);
-        
-                URI at = ServletUriComponentsBuilder
-                        .fromCurrentContextPath() // relative to application root
-                        .pathSegment("api", "v1", "appointments")
-                        .build()
-                        .toUri();
-                return ResponseEntity.created(at).body(appointment);
-            });
+
+    @GetMapping
+    public Mono<ResponseEntity<List<Appointment>>> getAllAppointments(){
+        log.info("Retrieving all user appointments from Vendia...");
+        return appointments.getAllAppointments()
+                .map(r -> ResponseEntity.ok(r))
+                .doOnNext(r -> log.info("Finished retrieving all user appointments from Vendia!"))
+                .doOnError(e -> log.error("Could not retrieve user appointments from Vendia"));
     }
 
     /**
@@ -117,76 +67,79 @@ public class AppointmentController {
      * Gets appointments the currently logged in user is booked for, sorted and
      * filtered by the given pagination options.
      * 
+     * @param token the current context's authentication token
      * @param pageable pagination options
      * @return a mono containing some of the user's booked appointments
      */
     @GetMapping("mine")
-    public Mono<ResponseEntity<Page<Appointment>>> myAppointments(Pageable pageable){       
-        return authentication.getLoggedInUserReactive()
-            .flatMap(user -> appointments.getAppointmentsForUser(user.getEmail(), pageable))
+    public Mono<ResponseEntity<Page<Appointment>>> myAppointments(
+            Authentication token,
+            Pageable pageable
+    ){
+        var email = authentication.getEmailFrom(token);
+        return appointments
+            .getAppointmentsForUser(email, pageable)
             .map(page -> ResponseEntity.ok(page));
     }
-    
-    @PutMapping
-    public Mono<ResponseEntity<AppointmentEntity>> update(@RequestBody AppointmentEntity appointment){
-        appointments.validateAppointment(appointment);
-        
-        return authentication
-            .getLoggedInUserReactive()
-            .handle((user, sink)->{
-                var role = user.getRole().getRoleName();
-                if(isRoleAllowedToCreateAppointments(role)){
-                    sink.next(user);
-                } else {
-                    sink.error(new AccessDeniedException(String.format("Users with role %s are not allowed to create appointments", role)));
-                }
-            }).map((whatever)->{
-                if(appointment.getId() == 0){ // new appointment
-                    appointments.createAppointment(appointment);
-                } else { // updating an old appointment
-                    appointments.updateAppointment(appointment);
-                }
-                
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(appointment);
-            });
+
+    /** 
+     * @param days the number of days to check for. A value of 3 means 
+     *  available appointments occuring within the next 3 days.
+     * @param page size={size}&page={page}&sort={attr},{by}
+     *  - page is 0-indexed
+     *  - attr is the name of one of AppointmentEntity's attributes
+     *  - by is either asc or desc
+     *
+     * @return a response containing a page of available appintments
+     */
+    @GetMapping(path="available")
+    public Mono<ResponseEntity<Page<Appointment>>> getAvailableInDays(
+            @RequestParam(required=false, defaultValue="30") int days,
+            Pageable page
+    ){
+        LocalDate now = LocalDate.now();
+        LocalDate later = now.plusDays(days);
+        return appointments.getAvailableAppointments(now, later, page)
+            .map(appts -> ResponseEntity.ok(appts));
     }
 
     /**
-     * Books the currently logged in user for the given appointment.
-     * @param appointmentId the ID of theappointment to book the logged-in user 
-     *  for.
-     * @return either a bad request or an OK response containing the updated 
-     *  appointment
+     * Creates and stores a new appointment, if it is valid.
+     * Note that using RequestBody means it works as an API endpoint, but might 
+     * not handle a form submission.
+     * 
+     * @param root contains the URI component of the app root, such as
+     *  http://localhost:8080
+     * @param token the current context's authentication token
+     * @param appointment the appointment to create
+     * @return a 201 Created At response if successful
      */
-    @PostMapping("/book-me/{appointment-id}")
-    public Mono<ResponseEntity<AppointmentEntity>> bookMe(
-            @PathVariable("appointment-id") int appointmentId
+    @PostMapping
+    public Mono<ResponseEntity<Appointment>> createAppointment(
+            UriComponentsBuilder root,
+            Authentication token,
+            @RequestBody Appointment appointment
     ){
-        var appointmentMaybe = appointments.getAppointmentById(appointmentId);
-        if(appointmentMaybe.isEmpty()){
-            return Mono.error(new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
-        }
-        
-        var appointment = appointmentMaybe.get();
-        if(!appointments.isSlotAvailable(appointment)){
-            return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
-        }
+        appointments.validateAppointment(appointment);
 
-        return authentication
-            .getLoggedInUserReactive()
-            .map(u -> u.getEmail())
-            .map(email->{
-                if(!appointments.isUserRegistered(appointment, email)){
-                    appointments.registerUser(appointment, email);
-                }
-                return ResponseEntity.ok(appointment);
-            });
+        log.info("Creating an appointment", appointment);
+
+        URI at = root // relative to application root
+            .pathSegment("api", "v1", "appointments")
+            .build()
+            .toUri();
+        
+        return appointments.createAppointment(appointment)
+                .map(r -> ResponseEntity.created(at).body(appointment))
+                .doOnNext(u -> log.info("Appointment created in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error creating appointment in Vendia"));
     }
 
     /**
      * POST /api/v1/appointments/123?email=foo.bar@baz.qux
      * Books a user for an appointment.
      * 
+     * @param token the current context's authentication token
      * @param appointmentId the ID of the appointment to book the given email 
      *  for
      * @param email the email of the user to book an appointment for
@@ -194,8 +147,8 @@ public class AppointmentController {
      *  or one of several error responses
      */
     @PostMapping("/book-them/{appointment-id}")
-    public Mono<ResponseEntity<AppointmentEntity>> bookThem(
-            @PathVariable("appointment-id") int appointmentId,
+    public Mono<ResponseEntity<Appointment>> bookThem(
+            @PathVariable("appointment-id") String appointmentId,
             @RequestParam("email") String email
     ){
         if(email == null){
@@ -205,69 +158,117 @@ public class AppointmentController {
             return Mono.error(new IllegalArgumentException("Invalid email: " + email));
         }
 
-        // Matt hates Reactor. Java needs Async/await!
-        return users.isRegistered(email)
-            .handle((Boolean isRegistered, SynchronousSink<Boolean> sink)->{
-                if(isRegistered){
-                    sink.next(isRegistered);
-                } else {
-                    sink.error(new IllegalArgumentException("Email is not registered as a user: " + email));
-                }
-            }).handle((Boolean whatever, SynchronousSink<AppointmentEntity> sink) -> {
-                var appointmentMaybe = appointments.getAppointmentById(appointmentId);
-                if(appointmentMaybe.isEmpty()){
-                    sink.error(new IllegalArgumentException("Invalid appointment ID: " + appointmentId));
-                } else {
-                    sink.next(appointmentMaybe.get());
-                }
-            }).handle((AppointmentEntity appt, SynchronousSink<AppointmentEntity> sink)->{
-                // need to call reactive from inside another reactive, pass down appt
-                authentication
-                    .getLoggedInUserReactive()
-                    .handle((user, userSink)->{
-                        // check if logged in user is allowed to book
-                        var role = user.getRole().getRoleName();
-                        if(isRoleAllowedToBookOtherPeople(role)){
-                            sink.next(appt);
-                        } else {
-                            var msg = String.format(
-                                "Users with role \"%s\" are not allowed to book appointments for other users",
-                                role
-                            );
-                            sink.error(new AccessDeniedException(msg));
-                        }
-                    });
-            }).handle((AppointmentEntity appt, SynchronousSink<AppointmentEntity> sink) -> {
-                if(appointments.isSlotAvailable(appt)){
-                    sink.next(appt);
-                } else {
-                    sink.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
-                }
-            }).map(appt -> {
-                if(!appointments.isUserRegistered(appt, email)){
-                    appointments.registerUser(appt, email);
-                }
+        var getAppt = appointments.getAppointmentById(appointmentId);
+        var checkUser = users.isRegistered(email);
         
-                return ResponseEntity.ok(appt);
-            });
+        return Mono.zip(getAppt, checkUser)
+            .flatMap(tuple -> {
+                var appt = tuple.getT1();
+                var isUserRegistered = tuple.getT2();
+                if(!isUserRegistered){
+                    throw new IllegalArgumentException("Email is not registered as a user: " + email);
+                }
+                return appointments.bookEmail(appt, email);
+            })
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    @PostMapping("/unbook-them/{appointment-id}")
+    public Mono<ResponseEntity<Appointment>> unbookThem(
+            @PathVariable("appointment-id") String appointmentId,
+            @RequestParam("email") String email
+    ){
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> appointments.unbookEmail(appt, email))
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
+     * Books the currently logged in user for the given appointment.
+     * 
+     * @param token the current context's authentication token
+     * @param appointmentId the ID of theappointment to book the logged-in user 
+     *  for.
+     * @return either a bad request or an OK response containing the updated 
+     *  appointment
+     */
+    @PostMapping("/book-me/{id}")
+    public Mono<ResponseEntity<Appointment>> bookMe(
+            Authentication token,
+            @PathVariable("id") String appointmentId
+    ){
+        var email = authentication.getEmailFrom(token);
+
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> {
+                if(!appointments.isSlotAvailable(appt)){
+                    return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
+                }
+                return appointments.bookEmail(appt, email);
+            })
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    @PostMapping("/unbook-me/{id}")
+    public Mono<ResponseEntity<Appointment>> unbookMe(
+            Authentication token,
+            @PathVariable("id") String appointmentId
+    ){
+        var email = authentication.getEmailFrom(token);
+        return appointments.getAppointmentById(appointmentId)
+            .flatMap(appt -> appointments.unbookEmail(appt, email))
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
+     * Cancels the appointment with the given ID, if it exists.
+     * Throws an exception if no such appointment exists.
+     * 
+     * @param id the ID of the appointment to cancel
+     * @return a response containing the status of the request after processing
+     */
+    @PostMapping("/cancel/{id}")
+    public Mono<ResponseEntity<Appointment>> cancelAppointmentById(
+            @PathVariable String id
+    ) {
+        return appointments.getAppointmentById(id)
+            .flatMap(appointments::cancelAppointment)
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
+    /**
+     * Updates the given appointment.
+     * Throws an exception if the appointment is not yet stored in Vendia.
+     * 
+     * @param token the current context's authentication token
+     * @param appointment the appointment to create or update
+     * @return a response containing the updated or created appointment
+     */
+    @PutMapping
+    public Mono<ResponseEntity<Appointment>> updateAppointment(
+            Authentication token,
+            @RequestBody Appointment appointment
+    ){
+        return appointments.updateAppointment(appointment)
+            .map(r -> ResponseEntity.ok(appointment));
+    }
+
+    /**
+     * This deletes the appointment called in Vendia
+     * @param appointment The appointment you want to delete
+     * @return The (@link DeletionResponse} of the appointment being updated.
+     */
+    @DeleteMapping
+    public Mono<ResponseEntity<Appointment>> deleteVendiaAppointment(
+            @RequestBody Appointment appointment
+    ){
+        log.info("Deleting an appointment");
+        return appointments.deleteAppointment(appointment)
+                .map(r -> ResponseEntity.ok(r))
+                .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
+                .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
     }
     
-    private boolean isRoleAllowedToCreateAppointments(String role){
-        var hs = new HashSet<>();
-        hs.add(Role.ADMIN);
-        hs.add(Role.ORGANIZER);
-        hs.add(Role.TALENT);
-        return hs.contains(role);
-    }
-
-    private boolean isRoleAllowedToBookOtherPeople(String role){
-        var hs = new HashSet<>();
-        hs.add(Role.ADMIN);
-        hs.add(Role.ORGANIZER);
-        hs.add(Role.TALENT);
-        return hs.contains(role);
-    }
-
     private boolean isValidEmail(String email){
         var isValid = true;
         // how to validate properly?

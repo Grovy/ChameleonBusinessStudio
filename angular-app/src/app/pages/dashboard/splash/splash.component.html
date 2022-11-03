@@ -1,19 +1,18 @@
-<mat-toolbar color="accent">
-  <mat-toolbar-row>
-    <p class="business-title">Chameleon <Br>Business Studio</p>
-    <span class="example-spacer"></span>
-    <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
-    <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
-    <button mat-stroked-button class="icon">About Us</button>
-    <sign-in></sign-in>
-  </mat-toolbar-row>
-</mat-toolbar>
+<app-default-header></app-default-header>
 
-<div *ngIf="(isAuthenticatedValue && isRegisteredValue)">
-  <app-nav></app-nav>
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'ADMIN' || currentUser.role === 'ORGANIZER')">
+  <app-admin-nav></app-admin-nav>
 </div>
 
-<div class="main-content">
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'PARTICIPANT')">
+  <app-participant-nav></app-participant-nav>
+</div>
+
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')">
+  <app-talent-nav></app-talent-nav>
+</div>
+
+<div *ngIf="!(isAuthenticatedValue && isRegisteredValue)" class="main-content">
   <div class="card">
     <h2 class="label">Scheduling made easier</h2>
     <p class="description">
@@ -43,6 +42,35 @@
     <mat-icon class="main-icon" svgIcon="edit"></mat-icon>
   </div>
 </div>
+
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')" class="main-content">
+  <div class="card">
+    <h2 class="label">Welcome Back {{ currentUser.displayName }}!</h2>
+    <p class="description">
+      You are a talent.<br>
+      Our project provides an open-source scheduling template that can be tailored to an individual
+      or to an organization's specific needs, just like a Chameleon!
+    </p>
+    <div class="icon-wrapper">
+      <mat-icon class="main-icon" svgIcon="checkAll"></mat-icon>
+    </div>
+  </div>
+
+<div>
+  <app-event-widget></app-event-widget>
+</div>
+    
+  <mat-card class="upcoming-appointments-card">
+    <mat-card-title>Upcoming Booked Appointments</mat-card-title>
+    <mat-card-subtitle>Name of the Appointment</mat-card-subtitle>
+    <mat-card-content>
+      First 10 appointments in this scrollable widget. Coming soon!
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+
 <div class="main-content">
 </div>
 

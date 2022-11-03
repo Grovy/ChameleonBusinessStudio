@@ -20,9 +20,10 @@ public class ExternalServiceException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
-    public ExternalServiceException(String message){
+    public ExternalServiceException(String message, Throwable inner){
         super(message);
         this.message = message;
+        this.httpStatus = HttpStatus.BAD_REQUEST;
     }
 
     public String getMessage(){
