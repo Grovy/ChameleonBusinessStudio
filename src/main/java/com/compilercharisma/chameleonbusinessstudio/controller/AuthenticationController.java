@@ -16,16 +16,16 @@ import java.util.Objects;
  */
 @RestController
 @Slf4j
-@RequestMapping(path="/api/v1/auth")
+@RequestMapping(path = "/api/v1/auth")
 public class AuthenticationController {
 
     private final AuthenticationService authService;
     private final UserService userService;
 
     public AuthenticationController(
-            AuthenticationService authService, 
+            AuthenticationService authService,
             UserService userService
-    ){
+    ) {
         this.authService = authService;
         this.userService = userService;
     }
@@ -60,7 +60,7 @@ public class AuthenticationController {
      * @return {@link Boolean}
      */
     @GetMapping("/isUserRegistered")
-    public Mono<ResponseEntity<Boolean>> isUserRegistered(Authentication authentication){
+    public Mono<ResponseEntity<Boolean>> isUserRegistered(Authentication authentication) {
         var email = authService.getEmailFrom(authentication);
         log.info("Checking to see if user with email [{}] is registered in Vendia", email);
         return Mono.just(Objects.requireNonNull(email))
