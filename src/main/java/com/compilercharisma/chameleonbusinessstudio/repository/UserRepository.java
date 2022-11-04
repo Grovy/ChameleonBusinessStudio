@@ -112,16 +112,11 @@ public class UserRepository {
      * Grab a user's appointments via their id.
      *
      * @param _id The id to look up.
-     * @return (@ link List }
+     * @return {@link UserAppointments}
      */
     public Mono<UserAppointments> getUserAppointments(String _id) {
         String getUserAppointmentArray = """
-                query {
-                  get_User(id: "%s") {
-                    appointments
-                  }
-                }
-                """.formatted(_id);
+                query { get_User(id: "%s") { appointments } }""".formatted(_id);
 
         return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
     }

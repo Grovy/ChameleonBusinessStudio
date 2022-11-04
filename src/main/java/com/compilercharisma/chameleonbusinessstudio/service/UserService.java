@@ -15,6 +15,7 @@ import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final AppointmentRepositoryv2 appointmentRepository;
 
-    public UserService(UserRepository userRepository, AppointmentRepositoryv2 appointmentRepository){
+    public UserService(UserRepository userRepository, AppointmentRepositoryv2 appointmentRepository) {
         this.userRepository = userRepository;
         this.appointmentRepository = appointmentRepository;
     }
@@ -122,23 +123,17 @@ public class UserService {
     }
 
     /**
+     * Fetches all the Appointments for a user in Vendia
      *
-     * @param _id The _id to look up.
+     * @param id The id to look up.
      * @return {@link UserAppointments}
      */
-//    public Mono<UserAppointmentsResponse> getUserAppointments(String _id)
-//    {
-//       var test = userRepository.getUserAppointments(_id);
-//       List<Appointment> appointmentList = new ArrayList<>();
-//       test.map(ua -> ua.getAppointments().forEach(s -> appointmentRepository.getAppointment(s)
-//               .flatMap(appointmentList::add)));
-//       return Mono.just(new UserAppointmentsResponse(appointmentList));
-//    }
-
-    public Mono<UserAppointments> getUserAppointments(String _id)
-    {
-        return userRepository.getUserAppointments(_id);
+    public Mono<UserAppointmentsResponse> getUserAppointments(String id) {
+        return userRepository.getUserAppointments(id)
+                .flatMapIterable(UserAppointments::getAppointments)
+                .flatMap(appointmentRepository::getAppointment)
+                .collectList()
+                .map(UserAppointmentsResponse::new);
     }
-
 
 }

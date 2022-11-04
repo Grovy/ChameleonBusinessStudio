@@ -161,15 +161,15 @@ public class AppointmentRepositoryv2 {
 
     /**
      * New Endpoint to get a single appointment from Vendia
+     *
      * @param _id The _id of the appointment you want to fully get
      * @return The full details of the appointment gets returned
      */
-    public Mono<Appointment> getAppointment(String _id)
-    {
+    public Mono<Appointment> getAppointment(String _id) {
         var query = """
                 query { get_Appointment(id: "%s") {cancelled, description, endTime, location, participants, startTime, title, totalSlots}}"""
                 .formatted(_id);
-        return(vendiaClient.executeQuery(query, "get_Appointment[0]", Appointment.class));
+        return (vendiaClient.executeQuery(query, "get_Appointment", Appointment.class));
 
     }
 

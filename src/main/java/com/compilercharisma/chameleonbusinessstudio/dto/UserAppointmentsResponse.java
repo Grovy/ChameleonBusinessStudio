@@ -13,6 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserAppointmentsResponse {
+
+    /**
+     * Appointments for a user
+     */
     private List<Appointment> appointments;
 }
 
