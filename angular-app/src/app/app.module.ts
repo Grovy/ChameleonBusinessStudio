@@ -69,6 +69,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.component';
 
 
 @NgModule({
@@ -100,6 +101,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TalentNavComponent,
     AdminNavComponent,
     ParticipantNavComponent,
+    EventWidgetComponent,
   ],
   imports: [
     AppRoutingModule,

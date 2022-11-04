@@ -47,6 +47,7 @@ export class DateManager {
     }
 
     // Takes in the duration of an event and returns it in a readable format to add using addTime()
+    // We only suppored 15 min increments for duration
     public durationToTime(duration: number): string {
         switch(duration) {
             case 15:
@@ -59,6 +60,21 @@ export class DateManager {
                 return "01:00:00";
             default:
                 return "00:00:00";
+        }
+    }
+
+    public timeToDuration(time: string): number {
+        switch(time) {
+            case "00:15:00":
+                return 15;
+            case "00:30:00":
+                return 30;
+            case "00:45:00":
+                return 45;
+            case "01:00:00":
+                return 60;
+            default:
+                return 0;
         }
     }
 
@@ -76,5 +92,39 @@ export class DateManager {
 
         let c = date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
         return c;
+    }
+
+    // Subtracts timeA from timeB
+    public subtractTime(timeA: string, timeB: string): string {
+        let start = timeA;
+        let end = timeB;
+        let a = start.split(":");
+        let secondsA = (+a[0]) * 60 * 60 + (+a[1]) * 60 - (+a[2]);
+        let b = end.split(":");
+        let secondsB = (+b[0]) * 60 * 60 + (+b[1]) * 60 - (+b[2]);
+
+        let date = new Date(1970, 0, 1);
+        date.setSeconds(secondsA - secondsB);
+
+        let c = date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+        return c;
+    }
+
+    public arrayToISOString(date: number[]): string {
+        let year = date[0];
+        let month = date[1];
+        let day = date[2];
+        let hour = date[3];
+        let minute = date[4];
+        let newMinute = "";
+        let newDate = new Date(year, month - 1, day).toISOString().split("T")[0];
+        let time = "" + hour + ":" + minute + ":00";
+
+        let timeAsISO = "" + year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":00";
+        let newTime = this.addTime(time, "00:00:00");
+
+
+        return newDate + "T" + newTime; 
+
     }
 }

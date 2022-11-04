@@ -1,0 +1,47 @@
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
+
+<div>
+    <div class="top-line"></div>
+    <mat-card class="event-card">
+        <mat-card-title *ngIf="(hasEvent ===  true)">
+            <div class="event-card-title">
+                <div>{{ eventName }}</div>
+                <mat-icon class="event-icon" svgIcon="eventIcon"></mat-icon>
+            </div>
+        </mat-card-title>
+        <mat-card-title *ngIf="(hasEvent ===  false)">
+            <div class="event-card-title">
+                <div>You don't have any events or services yet.</div>
+                <mat-icon class="event-icon" svgIcon="eventIcon"></mat-icon>
+            </div>
+        </mat-card-title>
+        <mat-card-subtitle *ngIf="(hasEvent ===  true)">
+            <div class="event-card-subtitle">
+                {{ eventDuration }} minutes
+            </div>
+        </mat-card-subtitle>
+        <mat-card-subtitle *ngIf="(hasEvent ===  false)">
+            <div class="event-card-subtitle">
+                Click below to configure your event/service.
+            </div>
+        </mat-card-subtitle>
+        <mat-card-content>
+            <div class="break"></div>
+        </mat-card-content>
+        <mat-card-actions class="mat-card-actions">
+            <div class="first-button">
+                <a routerLink="../booking-page" routerLinkActive="active">
+                    <button mat-raised-button color="primary">Booking Page</button>
+                </a>
+            </div>
+            <div>
+                <a routerLink="../schedule-configuration" routerLinkActive="active">
+                    <button mat-raised-button color="secondary">Edit Event</button>
+                </a>
+            </div>
+        </mat-card-actions>
+    </mat-card>
+    <div class="bottom-line"></div>
+</div>
