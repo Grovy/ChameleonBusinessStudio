@@ -118,6 +118,11 @@ public class WebsiteAppearanceService {
         return repo.get(BANNER_COLOR, "#ffffff");
     }
 
+    public void setBannerImage(MultipartFile file){
+        repo.set(BANNER_IMAGE, file.getOriginalFilename());
+        folder.saveBannerImage(file);
+    }
+
     /**
      * defaults to a blank image if the banner hasn't been configured yet
      * 

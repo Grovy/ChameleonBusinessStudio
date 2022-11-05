@@ -72,6 +72,10 @@ public class ApplicationFolder {
         return Paths.get(root.toString(), dirName);
     }
 
+    public void saveBannerImage(MultipartFile file){
+        save(BANNER_IMAGE_DIR, file);
+    }
+
     public void saveLandingPage(MultipartFile file){
         save(LANDING_PAGES_DIR, file);
     }

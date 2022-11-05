@@ -74,6 +74,23 @@ public class WebsiteAppearanceController {
         return ResponseEntity.ok(serv.getBannerImage());
     }
 
+    @PostMapping("/banner-image")
+    public ResponseEntity<byte[]> setBannerImage(
+            UriComponentsBuilder root,
+            @RequestParam("bannerImage") MultipartFile bannerImage
+    ){
+        var type = bannerImage.getContentType();
+        var split = (type == null) ? new String[]{} : type.split("/");
+        if(split.length < 1 || !split[0].equals("image")){
+            return ResponseEntity
+                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                .build();
+        }
+        serv.setBannerImage(bannerImage);
+        var at = makeUri(root, "banner-image");
+        return ResponseEntity.created(at).body(serv.getBannerImage());
+    }
+
     @GetMapping("/landing-page")
     public Map<String, Object> getLandingPageContent(){
         HashMap<String, Object> json = new HashMap<>();
@@ -135,7 +152,6 @@ public class WebsiteAppearanceController {
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                 .build();
         }
-        // todo check mime type if image
         serv.setLogo(file);
         return ResponseEntity.created(makeUri(root, "logo")).build();
     }
