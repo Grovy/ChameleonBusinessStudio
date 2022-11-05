@@ -17,7 +17,8 @@ export class SignupModalComponent {
   constructor (@Inject(MAT_DIALOG_DATA) public data: { userEmailValue: string}, private userService: UserService, public dialogRef: MatDialogRef<SignupModalComponent>) {
     this.profileForm = new FormGroup({
       displayName: new FormControl ('', [ Validators.required ]),
-      confirmDisplayName: new FormControl('')
+      confirmDisplayName: new FormControl(''),
+      phoneNumber: new FormControl(''),
     }, { validators: validateDisplayName });
 
     this.userEmailValue = data.userEmailValue;
@@ -30,12 +31,17 @@ export class SignupModalComponent {
   getConfirmDisplayName() {
     return this.profileForm.get('confirmDisplayName');
   }
+
+  getPhoneNumber() {
+    return this.profileForm.get('phoneNumber');
+  }
    
   onClickSubmit(data): void {
     const newUser: IUser = {
       displayName: data.displayName,
       email: this.userEmailValue,
-      role: "PARTICIPANT" as UserRole
+      role: "PARTICIPANT" as UserRole,
+      phoneNumber: data.phoneNumber
     }
     
     // Will need to add error handling and a spinner animation here later
