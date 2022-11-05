@@ -20,6 +20,7 @@ public class SecurityConfiguration {
         return security
                 .oauth2Login(Customizer.withDefaults())
                 .authorizeExchange()
+                .pathMatchers("/api/v1/users/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/v1/users").authenticated() // allow logged-in users to register themselves
                 .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
                 .pathMatchers(HttpMethod.POST, "/api/v1/appointments/unbook-me").authenticated() // allow any role to unbook-me
