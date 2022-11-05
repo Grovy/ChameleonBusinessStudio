@@ -2,7 +2,6 @@ package com.compilercharisma.chameleonbusinessstudio.integration
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole
-import org.springframework.http.HttpStatus
 import org.springframework.security.test.context.support.WithMockUser
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -126,7 +125,7 @@ class UserControllerITSpec extends BaseITSpec {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBodyFile("vendiaResponses/createUserWithPhoneNumberResponse.json")))
+                        .withBodyFile("vendiaResponses/createUserWithPhoneNumber.json")))
 
         when: "the request is sent"
         def response = request.exchange()
@@ -278,7 +277,7 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$._id').isEqualTo("01839503-1f82-1357-c21b-20e73e8d5575")
 
         and: "two calls to /graphql/ were made"
-        verify(3, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
     }
 
     @WithMockUser
@@ -309,6 +308,6 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$.message').isEqualTo("User with email [thisEmailDoesNotExist@gmail.com] was not found")
 
         and: "two calls to /graphql/ were made"
-        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(1, postRequestedFor(urlEqualTo("/graphql/")))
     }
 }
