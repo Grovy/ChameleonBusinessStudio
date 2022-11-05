@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.compilercharisma.chameleonbusinessstudio.repository.WebsiteConfigurationRepository;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
-import com.compilercharisma.chameleonbusinessstudio.webconfig.ByteArrayHelper;
 
 /**
  * use this to set / get properties of the website's appearance
@@ -18,6 +17,7 @@ public class WebsiteAppearanceService {
     private static final String LANDING_PAGE_CONTENT = "pages.landing.content";
     private static final String SPLASH_PAGE_CONTENT = "pages.splash.content";
     private static final String BANNER_COLOR = "banner.color";
+    private static final String BANNER_IMAGE = "banner.image";
     private static final String ORG_NAME = "organization.name";
     private static final String LOGO_NAME = "logo.filename";
 
@@ -96,12 +96,7 @@ public class WebsiteAppearanceService {
         byte[] bytes = new byte[]{};
 
         if(repo.isConfigured(LOGO_NAME)){
-            try (var inputStream = folder.readLogo(repo.get(LOGO_NAME))){
-                ByteArrayHelper byteArrayHelper = new ByteArrayHelper(inputStream);
-                bytes = byteArrayHelper.toByteArray();
-            } catch(Exception ex){
-                throw new RuntimeException(ex);
-            }
+            bytes = folder.readLogo(repo.get(LOGO_NAME));
         }
 
         return bytes;
@@ -121,6 +116,21 @@ public class WebsiteAppearanceService {
      */
     public String getBannerColor(){
         return repo.get(BANNER_COLOR, "#ffffff");
+    }
+
+    /**
+     * defaults to a blank image if the banner hasn't been configured yet
+     * 
+     * @return the banner image bytes
+     */
+    public byte[] getBannerImage(){
+        byte[] bytes = new byte[]{};
+
+        if(repo.isConfigured(BANNER_IMAGE)){
+            bytes = folder.readBannerImage(repo.get(BANNER_IMAGE));
+        }
+
+        return bytes;
     }
 
     /**

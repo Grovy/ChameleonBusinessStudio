@@ -28,6 +28,7 @@ import wiremock.org.apache.commons.io.IOUtils;
 public class ApplicationFolder {
     public static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
     private static final String LANDING_PAGES_DIR = "landingPages";
+    private static final String BANNER_IMAGE_DIR = "bannerImages";
     private static final String LOGO_DIR = "logos";
     private static final String SPLASH_DIR = "splashes";
     public static final String SCHED_DIR = "schedules"; // rm this once we store schedules in Vendia
@@ -50,7 +51,13 @@ public class ApplicationFolder {
      * @throws IOException if any errors occur while creating folders
      */
     public void createAbsentFolders() throws IOException{
-        String[] dirs = {SPLASH_DIR, LANDING_PAGES_DIR, LOGO_DIR, SCHED_DIR};
+        String[] dirs = {
+            SPLASH_DIR,
+            LANDING_PAGES_DIR,
+            BANNER_IMAGE_DIR,
+            LOGO_DIR,
+            SCHED_DIR
+        };
         Path p;
         for(String dir : dirs){
             p = getSubdir(dir);
@@ -106,15 +113,27 @@ public class ApplicationFolder {
         save(LOGO_DIR, file);
     }
 
-    public InputStream readLogo(String fileName){
-        InputStream in = null;
-        try {
-            in = Files.newInputStream(Paths.get(getSubdir(LOGO_DIR).toString(), fileName));
-        } catch (IOException ex) {
-            log.error("Error reading logo " + fileName, ex);
+    public byte[] readBannerImage(String fileName){
+        return readImage(BANNER_IMAGE_DIR, fileName);    
+    }
+
+    public byte[] readLogo(String fileName){
+        return readImage(LOGO_DIR, fileName);
+    }
+
+    private byte[] readImage(String dir, String fileName){
+        byte[] bytes = new byte[]{};
+        var path = Paths.get(getSubdir(dir).toString(), fileName);
+
+        try (var inputStream = Files.newInputStream(path)){
+            ByteArrayHelper byteArrayHelper = new ByteArrayHelper(inputStream);
+            bytes = byteArrayHelper.toByteArray();
+        } catch(Exception ex){
+            log.error("Error reading logo " + path, ex);
             throw new RuntimeException(ex);
         }
-        return in;
+
+        return bytes;
     }
 
     private void save(String dirName, MultipartFile contents){

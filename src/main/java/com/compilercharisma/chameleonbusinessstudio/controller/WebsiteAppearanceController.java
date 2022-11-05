@@ -45,7 +45,7 @@ public class WebsiteAppearanceController {
      *  color: string
      * }
      */
-    @GetMapping("/banner")
+    @GetMapping("/banner-color")
     public Map<String, Object> getBannerColor(){
         HashMap<String, Object> json = new HashMap<>();
         json.put("color", serv.getBannerColor());
@@ -57,12 +57,21 @@ public class WebsiteAppearanceController {
      * @param color the new color for the website banner
      * @return a response containing the location of the new banner color
      */
-    @PostMapping("/banner")
+    @PostMapping("/banner-color")
     public ResponseEntity<Void> setBannerColor(
             UriComponentsBuilder root,
             @RequestParam String color){
         serv.setBannerColor(color);
         return ResponseEntity.created(makeUri(root, "banner")).build();
+    }
+
+    /**
+     * <img src="/api/v1/config/banner-image"/>
+     * @return banner image bytes
+     */
+    @GetMapping("/banner-image")
+    public ResponseEntity<byte[]> getBannerImage(){
+        return ResponseEntity.ok(serv.getBannerImage());
     }
 
     @GetMapping("/landing-page")
@@ -104,8 +113,8 @@ public class WebsiteAppearanceController {
      * @return logo bytes
      */
     @GetMapping("/logo")
-    public byte[] getLogo(){
-        return serv.getLogo();
+    public ResponseEntity<byte[]> getLogo(){
+        return ResponseEntity.ok(serv.getLogo());
     }
 
     /**
