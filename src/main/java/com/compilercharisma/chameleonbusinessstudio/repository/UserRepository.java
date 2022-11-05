@@ -6,6 +6,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -15,7 +16,7 @@ public class UserRepository {
 
     private final VendiaClient vendiaClient;
 
-    public UserRepository(VendiaClient vendiaClient){
+    public UserRepository(VendiaClient vendiaClient) {
         this.vendiaClient = vendiaClient;
     }
 
@@ -36,8 +37,11 @@ public class UserRepository {
      * @return The {@link User} that was created
      */
     public Mono<User> createUser(User user) {
-        var query = "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", role: %s}) { result { _id appointments displayName email role } } }"
-                .formatted(user.getDisplayName(), user.getEmail(), user.getRole());
+        var query = StringUtils.isBlank(user.getPhoneNumber()) ?
+                "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", role: %s}) { result { _id appointments displayName email role } } }"
+                        .formatted(user.getDisplayName(), user.getEmail(), user.getRole()) :
+                "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", phoneNumber: \"%s\", role: %s}) { result { _id appointments displayName email phoneNumber role } } }"
+                        .formatted(user.getDisplayName(), user.getEmail(), user.getPhoneNumber(), user.getRole());
         return vendiaClient.executeQuery(query, "add_User.result", User.class);
     }
 
@@ -71,10 +75,10 @@ public class UserRepository {
      * Updates a user in Vendia
      *
      * @param user The user whose info will be edited in Vendia
-     * @param id Id of the user that will be updated
+     * @param id   Id of the user that will be updated
      * @return {@link User}
      */
-    public Mono<User> updateUser(User user, String id){
+    public Mono<User> updateUser(User user, String id) {
         String updateUserMutation = """
                 mutation {
                    update_User(
@@ -101,7 +105,7 @@ public class UserRepository {
      */
     public Mono<DeletionResponse> deleteUser(String id) {
         String deleteUserMutation = "mutation { remove_User(id: \"%s\") { transaction { _id } } }".formatted(id);
-        return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction" , DeletionResponse.class)
+        return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction", DeletionResponse.class)
                 .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
     }
 }
