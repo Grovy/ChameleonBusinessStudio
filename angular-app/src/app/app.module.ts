@@ -70,6 +70,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.component';
+import { BookedApptsWidgetComponent } from './theme/widgets/booked-appts-widget/booked-appts-widget.component';
 
 
 @NgModule({
@@ -102,6 +103,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     AdminNavComponent,
     ParticipantNavComponent,
     EventWidgetComponent,
+    BookedApptsWidgetComponent,
   ],
   imports: [
     AppRoutingModule,

@@ -43,30 +43,25 @@
   </div>
 </div>
 
-<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')" class="main-content">
-  <div class="card">
-    <h2 class="label">Welcome Back {{ currentUser.displayName }}!</h2>
-    <p class="description">
-      You are a talent.<br>
-      Our project provides an open-source scheduling template that can be tailored to an individual
-      or to an organization's specific needs, just like a Chameleon!
-    </p>
-    <div class="icon-wrapper">
-      <mat-icon class="main-icon" svgIcon="checkAll"></mat-icon>
+<!-- Dynamic Rendering for Talent Accounts -->
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')" class="main-content">  
+  <mat-toolbar class="talent-toolbar">
+    <span>Welcome Back {{ currentUser.displayName }}!</span>
+  </mat-toolbar>
+
+
+
+  <div class="talent-content">  
+    <div>
+      <app-event-widget></app-event-widget>
     </div>
+      
+    <div>
+      <app-booked-appts-widget></app-booked-appts-widget>
+    </div>
+
   </div>
 
-<div>
-  <app-event-widget></app-event-widget>
-</div>
-    
-  <mat-card class="upcoming-appointments-card">
-    <mat-card-title>Upcoming Booked Appointments</mat-card-title>
-    <mat-card-subtitle>Name of the Appointment</mat-card-subtitle>
-    <mat-card-content>
-      First 10 appointments in this scrollable widget. Coming soon!
-    </mat-card-content>
-  </mat-card>
 
 </div>
 
