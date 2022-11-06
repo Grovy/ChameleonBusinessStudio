@@ -26,7 +26,7 @@ class AppointmentRepositorySpec extends Specification {
         0 * _
     }
 
-    def "finding all appointments is successful"() {
+    def "finding all appointments is successful if they're not empty"() {
         given: "some test data"
         def appointmentResponse = new AppointmentResponse(appointments: [
                 new Appointment(_id: "1", title: "Appointment1", startTime: LocalDateTime.now(), endTime: LocalDateTime.now(),

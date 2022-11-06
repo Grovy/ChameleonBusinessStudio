@@ -6,6 +6,7 @@
         "appointments": [],
         "email": "Chameleon@email.com",
         "displayName": "ChameleonTest",
+        "phoneNumber": "+11234567890",
         "role": "PARTICIPANT"
       }
     }
