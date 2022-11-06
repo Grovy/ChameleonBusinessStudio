@@ -9,6 +9,7 @@ export interface IUser {
     displayName: string;
     email: string;
     role: UserRole | string;
+    phoneNumber?: string;
     id?: string; 
     appointments?: string[];
     
