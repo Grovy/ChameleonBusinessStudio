@@ -18,7 +18,7 @@ export class SignupModalComponent {
     this.profileForm = new FormGroup({
       displayName: new FormControl ('', [ Validators.required ]),
       confirmDisplayName: new FormControl(''),
-      phoneNumber: new FormControl(''),
+      phoneNumber: new FormControl("",[Validators.required,Validators.pattern("^(\\+\\d{1,2}\\s?)?1?\\-?\\.?\\s?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")]),
     }, { validators: validateDisplayName });
 
     this.userEmailValue = data.userEmailValue;
@@ -41,7 +41,7 @@ export class SignupModalComponent {
       displayName: data.displayName,
       email: this.userEmailValue,
       role: "PARTICIPANT" as UserRole,
-      phoneNumber: data.phoneNumber
+      phoneNumber: "+1" + data.phoneNumber
     }
     
     // Will need to add error handling and a spinner animation here later
