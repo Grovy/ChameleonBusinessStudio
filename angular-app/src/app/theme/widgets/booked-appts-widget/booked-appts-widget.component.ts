@@ -19,7 +19,7 @@ export class BookedApptsWidgetComponent implements OnInit {
   myBookedAppointments: IAppointment[];
   displayedColumns: string[] = ['startTime', 'endTime', 'title'];
 
-  constructor(private scheduleService: ScheduleService) { }
+  constructor(private scheduleService: ScheduleService, private dateManager: DateManager) { }
 
   ngOnInit(): void {
     this.getSchedule();
@@ -53,12 +53,19 @@ export class BookedApptsWidgetComponent implements OnInit {
       data => {
         // Filtering booked appointments. Those that have 2 participants
         if(data.appointment.participants[1] !== undefined) {
+          // Converting the date format to be more user friendly
+          let startdate: number[] = data.appointment.startTime as number[];
+          let enddate: number[] = data.appointment.endTime as number[];
+          data.appointment.startTime = this.dateManager.arrayToDate(startdate).toLocaleString();
+          data.appointment.endTime = this.dateManager.arrayToDate(enddate).toLocaleString()
+
           appts.push(data.appointment);
           this.myBookedAppointments = appts;
           return data;
         }
         return data;
-      }
+      },
+  
     );
 
   }
