@@ -2,7 +2,6 @@ package com.compilercharisma.chameleonbusinessstudio.integration
 
 import com.compilercharisma.chameleonbusinessstudio.dto.User
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole
-import org.springframework.http.HttpStatus
 import org.springframework.security.test.context.support.WithMockUser
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -87,9 +86,58 @@ class UserControllerITSpec extends BaseITSpec {
         response.expectStatus().isOk()
                 .expectBody()
                 .jsonPath('$._id').isEqualTo("0184126d-8309-52e1-2e62-30fc43dd5096")
-                .jsonPath('$.email').isEqualTo("ChameleonTest@gmail.com")
-                .jsonPath('$.displayName').isEqualTo("ChameleonTest")
-                .jsonPath('$.role').isEqualTo("PARTICIPANT")
+                .jsonPath('$.email').isEqualTo(user.email)
+                .jsonPath('$.displayName').isEqualTo(user.displayName)
+                .jsonPath('$.role').isEqualTo(user.role.toString())
+                .jsonPath('$.appointments.size()').isEqualTo(0)
+
+        and: "two requests to /graphql/ are sent"
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+    }
+
+    @WithMockUser
+    def "createUser is successful if phoneNumber is included"() {
+        given: "a valid request"
+        def user = new User(_id: "", displayName: "ChameleonTest", email: "Chameleon@email.com", phoneNumber: "+11234567890", role: UserRole.PARTICIPANT, appointments: [])
+        def body = objectMapper.writeValueAsString(user)
+        def request = client.mutateWith(mockOidcLogin()).post().uri("/api/v1/users")
+                .bodyValue(body)
+                .header("content-type", "application/json")
+
+        def vendiaQuery1 = """{"query":"query { list_UserItems(filter: {email: {eq: \\"$user.email\\"}}) { _UserItems { _id email displayName role } } }"}"""
+        def vendiaQuery2 = """{"query":"mutation { add_User(input: {appointments: [], displayName: \\"$user.displayName\\", email: \\"$user.email\\", phoneNumber: \\"$user.phoneNumber\\", role: $user.role}) { result { _id appointments displayName email phoneNumber role } } }"}"""
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo(vendiaQuery1))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/emptyUsersResponse.json")))
+
+        stubFor(post("/graphql/")
+                .withHeader("Authorization", equalTo(VENDIA_API_KEY))
+                .withHeader("Content-Type", equalTo("application/json"))
+                .withHeader("Accept", equalTo("application/json, application/graphql+json"))
+                .withRequestBody(equalTo(vendiaQuery2))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBodyFile("vendiaResponses/createUserWithPhoneNumber.json")))
+
+        when: "the request is sent"
+        def response = request.exchange()
+
+        then: "an OK response is returned"
+        response.expectStatus().isOk()
+                .expectBody()
+                .jsonPath('$._id').isEqualTo("0184126d-8309-52e1-2e62-30fc43dd5096")
+                .jsonPath('$.email').isEqualTo(user.email)
+                .jsonPath('$.displayName').isEqualTo(user.displayName)
+                .jsonPath('$.role').isEqualTo(user.role.toString())
+                .jsonPath('$.phoneNumber').isEqualTo(user.phoneNumber)
                 .jsonPath('$.appointments.size()').isEqualTo(0)
 
         and: "two requests to /graphql/ are sent"
@@ -124,7 +172,7 @@ class UserControllerITSpec extends BaseITSpec {
         then: "an OK response is returned"
         response.expectStatus().isEqualTo(409)
                 .expectBody()
-                .jsonPath('$.code').isEqualTo("error.message.alreadyExists")
+                .jsonPath('$.code').isEqualTo("error.message.externalError")
                 .jsonPath('$.message').isEqualTo("User with email [userAlreadyExists@gmail.com] already exists")
 
         and: "two requests to /graphql/ are sent"
@@ -229,7 +277,7 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$._id').isEqualTo("01839503-1f82-1357-c21b-20e73e8d5575")
 
         and: "two calls to /graphql/ were made"
-        verify(3, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
     }
 
     @WithMockUser
@@ -260,6 +308,6 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$.message').isEqualTo("User with email [thisEmailDoesNotExist@gmail.com] was not found")
 
         and: "two calls to /graphql/ were made"
-        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(1, postRequestedFor(urlEqualTo("/graphql/")))
     }
 }
