@@ -1,9 +1,18 @@
+<mat-toolbar class = "header">
+  <span><a href="/appointment-creation"><mat-icon>schedule</mat-icon>Build Schedule</a></span>
+  <span class="active"><a href="/appointment"><mat-icon>event</mat-icon>Current Schedule</a></span>
+</mat-toolbar>
 <div class="appt-list">
-    <h1>Current Schedule</h1>
+
     <div class="table-view">
         <appointment-list [appointments]="appointments"></appointment-list>
     </div>
     <div class="calender-view">
-      <app-calender-view></app-calender-view>
+      <app-calender-view [appointments]="appointments"></app-calender-view>
     </div>
 </div>
+<br/>
+<div class="footer">
+  <app-site-footer></app-site-footer>
+</div>
+

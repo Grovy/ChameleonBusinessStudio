@@ -1,6 +1,15 @@
+/**
+ * This component is reponsible for rendering list view and calendar view
+ * of the appointments. List view and calendar view are the child of this component
+ * and pass appointments[] to the child components
+ */
+
+
+
+import { HttpClient } from '@angular/common/http';
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-
+import { MockAppointmentList } from 'src/app/models/mock/mock-appointments';
 /*
 This component is currently responsible for rendering a list of appointments. As
 our design evolves, we may need to push more responsibilities into this
@@ -15,22 +24,22 @@ component.
 export class AppointmentComponent {
     @Input() appointments: IAppointment[];
 
-    temp:IAppointment ={
-      id: 123,
-      date: "masdf",
-      startTime: '',
-      endTime: '',
-      title: 'Hair cut',
-      location: 'jasdfjsd',
-      description: 'sdfasdf',
-      registeredUsers: []
-    };
-    constructor(){
-        this.appointments = [this.temp];
+    temp:IAppointment[] = MockAppointmentList;
+
+
+    constructor(private http: HttpClient){
+        this.appointments = this.temp;
     }
 
     ngOnChanges(changes: SimpleChanges){
         console.log(changes);
         this.appointments = changes['appointments'].currentValue;
+    }
+    ngOnInit(): void {
+       /// TODO: Instead of the temp appointment
+    ///GET Request from the backend
+
+     // this.http.get<IAppointment>
+
     }
 }

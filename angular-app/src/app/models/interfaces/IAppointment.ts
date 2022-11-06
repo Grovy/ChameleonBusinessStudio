@@ -3,8 +3,8 @@ import { IUser } from "./IUser";
 export interface IAppointment {
     id?: number;
     date?: string;
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
     title: string;
     location: string;
     description: string;

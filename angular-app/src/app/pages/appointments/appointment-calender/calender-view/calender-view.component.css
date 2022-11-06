@@ -57,5 +57,20 @@ button{
   font-style: bold;
 }
 
+/* .scroll-container{
+  height: calc(100vh - 320px);
+   overflow-y: auto;
+} */
 
+.cal-week-view .cal-time-events {
+  max-height: calc(100vh - 320px);
+  overflow-y: auto;
+}
 
+.cal-day-headers {
+  margin-right: 14.5px;
+}
+
+.cal-day-columns {
+  height: 100%;
+}
