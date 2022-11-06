@@ -45,18 +45,20 @@
 
 <!-- Dynamic Rendering for Talent Accounts -->
 <div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')" class="main-content">  
-  <mat-toolbar class="talent-toolbar">
-    <span>Welcome Back {{ currentUser.displayName }}!</span>
+  <mat-toolbar class="second-toolbar">
   </mat-toolbar>
 
-
+  <div class="welcome-message">
+    <p class="welcome-text">Welcome Back {{ currentUser.displayName }}!</p>
+  </div>
+  
 
   <div class="talent-content">  
-    <div>
+    <div class="event-widget">
       <app-event-widget></app-event-widget>
     </div>
       
-    <div>
+    <div class="booked-appts-widget">
       <app-booked-appts-widget></app-booked-appts-widget>
     </div>
 
