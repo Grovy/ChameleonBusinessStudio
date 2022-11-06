@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
+import com.compilercharisma.chameleonbusinessstudio.dto.UploadedFile;
 import com.compilercharisma.chameleonbusinessstudio.service.WebsiteAppearanceService;
+
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 /**
  * Handles requests regarding customized website elements, such as its splash 
@@ -28,6 +35,7 @@ import com.compilercharisma.chameleonbusinessstudio.service.WebsiteAppearanceSer
  * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
+@Slf4j
 @RestController
 @RequestMapping(path="/api/v1/config")
 public class WebsiteAppearanceController {
@@ -75,20 +83,28 @@ public class WebsiteAppearanceController {
     }
 
     @PostMapping("/banner-image")
-    public ResponseEntity<byte[]> setBannerImage(
+    public Mono<ResponseEntity<byte[]>> setBannerImage(
             UriComponentsBuilder root,
-            @RequestParam("bannerImage") MultipartFile bannerImage
+            @ModelAttribute UploadedFile file
     ){
-        var type = bannerImage.getContentType();
-        var split = (type == null) ? new String[]{} : type.split("/");
-        if(split.length < 1 || !split[0].equals("image")){
-            return ResponseEntity
+        var adapted = FileAdapter.from(file.getFile());
+        adapted.setResourceType("banner-image");
+        
+        if(!isImage(adapted)){
+            return Mono.just(ResponseEntity
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build();
+                .build());
         }
-        serv.setBannerImage(bannerImage);
+
         var at = makeUri(root, "banner-image");
-        return ResponseEntity.created(at).body(serv.getBannerImage());
+        return serv.setBannerImage(adapted)
+            .doOnSuccess(success -> {
+                log.info("Saved as " + adapted.getFileName());
+            })
+            .doOnError(err -> {
+                log.error("Failed to save " + adapted.getFileName(), err);
+            })
+            .map(v -> ResponseEntity.created(at).body(serv.getBannerImage()));
     }
 
     @GetMapping("/landing-page")
@@ -217,6 +233,12 @@ public class WebsiteAppearanceController {
         return ResponseEntity.ok().build();
     }
 
+    private boolean isImage(FileAdapter file){
+        var img = MediaType.IMAGE_JPEG.getType();
+        var fileType = file.getMediaType().getType();
+        return img.equals(fileType);
+    }
+    
     private URI makeUri(UriComponentsBuilder root, String resource){
         return root.pathSegment("api", "v1", "config", resource)
             .build()

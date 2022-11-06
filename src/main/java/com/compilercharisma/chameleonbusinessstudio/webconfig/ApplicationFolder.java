@@ -14,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
+
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 import wiremock.org.apache.commons.io.IOUtils;
 
 /**
@@ -72,8 +75,8 @@ public class ApplicationFolder {
         return Paths.get(root.toString(), dirName);
     }
 
-    public void saveBannerImage(MultipartFile file){
-        save(BANNER_IMAGE_DIR, file);
+    public Mono<Void> saveBannerImage(FileAdapter file){
+        return save(BANNER_IMAGE_DIR, file);
     }
 
     public void saveLandingPage(MultipartFile file){
@@ -151,5 +154,11 @@ public class ApplicationFolder {
             log.error("Error saving file " + contents.getOriginalFilename(), ex);
             throw new RuntimeException(ex);
         }
+    }
+
+    private Mono<Void> save(String dirName, FileAdapter contents){
+        File f = Paths.get(getSubdir(dirName).toString(), contents.getFileName())
+            .toFile();
+        return contents.getFilePart().transferTo(f);
     }
 }

@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
 import com.compilercharisma.chameleonbusinessstudio.repository.WebsiteConfigurationRepository;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
+
+import reactor.core.publisher.Mono;
 
 /**
  * use this to set / get properties of the website's appearance
@@ -118,9 +121,9 @@ public class WebsiteAppearanceService {
         return repo.get(BANNER_COLOR, "#ffffff");
     }
 
-    public void setBannerImage(MultipartFile file){
-        repo.set(BANNER_IMAGE, file.getOriginalFilename());
-        folder.saveBannerImage(file);
+    public Mono<Void> setBannerImage(FileAdapter file){
+        repo.set(BANNER_IMAGE, file.getFileName());
+        return folder.saveBannerImage(file);
     }
 
     /**
