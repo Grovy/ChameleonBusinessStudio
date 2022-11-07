@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
 import com.compilercharisma.chameleonbusinessstudio.config.TwilioConfiguration;
+import com.compilercharisma.chameleonbusinessstudio.dto.MessageRequest;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -22,9 +23,9 @@ public class TwilioMessagingService {
      * Send an SMS to a user with a valid phone number
      *
      * @param userPhoneNumber the receiver's phone number
-     * @param body            the message's body
+     * @param message            the message's body
      */
-    public void sendSMSToUser(String userPhoneNumber, String body) {
+    public void sendSMSToUser(String userPhoneNumber, String message) {
         var chameleonSID = twilioConfiguration.getSid();
         var chameleonAuthToken = twilioConfiguration.getToken();
         var senderPhoneNumber = new PhoneNumber(twilioConfiguration.getPhoneNumber());
@@ -32,7 +33,7 @@ public class TwilioMessagingService {
         Twilio.init(chameleonSID, chameleonAuthToken);
         log.info("Sending message to user with phone number [{}]", userPhoneNumber);
         try {
-            Message.creator(senderPhoneNumber, receiverPhoneNumber, body).create();
+            Message.creator(receiverPhoneNumber, senderPhoneNumber, message).create();
         } catch (ExternalServiceException ex) {
             log.error("Could not send message to user with phone number [{}]", userPhoneNumber);
             var msg = "Something went wrong when calling Twilio's API, could not send message";
