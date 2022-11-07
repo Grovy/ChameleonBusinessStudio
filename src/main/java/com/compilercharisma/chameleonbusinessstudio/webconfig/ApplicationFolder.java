@@ -1,10 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.webconfig;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,13 +9,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import wiremock.org.apache.commons.io.IOUtils;
 
 /**
  * This class is responsible for providing access to the ChameleonBusinessStudio
@@ -79,12 +74,12 @@ public class ApplicationFolder {
         return save(BANNER_IMAGE_DIR, file);
     }
 
-    public void saveLandingPage(MultipartFile file){
-        save(LANDING_PAGES_DIR, file);
+    public Mono<Void> saveLandingPage(FileAdapter file){
+        return save(LANDING_PAGES_DIR, file);
     }
 
-    public void saveSplash(MultipartFile file){
-        save(SPLASH_DIR, file);
+    public Mono<Void> saveSplash(FileAdapter file){
+        return save(SPLASH_DIR, file);
     }
 
     public String readSplash(String fileName){
@@ -116,8 +111,8 @@ public class ApplicationFolder {
         return content;
     }
 
-    public void saveLogo(MultipartFile file){
-        save(LOGO_DIR, file);
+    public Mono<Void> saveLogo(FileAdapter file){
+        return save(LOGO_DIR, file);
     }
 
     public byte[] readBannerImage(String fileName){
@@ -143,22 +138,11 @@ public class ApplicationFolder {
         return bytes;
     }
 
-    private void save(String dirName, MultipartFile contents){
-        File f = Paths.get(getSubdir(dirName).toString(), contents.getOriginalFilename()).toFile();
-        try (
-                InputStream in = contents.getInputStream();
-                OutputStream out = new FileOutputStream(f);
-        ){
-            IOUtils.copy(in, out);
-        } catch (IOException ex) {
-            log.error("Error saving file " + contents.getOriginalFilename(), ex);
-            throw new RuntimeException(ex);
-        }
-    }
-
     private Mono<Void> save(String dirName, FileAdapter contents){
         File f = Paths.get(getSubdir(dirName).toString(), contents.getFileName())
             .toFile();
-        return contents.getFilePart().transferTo(f);
+        return contents.getFilePart().transferTo(f)
+            .doOnSuccess(x -> log.info("Saved to {}", f.getAbsolutePath()))
+            .doOnError(err -> log.error("Failed to save " + f.getAbsolutePath(), err));
     }
 }

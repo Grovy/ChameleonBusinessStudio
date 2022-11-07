@@ -1,6 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,21 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
-import com.compilercharisma.chameleonbusinessstudio.dto.UploadedFile;
+import com.compilercharisma.chameleonbusinessstudio.formdata.BannerColor;
+import com.compilercharisma.chameleonbusinessstudio.formdata.OrganizationName;
+import com.compilercharisma.chameleonbusinessstudio.formdata.UploadedFile;
+import com.compilercharisma.chameleonbusinessstudio.formdata.WebsiteConfigForm;
 import com.compilercharisma.chameleonbusinessstudio.service.WebsiteAppearanceService;
 
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
@@ -33,9 +33,11 @@ import reactor.core.publisher.Mono;
  * endpoints, while only authorized users can access the other HTTP verbs.
  * To customize who can access each enpoint, {@link com.compilercharisma.chameleonbusinessstudio.config.SecurityConfiguration SecurityConfiguration}
  * 
+ * Helpful link:
+ * https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-ann-modelattrib-method-args 
+ * 
  * @author Matt Crow <mattcrow19@gmail.com>
  */
-@Slf4j
 @RestController
 @RequestMapping(path="/api/v1/config")
 public class WebsiteAppearanceController {
@@ -68,9 +70,9 @@ public class WebsiteAppearanceController {
     @PostMapping("/banner-color")
     public ResponseEntity<Void> setBannerColor(
             UriComponentsBuilder root,
-            @RequestParam String color){
-        serv.setBannerColor(color);
-        return ResponseEntity.created(makeUri(root, "banner")).build();
+            @ModelAttribute BannerColor color){
+        serv.setBannerColor(color.getBannerColor());
+        return ResponseEntity.created(makeUri(root, "banner-color")).build();
     }
 
     /**
@@ -82,8 +84,15 @@ public class WebsiteAppearanceController {
         return ResponseEntity.ok(serv.getBannerImage());
     }
 
+    /**
+     * Receives a multipart form containing an image file.
+     * 
+     * @param root points to the app root
+     * @param file from a file input in a multipart form
+     * @return a response containing either nothing or an error
+     */
     @PostMapping("/banner-image")
-    public Mono<ResponseEntity<byte[]>> setBannerImage(
+    public Mono<ResponseEntity<Void>> setBannerImage(
             UriComponentsBuilder root,
             @ModelAttribute UploadedFile file
     ){
@@ -98,13 +107,7 @@ public class WebsiteAppearanceController {
 
         var at = makeUri(root, "banner-image");
         return serv.setBannerImage(adapted)
-            .doOnSuccess(success -> {
-                log.info("Saved as " + adapted.getFileName());
-            })
-            .doOnError(err -> {
-                log.error("Failed to save " + adapted.getFileName(), err);
-            })
-            .map(v -> ResponseEntity.created(at).body(serv.getBannerImage()));
+            .then(Mono.just(ResponseEntity.created(at).build()));
     }
 
     @GetMapping("/landing-page")
@@ -117,28 +120,30 @@ public class WebsiteAppearanceController {
     /**
      * Handles post request to /api/v1/config/landing-page
      * 
+     * <form action="/api/v1/config/landing-page" enctype="multipart/form-data" method="POST">
+     * <input type="file" name="file"/>
+     * 
      * @param root a URI builder containing the current request root, such as
      *  http://localhost:8080
      * @param file an HTML file 
      * @return a 201 Created At response if successful
      */
     @PostMapping("landing-page")
-    public ResponseEntity<Void> setLandingPage(
+    public Mono<ResponseEntity<Void>> setLandingPage(
             UriComponentsBuilder root,
-            @RequestParam("file") MultipartFile file
+            @ModelAttribute UploadedFile file
     ){
-        if(!MimeTypeUtils.TEXT_HTML_VALUE.equals(file.getContentType())){
-            return ResponseEntity
+        var adapted = FileAdapter.from(file.getFile());
+        adapted.setResourceType("landing-page");
+
+        if(!isHtml(adapted)){
+            return Mono.just(ResponseEntity
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build();
+                .build());
         }
-        /*
-        Submit using:
-            <form action="/api/v1/config/landing-page" enctype="multipart/form-data" method="POST">
-            <input type="file" name="file"/>
-        */
-        serv.setLandingPage(file);        
-        return ResponseEntity.created(makeUri(root, "landing-page")).build();
+        
+        return serv.setLandingPage(adapted)
+            .then(Mono.just(ResponseEntity.created(makeUri(root, "landing-page")).build()));        
     }
 
     /**
@@ -157,19 +162,21 @@ public class WebsiteAppearanceController {
      * @return a response containing the location of the new logo
      */
     @PostMapping("/logo")
-    public ResponseEntity<Void> setLogo(
+    public Mono<ResponseEntity<Void>> setLogo(
             UriComponentsBuilder root,
-            @RequestParam("file") MultipartFile file
+            @ModelAttribute UploadedFile file
     ){
-        var type = file.getContentType();
-        var split = (type == null) ? new String[]{} : type.split("/");
-        if(split.length < 1 || !split[0].equals("image")){
-            return ResponseEntity
+        var adapted = FileAdapter.from(file.getFile());
+        adapted.setResourceType("logo");
+        
+        if(!isImage(adapted)){
+            return Mono.just(ResponseEntity
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build();
+                .build());
         }
-        serv.setLogo(file);
-        return ResponseEntity.created(makeUri(root, "logo")).build();
+
+        return serv.setLogo(adapted)
+            .then(Mono.just(ResponseEntity.created(makeUri(root, "logo")).build()));
     }
     
     /**
@@ -187,9 +194,9 @@ public class WebsiteAppearanceController {
     @PostMapping("/organization")
     public ResponseEntity<Void> setOrganizationName(
             UriComponentsBuilder root,
-            @RequestParam String name
+            @ModelAttribute OrganizationName name
     ){
-        serv.setOrganizationName(name);
+        serv.setOrganizationName(name.getOrganizationName());
         return ResponseEntity.created(makeUri(root, "organization")).build();
     }
 
@@ -206,37 +213,70 @@ public class WebsiteAppearanceController {
     }
 
     @PostMapping("/splash")
-    public ResponseEntity<Void> setSplashPage(
+    public Mono<ResponseEntity<Void>> setSplashPage(
             UriComponentsBuilder root,
-            @RequestParam MultipartFile file
+            @ModelAttribute UploadedFile file
     ){
-        if(!MimeTypeUtils.TEXT_HTML_VALUE.equals(file.getContentType())){
-            return ResponseEntity
+        var adapted = FileAdapter.from(file.getFile());
+        adapted.setResourceType("splash");
+
+        if(!isHtml(adapted)){
+            return Mono.just(ResponseEntity
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build();
+                .build());
         }
-        serv.setLandingPage(file);        
-        return ResponseEntity.created(makeUri(root, "splash")).build();
+
+        return serv.setSplashPageContent(adapted)
+            .then(Mono.just(ResponseEntity.created(makeUri(root, "splash")).build()));
     }
     
     @PostMapping
-    public ResponseEntity<Void> handlePost(
-            @RequestParam("org-name") String organizationName,
-            @RequestParam("splash") MultipartFile splash,
-            @RequestParam("logo") MultipartFile logo,
-            @RequestParam("banner-color") String bannerColor
+    public Mono<ResponseEntity<Void>> handlePost(
+            @ModelAttribute WebsiteConfigForm form
     ){
-        serv.setOrganizationName(organizationName);
-        serv.setSplashPageContent(splash);
-        serv.setLogo(logo);
-        serv.setBannerColor(bannerColor);
-        return ResponseEntity.ok().build();
+        var monos = new ArrayList<Mono<Void>>();
+
+        if(form.getOrganizationName() != null){
+            serv.setOrganizationName(form.getOrganizationName());
+        }
+        if(form.getBannerColor() != null){
+            serv.setBannerColor(form.getBannerColor());
+        }
+
+        var logo = form.getLogo();
+        if(logo != null && isImage(FileAdapter.from(logo))){
+            monos.add(serv.setLogo(FileAdapter.from(logo)));
+        }
+
+        var banner = form.getBannerImage();
+        if(banner != null && isImage(FileAdapter.from(banner))){
+            monos.add(serv.setBannerImage(FileAdapter.from(banner)));
+        }
+
+        var splash = form.getSplashPage();
+        if(splash != null && isHtml(FileAdapter.from(splash))){
+            monos.add(serv.setSplashPageContent(FileAdapter.from(splash)));
+        }
+
+        var landing = form.getLandingPage();
+        if(landing != null && isHtml(FileAdapter.from(landing))){
+            monos.add(serv.setLandingPage(FileAdapter.from(landing)));
+        }
+        
+        return Mono.when(monos)
+            .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     private boolean isImage(FileAdapter file){
         var img = MediaType.IMAGE_JPEG.getType();
         var fileType = file.getMediaType().getType();
         return img.equals(fileType);
+    }
+
+    private boolean isHtml(FileAdapter file){
+        var html = MediaType.TEXT_HTML;
+        var fileType = file.getMediaType();
+        return html.equals(fileType);
     }
     
     private URI makeUri(UriComponentsBuilder root, String resource){

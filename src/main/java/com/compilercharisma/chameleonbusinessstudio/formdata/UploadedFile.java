@@ -1,4 +1,4 @@
-package com.compilercharisma.chameleonbusinessstudio.dto;
+package com.compilercharisma.chameleonbusinessstudio.formdata;
 
 import org.springframework.http.codec.multipart.FilePart;
 

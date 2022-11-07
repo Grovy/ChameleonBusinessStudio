@@ -2,7 +2,6 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
 import com.compilercharisma.chameleonbusinessstudio.repository.WebsiteConfigurationRepository;
@@ -60,10 +59,11 @@ public class WebsiteAppearanceService {
      * sets the custom body content of the splash page and saves it
      *
      * @param file the file to set as the splash page content
+     * @return 
      */
-    public void setSplashPageContent(MultipartFile file){
-        folder.saveSplash(file);
-        repo.set(SPLASH_PAGE_CONTENT, file.getOriginalFilename());
+    public Mono<Void> setSplashPageContent(FileAdapter file){
+        repo.set(SPLASH_PAGE_CONTENT, file.getFileName());
+        return folder.saveSplash(file);
     }
 
     /**
@@ -74,7 +74,7 @@ public class WebsiteAppearanceService {
     public String getSplashPageContent(){
         String content = "";
         if(repo.isConfigured(SPLASH_PAGE_CONTENT)){
-            content = folder.readLandingPage(repo.get(SPLASH_PAGE_CONTENT));
+            content = folder.readSplash(repo.get(SPLASH_PAGE_CONTENT));
             content = extractHtmlBody(content);
         }
         return content;
@@ -84,10 +84,11 @@ public class WebsiteAppearanceService {
      * sets the website logo to the given image file
      *
      * @param file the new logo
+     * @return 
      */
-    public void setLogo(MultipartFile file){
-        folder.saveLogo(file);
-        repo.set(LOGO_NAME, file.getOriginalFilename());
+    public Mono<Void> setLogo(FileAdapter file){
+        repo.set(LOGO_NAME, file.getFileName());
+        return folder.saveLogo(file);
     }
 
     /**
@@ -145,10 +146,11 @@ public class WebsiteAppearanceService {
      * Sets & stores the given HTML file as the landing page content.
      *
      * @param file an HTML file, uploaded in a multipart form
+     * @return 
      */
-    public void setLandingPage(MultipartFile file){
-        repo.set(LANDING_PAGE_CONTENT, file.getOriginalFilename());
-        folder.saveLandingPage(file);
+    public Mono<Void> setLandingPage(FileAdapter file){
+        repo.set(LANDING_PAGE_CONTENT, file.getFileName());
+        return folder.saveLandingPage(file);
     }
 
     /**
