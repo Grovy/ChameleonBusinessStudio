@@ -1,0 +1,42 @@
+package com.compilercharisma.chameleonbusinessstudio.service;
+
+import com.compilercharisma.chameleonbusinessstudio.config.TwilioConfiguration;
+import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+public class TwilioMessagingService {
+
+    TwilioConfiguration twilioConfiguration;
+
+    public TwilioMessagingService(TwilioConfiguration twilioConfiguration) {
+        this.twilioConfiguration = twilioConfiguration;
+    }
+
+    /**
+     * Send an SMS to a user with a valid phone number
+     *
+     * @param userPhoneNumber the receiver's phone number
+     * @param body            the message's body
+     */
+    public void sendSMSToUser(String userPhoneNumber, String body) {
+        var chameleonSID = twilioConfiguration.getSid();
+        var chameleonAuthToken = twilioConfiguration.getToken();
+        var senderPhoneNumber = new PhoneNumber(twilioConfiguration.getPhoneNumber());
+        var receiverPhoneNumber = new PhoneNumber(userPhoneNumber);
+        Twilio.init(chameleonSID, chameleonAuthToken);
+        log.info("Sending message to user with phone number [{}]", userPhoneNumber);
+        try {
+            Message.creator(senderPhoneNumber, receiverPhoneNumber, body).create();
+        } catch (ExternalServiceException ex) {
+            log.error("Could not send message to user with phone number [{}]", userPhoneNumber);
+            var msg = "Something went wrong when calling Twilio's API, could not send message";
+            throw new ExternalServiceException(msg, ex);
+        }
+    }
+}
