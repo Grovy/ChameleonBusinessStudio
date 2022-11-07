@@ -125,6 +125,14 @@ export class DateManager {
 
 
         return newDate + "T" + newTime; 
+    }
 
+    public arrayToDate(date: number[]): Date {
+        let year = date[0];
+        let month = date[1];
+        let day = date[2];
+        let hour = date[3];
+        let minute = date[4];
+        return new Date(year, month - 1, day, hour, minute);
     }
 }

@@ -17,6 +17,7 @@ import { AppointmentDetailsComponent } from './pages/appointments/appointment-de
 import { AppointmentListComponent } from './pages/appointments/appointment-list/appointment-list.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthenticationService } from './services/AuthenticationService.service';
+import { BookedApptsWidgetComponent } from './theme/widgets/booked-appts-widget/booked-appts-widget.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BookingPageComponent} from './pages/appointments/booking-page/booking-page.component';
@@ -83,6 +84,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     AppointmentCreateFormComponent,
     AppointmentDetailsComponent,
     AppointmentListComponent,
+    BookedApptsWidgetComponent,
     BookingPageComponent,
     CalenderViewComponent,
     CustomBannerDirective,
