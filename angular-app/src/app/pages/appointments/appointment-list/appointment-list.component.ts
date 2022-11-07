@@ -3,6 +3,7 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import format from 'date-fns/format';
+import { UserRole } from 'src/app/models/interfaces/IUser';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -18,6 +19,7 @@ export class AppointmentListComponent implements AfterViewInit{
 
     // needs to be nullable, as it cannot initialize in the constructor
     @Input() appointments?: IAppointment[];
+    @Input() role?: UserRole;
     displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
 
     dataSource: MatTableDataSource<IAppointment>;
@@ -30,6 +32,14 @@ export class AppointmentListComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    if(this.role == UserRole.PARTICIPANT){
+      console.log("here");
+      console.log(this.role);
+      const pos = this.displayedColumns.indexOf('totalSlots');
+      if(pos!==-1){
+          this.displayedColumns.splice(pos,1);
+      }
+    }
   }
 
 
@@ -77,5 +87,10 @@ export class AppointmentListComponent implements AfterViewInit{
       } else{
         return s;
       }
+    }
+
+    public isAdmin(){
+      return this.role == UserRole.ADMIN
+                     || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;
     }
 }

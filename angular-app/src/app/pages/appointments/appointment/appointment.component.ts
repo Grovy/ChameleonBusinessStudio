@@ -9,7 +9,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
+import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { MockAppointmentList } from 'src/app/models/mock/mock-appointments';
+import { MockAdminUserList, MockParticipantList } from 'src/app/models/mock/mock-users';
 /*
 This component is currently responsible for rendering a list of appointments. As
 our design evolves, we may need to push more responsibilities into this
@@ -22,13 +24,19 @@ component.
     styleUrls: ['./appointment.component.css']
 })
 export class AppointmentComponent {
-    @Input() appointments: IAppointment[];
+    public currentUser: IUser;
 
-    temp:IAppointment[] = MockAppointmentList;
+
+    @Input() appointments: IAppointment[];
+    @Input() role: UserRole;
+     temp:IAppointment[] = MockAppointmentList;
 
 
     constructor(private http: HttpClient){
         this.appointments = this.temp;
+        this.currentUser = MockParticipantList[0];
+        this.role = this.currentUser.role;
+
     }
 
     ngOnChanges(changes: SimpleChanges){
@@ -41,5 +49,12 @@ export class AppointmentComponent {
 
      // this.http.get<IAppointment>
 
+
     }
+
+    isAdmin(){
+      return this.currentUser.role === UserRole.ADMIN || this.currentUser.role===UserRole.ORGANIZER;
+    }
+
+
 }

@@ -40,12 +40,7 @@ export class CalenderViewComponent implements OnInit {
   @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
   view: CalendarView = CalendarView.Week;
   viewDate = new Date();
-  events: CalendarEvent[] =[{
-    start: setHours(setMinutes(new Date(), 20), 15),
-    end: setHours(setMinutes(new Date(), 40), 17),
-
-      title: `Hair cut `,
-  }];
+  events: CalendarEvent[] =[];
   dragToCreateActive = false;
   weekStartsOn: 0 =0;
 

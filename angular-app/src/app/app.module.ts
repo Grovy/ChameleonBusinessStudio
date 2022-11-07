@@ -13,6 +13,7 @@ import { AppointmentComponent} from './pages/appointments/appointment/appointmen
 import { AppointmentCreateFormComponent } from './pages/appointments/appointment-create-form/appointment-create-form.component';
 import { AppointmentDetailsComponent } from './pages/appointments/appointment-details/appointment-details.component';
 import { AppointmentListComponent } from './pages/appointments/appointment-list/appointment-list.component';
+import { AppointmentService } from './services/appointment.service';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -143,7 +144,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
   providers: [
 
-    UserService
+    UserService,
+    AppointmentService
   ],
   bootstrap: [AppComponent]
 })
