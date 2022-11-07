@@ -14,7 +14,7 @@
     </mat-card-subtitle>
     <mat-card-content>
         <div class="form-container">
-            <p class="content-text">Provide your display name to get started!</p>
+            <p class="content-text">Provide your display name to get started! Add an <strong>optional</strong> phone number to get SMS notifications.</p>
             <form [formGroup]="profileForm" id="ngForm" (ngSubmit)="onClickSubmit(profileForm.value)">
                 <div class="row">
                     <div class="col-md-6">
@@ -27,6 +27,13 @@
                     <div class="col-md-6">
                         <mat-form-field class="full-width">
                             <input type="text" formControlName="confirmDisplayName" matInput placeholder="Confirm your display name" required>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field class="full-width">
+                            <input type="text" formControlName="phoneNumber" matInput placeholder="Enter your phone number in format: XXXXXXXXXX">
                         </mat-form-field>
                     </div>
                 </div>

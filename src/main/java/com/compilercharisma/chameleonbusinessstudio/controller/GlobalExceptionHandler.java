@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     public static final String RESOURCE_NOT_FOUND_MESSAGE = "error.message.resourceNotFound";
     public static final String MALFORMED_REQUEST_MESSAGE = "error.message.malformedRequest";
-    public static final String ALREADY_EXISTS_MESSAGE = "error.message.alreadyExists";
+    public static final String EXTERNAL_ERROR_MESSAGE = "error.message.externalError";
 
     @ExceptionHandler(NoUserLoggedInException.class)
     public ResponseEntity<HttpErrorMessage> handleNoLoggedInUser(NoUserLoggedInException ex) {
@@ -54,9 +54,9 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage(), ex);
         var response = HttpErrorMessage.builder()
                 .message(ex.getMessage())
-                .code(ALREADY_EXISTS_MESSAGE)
+                .code(EXTERNAL_ERROR_MESSAGE)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(response, ex.getHttpStatus());
     }
 
 }
