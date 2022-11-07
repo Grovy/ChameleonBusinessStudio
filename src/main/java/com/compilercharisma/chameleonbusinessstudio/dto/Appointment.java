@@ -50,7 +50,6 @@ public class Appointment implements Serializable {
     @Builder.Default
     private String description= "";
 
-
     /**
      * If the appointment is cancelled or not
      */
