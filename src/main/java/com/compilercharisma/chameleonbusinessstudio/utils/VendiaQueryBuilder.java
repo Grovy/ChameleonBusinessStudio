@@ -165,7 +165,7 @@ public class VendiaQueryBuilder {
         }
         var t = getTypeString();
         var fs = getFieldsString();
-        return String.format("query{list_%sItems(%s){%s %s}}", t, criteria, t, fs);
+        return String.format("query{list_%sItems(%s){_%sItems %s}}", t, criteria, t, fs);
     }
 
     private String buildSingle(){
