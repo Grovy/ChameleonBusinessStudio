@@ -19,8 +19,8 @@ export class AppointmentService {
    * can view all appointments
    */
 
-  getAllappointments(user: IUser) : Observable<any>{
-    if(this.allowedList.includes(user.role)){
+  getAllappointments(user: UserRole) : Observable<any>{
+    if(this.allowedList.includes(user)){
       return throwError(()=>`NOT AUTHORIZED`)
   }
     var st = this.httpClient.get(`${this.apiUrl}/v1/appointments`)
@@ -37,8 +37,8 @@ export class AppointmentService {
    * @param user
    */
 
-  getappointmentsbyUser(user:IUser):Observable<any>{
-      return this.httpClient.get(`${this.apiUrl}/api/v1/appointments/mine`)
+  getappointmentsbyUser():Observable<any>{
+      return this.httpClient.get(`${this.apiUrl}/v1/appointments/mine`)
                   .pipe(
                     catchError(this.handleError)
                   )

@@ -1,20 +1,19 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
-
 @RestController
-@RequestMapping(path="/api/v2/users")
+@RequestMapping(path="/api/v1/users")
 @Slf4j
 public class UserController {
     
@@ -25,12 +24,26 @@ public class UserController {
     }
 
     /**
+     * Get a user from Vendia by their email
+     * @param email User's email
+     *
+     * @return {@link UserResponse}
+     */
+    @GetMapping("/{email}")
+    public Mono<User> getUser(@PathVariable String email) {
+        log.info("Retrieving user with email [{}] from Vendia", email);
+        return userService.getUser(email)
+                .doOnNext(l -> log.info("Finished retrieving user from Vendia with email [{}]", email))
+                .doOnError(e -> log.error("Could not retrieve user from Vendia with email [{}]", email));
+    }
+
+    /**
      * Gets all users from Vendia
      *
      * @return {@link UserResponse}
      */
-    @GetMapping("/getAllUsers")
-    public Mono<ResponseEntity<UserResponse>> fetchAllUsersFromVendia() {
+    @GetMapping()
+    public Mono<ResponseEntity<UserResponse>> getAllUsers() {
         log.info("Retrieving all users from Vendia...");
         return userService.getAllUsers()
                 .map(r -> new ResponseEntity<>(r, HttpStatus.ACCEPTED))
@@ -44,13 +57,13 @@ public class UserController {
      * @param user the user to be created
      * @return The {@link User} that was created
      */
-    @PostMapping("/createUser")
-    public Mono<ResponseEntity<User>> createVendiaUser(@RequestBody User user){
+    @PostMapping()
+    public Mono<ResponseEntity<User>> createUser(@RequestBody User user){
         log.info("Creating user in Vendia with parameters [{}]", user);
         return userService.createUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User created in Vendia share!"))
-                .onErrorMap(e -> new Exception("Error creating user in Vendia"));
+                .doOnError(e -> log.error("Could not create user in Vendia"));
     }
 
     /**
@@ -58,8 +71,8 @@ public class UserController {
      * @param user the user being edited
      * @return The {@link User} that was created
      */
-    @PutMapping("/updateUser")
-    public Mono<ResponseEntity<User>> updateVendiaUser(@RequestBody User user){
+    @PutMapping()
+    public Mono<ResponseEntity<User>> updateUser(@RequestBody User user){
         log.info("Updating user in Vendia with parameters [{}]", user);
         return userService.updateUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
@@ -69,32 +82,16 @@ public class UserController {
 
     /**
      * Deletes user in Vendia
-     * @param user the user being removed
+     * @param email the email of user being removed
      * @return Id of the deleted user
      */
-    @DeleteMapping("/deleteUser")
-    public Mono<ResponseEntity<String>> deleteVendiaUser(@RequestBody User user) {
-        log.info("Deleting user in Vendia with email [{}]", user.getEmail());
-        return userService.deleteUser(user)
+    @DeleteMapping("/{email}")
+    public Mono<ResponseEntity<DeletionResponse>> deleteUser(@PathVariable String email) {
+        log.info("Deleting user in Vendia with email [{}]", email);
+        return userService.deleteUser(email)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User deleted in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
-    }
-
-    /**
-     * Returns true if the currently authenticated user has a user in Vendia,
-     * else returns false
-     *
-     * @param authentication Authentication object (has the OAuth2.0 token)
-     * @return {@link Boolean}
-     */
-    @GetMapping("/isUserRegistered")
-    public Mono<ResponseEntity<Boolean>> isUserRegistered(Authentication authentication){
-        var email = ((OAuth2AuthenticationToken) authentication).getPrincipal().getAttribute("email");
-        log.info("Checking to see if user with email [{}] is registered in Vendia", email);
-        return Mono.just(Objects.requireNonNull(email))
-                .flatMap(s -> userService.isRegistered((String) s))
-                .map(bool -> new ResponseEntity<>(bool, HttpStatus.OK));
     }
 
 }

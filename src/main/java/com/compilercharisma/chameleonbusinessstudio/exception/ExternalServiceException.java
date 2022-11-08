@@ -3,6 +3,7 @@ package com.compilercharisma.chameleonbusinessstudio.exception;
 import org.springframework.http.HttpStatus;
 
 public class ExternalServiceException extends RuntimeException {
+    public static final long serialVersionUID = 1L;
 
     private String message;
     private HttpStatus httpStatus;
@@ -19,8 +20,17 @@ public class ExternalServiceException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
-    public ExternalServiceException(String message){
+    public ExternalServiceException(String message, Throwable inner){
         super(message);
         this.message = message;
+        this.httpStatus = HttpStatus.BAD_REQUEST;
+    }
+
+    public String getMessage(){
+        return message;
+    }
+
+    public HttpStatus getHttpStatus(){
+        return httpStatus;
     }
 }

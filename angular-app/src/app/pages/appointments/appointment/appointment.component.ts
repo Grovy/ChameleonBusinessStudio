@@ -12,6 +12,10 @@ import { IAppointment } from 'src/app/models/interfaces/IAppointment';
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { MockAppointmentList } from 'src/app/models/mock/mock-appointments';
 import { MockAdminUserList, MockParticipantList } from 'src/app/models/mock/mock-users';
+import { AppointmentService } from 'src/app/services/appointment.service';
+import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
+import { UserService } from 'src/app/services/UserService.service';
+
 /*
 This component is currently responsible for rendering a list of appointments. As
 our design evolves, we may need to push more responsibilities into this
@@ -24,18 +28,20 @@ component.
     styleUrls: ['./appointment.component.css']
 })
 export class AppointmentComponent {
-    public currentUser: IUser;
+
+  userEmail?: string;
+  currentUser?:IUser;
 
 
-    @Input() appointments: IAppointment[];
-    @Input() role: UserRole;
-     temp:IAppointment[] = MockAppointmentList;
+    @Input() appointments?: IAppointment[];
+    @Input() role!: UserRole;
 
 
-    constructor(private http: HttpClient){
-        this.appointments = this.temp;
-        this.currentUser = MockParticipantList[0];
-        this.role = this.currentUser.role;
+
+    constructor(private http: HttpClient,private userService: UserService,private authService: AuthenticationService
+              ,private appointmentService: AppointmentService){
+          this.getUserEmail();
+
 
     }
 
@@ -48,13 +54,29 @@ export class AppointmentComponent {
     ///GET Request from the backend
 
      // this.http.get<IAppointment>
-
+      console.log(this.role);
+      this.appointmentService.getAllappointments(this.role).subscribe(data=>{
+          this.appointments = data;
+          console.log(data);
+      })
 
     }
 
     isAdmin(){
-      return this.currentUser.role === UserRole.ADMIN || this.currentUser.role===UserRole.ORGANIZER;
+      return this.role === UserRole.ADMIN || this.role===UserRole.ORGANIZER;
     }
+
+
+private getUserEmail() {
+  this.authService.getPrincipal().subscribe(
+    data => {
+      this.userEmail = data.valueOf();
+      this.userService.getUser(this.userEmail).subscribe(data => {
+        this.currentUser = data as IUser;
+        this.role = this.currentUser.role as UserRole;
+      }); // make sure to import UserService.service.ts in constructor
+  });
+}
 
 
 }

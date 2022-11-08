@@ -1,0 +1,141 @@
+{
+    "content": [
+        {
+            "_id": "0c1eff56-bd75-427a-94d8-67a4e710456f",
+            "name": "Social Life",
+            "isEnabled": false,
+            "appointments": [
+                {
+                    "_id": "d07c262a-2804-4f06-b3d0-789e225802dd",
+                    "isEnabled": true,
+                    "repeatsOn": [
+                        "SUNDAY"
+                    ],
+                    "appointment": {
+                        "_id": "53ef35ba-f080-4ca2-b64b-80e2a735c73e",
+                        "title": "D&D",
+                        "startTime": [
+                            2022,
+                            10,
+                            9,
+                            12,
+                            30
+                        ],
+                        "endTime": [
+                            2022,
+                            10,
+                            9,
+                            13,
+                            30
+                        ],
+                        "location": "Home",
+                        "description": "Dungeons and Dragons",
+                        "cancelled": false,
+                        "totalSlots": 1,
+                        "participants": []
+                    }
+                }
+            ]
+        },
+        {
+            "_id": "81a39a60-1b34-473d-812b-a2eee3471158",
+            "name": "Classes",
+            "isEnabled": true,
+            "appointments": [
+                {
+                    "_id": "a10c8b68-1444-42a0-999d-cdc3ac3a4756",
+                    "isEnabled": true,
+                    "repeatsOn": [
+                        "TUESDAY",
+                        "THURSDAY"
+                    ],
+                    "appointment": {
+                        "_id": "419f3aba-4678-4c66-94cd-643ce27c84ce",
+                        "title": "CSC152",
+                        "startTime": [
+                            2022,
+                            10,
+                            11,
+                            15,
+                            0
+                        ],
+                        "endTime": [
+                            2022,
+                            10,
+                            11,
+                            16,
+                            15
+                        ],
+                        "location": "Sac State",
+                        "description": "Cryptography",
+                        "cancelled": false,
+                        "totalSlots": 1,
+                        "participants": []
+                    },
+                    "lastGenerated": [
+                        2022,
+                        10,
+                        31,
+                        15,
+                        12,
+                        33,
+                        204812400
+                    ]
+                },
+                {
+                    "_id": "e2b2ec37-e4d8-47b3-b4ec-43d5d018f9b9",
+                    "isEnabled": true,
+                    "repeatsOn": [
+                        "WEDNESDAY"
+                    ],
+                    "appointment": {
+                        "_id": "5475d4ef-9e8e-4abd-bfd5-7965d1f0299d",
+                        "title": "CSC191",
+                        "startTime": [
+                            2022,
+                            10,
+                            12,
+                            19,
+                            0
+                        ],
+                        "endTime": [
+                            2022,
+                            10,
+                            12,
+                            19,
+                            50
+                        ],
+                        "location": "Online",
+                        "description": "Senior project",
+                        "cancelled": false,
+                        "totalSlots": 1,
+                        "participants": []
+                    },
+                    "lastGenerated": [
+                        2022,
+                        10,
+                        31,
+                        15,
+                        12,
+                        33,
+                        204812400
+                    ]
+                }
+            ]
+        }
+    ],
+    "pageable": "INSTANCE",
+    "totalPages": 1,
+    "totalElements": 2,
+    "last": true,
+    "size": 2,
+    "number": 0,
+    "numberOfElements": 2,
+    "sort": {
+        "empty": true,
+        "unsorted": true,
+        "sorted": false
+    },
+    "first": true,
+    "empty": false
+}

@@ -33,8 +33,7 @@ export class AppointmentListComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     if(this.role == UserRole.PARTICIPANT){
-      console.log("here");
-      console.log(this.role);
+
       const pos = this.displayedColumns.indexOf('totalSlots');
       if(pos!==-1){
           this.displayedColumns.splice(pos,1);

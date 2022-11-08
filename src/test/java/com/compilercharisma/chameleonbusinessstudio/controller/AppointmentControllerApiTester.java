@@ -18,8 +18,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.compilercharisma.chameleonbusinessstudio.ChameleonApplication;
-import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfig;
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
+import com.compilercharisma.chameleonbusinessstudio.config.VendiaConfiguration;
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
@@ -47,7 +47,7 @@ public class AppointmentControllerApiTester {
     private UserService users;
 
     @MockBean
-    private VendiaConfig vendia;
+    private VendiaConfiguration vendia;
 
     @BeforeEach
     public void setup(){
@@ -65,13 +65,13 @@ public class AppointmentControllerApiTester {
     @WithMockUser // does not work. Do we need to create a user for this?
     public void bookMe_givenAValidAppointment_returnsUpdated() throws Exception{
         //var user = new Participant(new UserEntity());
-        var aValidAppointment = new AppointmentEntity();
+        var aValidAppointment = new Appointment();
 
         //when(authenticationMock.getLoggedInUserReactive()).thenReturn(user);
         
         var t = sut
             .post()
-            .uri(String.format("/api/v1/appointments/book-me/%d", aValidAppointment.getId()))
+            .uri(String.format("/api/v1/appointments/book-me/%d", aValidAppointment.get_id()))
             .exchange();
         t.expectStatus().is2xxSuccessful();
     }

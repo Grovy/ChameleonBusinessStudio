@@ -20,7 +20,7 @@
 
             <ng-container matColumnDef="client-name">
                 <th mat-header-cell *matHeaderCellDef> Client's Display Name (email) </th>
-                <td mat-cell *matCellDef="let element"> {{element.registeredUsers[0].email}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.participants[0].email}} </td>
             </ng-container>
 
             <ng-container matColumnDef="date">
@@ -58,7 +58,7 @@
                         <h3>Barber: Daniel Ramos</h3>
                     </div>
                     <div class="participant">
-                        <h3>Client: {{selectedAppt.registeredUsers}} </h3>
+                        <h3>Client: {{selectedAppt.participants}} </h3>
                     </div>
                     <div class="service">
                         <h3>Service: {{selectedAppt.description}}</h3>

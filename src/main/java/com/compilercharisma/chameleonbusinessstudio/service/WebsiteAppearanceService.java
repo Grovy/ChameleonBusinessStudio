@@ -1,15 +1,12 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import java.io.InputStream;
-import java.util.Properties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.compilercharisma.chameleonbusinessstudio.repository.WebsiteConfigurationRepository;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ByteArrayHelper;
-import com.compilercharisma.chameleonbusinessstudio.config.ProxyConfiguration;
-import com.compilercharisma.chameleonbusinessstudio.repository.IWebsiteConfigurationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.stereotype.Service;
 
 /**
  * use this to set / get properties of the website's appearance
@@ -24,15 +21,16 @@ public class WebsiteAppearanceService {
     private static final String ORG_NAME = "organization.name";
     private static final String LOGO_NAME = "logo.filename";
 
-    private final ApplicationFolder folder; // migrate away from this
-    private final IWebsiteConfigurationRepository repo;
-    private final ProxyConfiguration configProxy;
+    private final ApplicationFolder folder;
+    private final WebsiteConfigurationRepository repo;
 
     @Autowired
-    public WebsiteAppearanceService(ApplicationFolder folder, IWebsiteConfigurationRepository repo){
+    public WebsiteAppearanceService(
+            ApplicationFolder folder, 
+            WebsiteConfigurationRepository repo
+    ){
         this.folder = folder;
         this.repo = repo;
-        configProxy = new ProxyConfiguration(folder);
     }
 
 
@@ -42,8 +40,7 @@ public class WebsiteAppearanceService {
      * @param organizationName the new organization name
      */
     public void setOrganizationName(String organizationName){
-        configProxy.getConfig().setProperty(ORG_NAME, organizationName);
-        configProxy.save();
+        repo.set(ORG_NAME, organizationName);
     }
 
     /**
@@ -53,8 +50,7 @@ public class WebsiteAppearanceService {
      * @return the name of the organization that owns this application
      */
     public String getOrganizationName(){
-        return configProxy.getConfig().getProperty(ORG_NAME, "Chameleon Business Studio"
-        );
+        return repo.get(ORG_NAME, "Chameleon Business Studio");
     }
 
     /**
@@ -64,8 +60,7 @@ public class WebsiteAppearanceService {
      */
     public void setSplashPageContent(MultipartFile file){
         folder.saveSplash(file);
-        configProxy.getConfig().setProperty(SPLASH_PAGE_CONTENT, file.getOriginalFilename());
-        configProxy.save();
+        repo.set(SPLASH_PAGE_CONTENT, file.getOriginalFilename());
     }
 
     /**
@@ -76,7 +71,7 @@ public class WebsiteAppearanceService {
     public String getSplashPageContent(){
         String content = "";
         if(repo.isConfigured(SPLASH_PAGE_CONTENT)){
-            content = folder.readLandingPage(repo.getValueFor(SPLASH_PAGE_CONTENT).get());
+            content = folder.readLandingPage(repo.get(SPLASH_PAGE_CONTENT));
             content = extractHtmlBody(content);
         }
         return content;
@@ -89,8 +84,7 @@ public class WebsiteAppearanceService {
      */
     public void setLogo(MultipartFile file){
         folder.saveLogo(file);
-        configProxy.getConfig().setProperty(LOGO_NAME, file.getOriginalFilename());
-        configProxy.save();
+        repo.set(LOGO_NAME, file.getOriginalFilename());
     }
 
     /**
@@ -99,12 +93,10 @@ public class WebsiteAppearanceService {
      * @return the bytes of the logo image file
      */
     public byte[] getLogo(){
-
         byte[] bytes = new byte[]{};
 
         if(repo.isConfigured(LOGO_NAME)){
-            try {
-                InputStream inputStream = folder.readLogo(configProxy.getConfig().getProperty(LOGO_NAME));
+            try (var inputStream = folder.readLogo(repo.get(LOGO_NAME))){
                 ByteArrayHelper byteArrayHelper = new ByteArrayHelper(inputStream);
                 bytes = byteArrayHelper.toByteArray();
             } catch(Exception ex){
@@ -119,8 +111,7 @@ public class WebsiteAppearanceService {
      * @param color the CSS color string to use for the website banner
      */
     public void setBannerColor(String color){
-        configProxy.getConfig().setProperty(BANNER_COLOR, color);
-        configProxy.save();
+        repo.set(BANNER_COLOR, color);
     }
 
     /**
@@ -129,7 +120,7 @@ public class WebsiteAppearanceService {
      * @return the CSS color to use for the website banner
      */
     public String getBannerColor(){
-        return configProxy.getConfig().getProperty(BANNER_COLOR, "#ffffff");
+        return repo.get(BANNER_COLOR, "#ffffff");
     }
 
     /**
@@ -138,7 +129,7 @@ public class WebsiteAppearanceService {
      * @param file an HTML file, uploaded in a multipart form
      */
     public void setLandingPage(MultipartFile file){
-        repo.setValue(LANDING_PAGE_CONTENT, file.getOriginalFilename());
+        repo.set(LANDING_PAGE_CONTENT, file.getOriginalFilename());
         folder.saveLandingPage(file);
     }
 
@@ -151,7 +142,7 @@ public class WebsiteAppearanceService {
     public String getLandingPageContent(){
         String content = "";
         if(repo.isConfigured(LANDING_PAGE_CONTENT)){
-            content = folder.readLandingPage(repo.getValueFor(LANDING_PAGE_CONTENT).get());
+            content = folder.readLandingPage(repo.get(LANDING_PAGE_CONTENT));
             content = extractHtmlBody(content);
         }
         return content;
@@ -172,14 +163,5 @@ public class WebsiteAppearanceService {
             );
         }
         return content;
-    }
-
-    /**
-     * automatically saves to the config file afterwards
-     *
-     * @param config the new configuration options to use
-     */
-    public void setConfig(Properties config){
-        configProxy.setConfig(config); // automatically saves
     }
 }

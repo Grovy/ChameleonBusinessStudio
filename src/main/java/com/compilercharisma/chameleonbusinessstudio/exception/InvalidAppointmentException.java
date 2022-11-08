@@ -1,17 +1,18 @@
 package com.compilercharisma.chameleonbusinessstudio.exception;
 
-import com.compilercharisma.chameleonbusinessstudio.entity.AppointmentEntity;
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 
+// rework this one once we have a single appointment class
 public class InvalidAppointmentException extends RuntimeException {
-    
-    private final AppointmentEntity appointment;
+    public static final long serialVersionUID = 1L;
+    private final Appointment appointment;
 
-    public InvalidAppointmentException(AppointmentEntity appointment, String message){
+    public InvalidAppointmentException(Appointment appointment, String message){
         super(message);
         this.appointment = appointment;
     }
 
-    public AppointmentEntity getInvalidAppointment(){
+    public Appointment getInvalidAppointment2(){
         return appointment;
     }
 }

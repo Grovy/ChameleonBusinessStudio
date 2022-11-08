@@ -1,5 +1,8 @@
 package com.compilercharisma.chameleonbusinessstudio.client;
 
+import com.compilercharisma.chameleonbusinessstudio.utils.VendiaField;
+import com.compilercharisma.chameleonbusinessstudio.utils.VendiaQueryBuilder;
+import com.compilercharisma.chameleonbusinessstudio.utils.VendiaSort;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +76,7 @@ public class VendiaQueryBuilderTester {
         var sut = new VendiaQueryBuilder();
 
         sut.orderBy(
-            VendiaSort.by("foo"), 
+            VendiaSort.by("foo"),
             VendiaSort.by("bar", false)
         );
         var actual = sut.getSortString();

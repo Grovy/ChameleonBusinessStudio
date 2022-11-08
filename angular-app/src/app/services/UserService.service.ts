@@ -6,13 +6,13 @@ import { IUser } from '../models/interfaces/IUser';
 @Injectable()
 export class UserService {
 
-    private readonly apiUrl = '/api';
+    private readonly apiUrl = '/api/v1/users';
 
     constructor(private httpClient: HttpClient) { }
 
     // Function to fetch all the users from Vendia
     public getAllUsers(): Observable<any> {
-        return this.httpClient.get(`${this.apiUrl}/users/getAllUsers`)
+        return this.httpClient.get(`${this.apiUrl}/`)
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
@@ -21,7 +21,16 @@ export class UserService {
 
     // Function to create a new user and save in Vendia
     public createUser(user: IUser): Observable<any> {
-        return this.httpClient.post(`${this.apiUrl}/users/createUser`, user)
+        return this.httpClient.post(`${this.apiUrl}`, user)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    // Function to get the user object from Vendia
+    public getUser(email: string): Observable<any> {
+        return this.httpClient.get(`${this.apiUrl}/${email}`)
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

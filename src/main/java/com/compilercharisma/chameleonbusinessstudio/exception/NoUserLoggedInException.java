@@ -1,10 +1,8 @@
 package com.compilercharisma.chameleonbusinessstudio.exception;
 
-/**
- *
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 public class NoUserLoggedInException extends RuntimeException {
+    public static final long serialVersionUID = 1L;
+    
     public NoUserLoggedInException() {}
 
     public NoUserLoggedInException(String msg) {

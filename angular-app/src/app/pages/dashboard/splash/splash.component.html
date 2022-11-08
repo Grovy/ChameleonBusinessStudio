@@ -1,17 +1,18 @@
-<mat-toolbar color="accent">
-  <mat-toolbar-row>
-    <p class="business-title">Chameleon <Br>Business Studio</p>
-    <span class="example-spacer"></span>
-    <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
-    <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
-    <button mat-stroked-button class="icon">About Us</button>
-    <sign-in></sign-in>
-  </mat-toolbar-row>
-</mat-toolbar>
+<app-default-header></app-default-header>
 
-<app-nav></app-nav>
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'ADMIN' || currentUser.role === 'ORGANIZER')">
+  <app-admin-nav></app-admin-nav>
+</div>
 
-<div class="main-content">
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'PARTICIPANT')">
+  <app-participant-nav></app-participant-nav>
+</div>
+
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')">
+  <app-talent-nav></app-talent-nav>
+</div>
+
+<div *ngIf="!(isAuthenticatedValue && isRegisteredValue)" class="main-content">
   <div class="card">
     <h2 class="label">Scheduling made easier</h2>
     <p class="description">
@@ -41,6 +42,32 @@
     <mat-icon class="main-icon" svgIcon="edit"></mat-icon>
   </div>
 </div>
+
+<!-- Dynamic Rendering for Talent Accounts -->
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')" class="main-content">  
+  <mat-toolbar class="second-toolbar">
+  </mat-toolbar>
+
+  <div class="welcome-message">
+    <p class="welcome-text">Welcome Back {{ currentUser.displayName }}!</p>
+  </div>
+  
+
+  <div class="talent-content">  
+    <div class="event-widget">
+      <app-event-widget></app-event-widget>
+    </div>
+      
+    <div class="booked-appts-widget">
+      <app-booked-appts-widget></app-booked-appts-widget>
+    </div>
+
+  </div>
+
+
+</div>
+
+
 <div class="main-content">
 </div>
 
