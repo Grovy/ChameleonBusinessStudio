@@ -61,6 +61,14 @@ public class AppointmentController {
                 .doOnError(e -> log.error("Could not retrieve user appointments from Vendia"));
     }
 
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Appointment>> getAppointmentById(
+            @PathVariable("id") String apptId
+    ) {
+        return appointments.getAppointmentById(apptId)
+            .map(appt -> ResponseEntity.ok(appt));
+    }
+
     /**
      * GET /api/v1/appointments/mine
      * 

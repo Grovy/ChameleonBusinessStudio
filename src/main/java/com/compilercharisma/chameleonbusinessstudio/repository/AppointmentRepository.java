@@ -23,27 +23,25 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Repository
-public class AppointmentRepositoryv2 {
+public class AppointmentRepository {
     private final VendiaClient vendiaClient;
 
-    public AppointmentRepositoryv2(VendiaClient vendiaClient) {
+    public AppointmentRepository(VendiaClient vendiaClient) {
         this.vendiaClient = vendiaClient;
     }
 
-    // added by Matt, please make this better!
     public Mono<Appointment> getAppointmentById(String id) {
         var query = new VendiaQueryBuilder()
                 .select("_id", "title", "startTime", "endTime", "location",
                         "description", "cancelled", "participants")
                 .from("Appointment")
-                .where(new VendiaField("_id").eq(id))
+                .withId(id)
+                .limitOne()
                 .build();
 
-        return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
-                .map(listOfAppts -> listOfAppts.get(0))
-                .doOnError(IndexOutOfBoundsException.class, (err) -> {
-                    throw new IllegalArgumentException("Invalid appointment ID: " + id);
+        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class)
+                .doOnError((err) -> {
+                    throw new IllegalArgumentException("Invalid appointment ID: " + id, err);
                 });
     }
 

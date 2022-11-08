@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
 import reactor.core.publisher.Mono;
 
 public class AppointmentServiceTester {
-    private final AppointmentRepositoryv2 repo = mock(AppointmentRepositoryv2.class);
+    private final AppointmentRepository repo = mock(AppointmentRepository.class);
     private final AppointmentValidator validator = mock(AppointmentValidator.class);
     private final Appointment theAppointment = new Appointment();
     private final String theEmail = "test.user@gmail.com";

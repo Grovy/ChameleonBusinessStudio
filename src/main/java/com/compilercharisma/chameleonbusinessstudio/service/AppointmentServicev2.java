@@ -4,7 +4,7 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -13,9 +13,9 @@ import reactor.core.publisher.Mono;
  */
 @Service
 public class AppointmentServicev2 {
-    private final AppointmentRepositoryv2 appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public AppointmentServicev2(AppointmentRepositoryv2 appointmentRepository){
+    public AppointmentServicev2(AppointmentRepository appointmentRepository){
         this.appointmentRepository = appointmentRepository;
     }
 
