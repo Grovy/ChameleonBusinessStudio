@@ -2,11 +2,12 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
 import com.compilercharisma.chameleonbusinessstudio.repository.WebsiteConfigurationRepository;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
-import com.compilercharisma.chameleonbusinessstudio.webconfig.ByteArrayHelper;
+
+import reactor.core.publisher.Mono;
 
 /**
  * use this to set / get properties of the website's appearance
@@ -18,6 +19,7 @@ public class WebsiteAppearanceService {
     private static final String LANDING_PAGE_CONTENT = "pages.landing.content";
     private static final String SPLASH_PAGE_CONTENT = "pages.splash.content";
     private static final String BANNER_COLOR = "banner.color";
+    private static final String BANNER_IMAGE = "banner.image";
     private static final String ORG_NAME = "organization.name";
     private static final String LOGO_NAME = "logo.filename";
 
@@ -57,10 +59,11 @@ public class WebsiteAppearanceService {
      * sets the custom body content of the splash page and saves it
      *
      * @param file the file to set as the splash page content
+     * @return 
      */
-    public void setSplashPageContent(MultipartFile file){
-        folder.saveSplash(file);
-        repo.set(SPLASH_PAGE_CONTENT, file.getOriginalFilename());
+    public Mono<Void> setSplashPageContent(FileAdapter file){
+        repo.set(SPLASH_PAGE_CONTENT, file.getFileName());
+        return folder.saveSplash(file);
     }
 
     /**
@@ -71,7 +74,7 @@ public class WebsiteAppearanceService {
     public String getSplashPageContent(){
         String content = "";
         if(repo.isConfigured(SPLASH_PAGE_CONTENT)){
-            content = folder.readLandingPage(repo.get(SPLASH_PAGE_CONTENT));
+            content = folder.readSplash(repo.get(SPLASH_PAGE_CONTENT));
             content = extractHtmlBody(content);
         }
         return content;
@@ -81,10 +84,11 @@ public class WebsiteAppearanceService {
      * sets the website logo to the given image file
      *
      * @param file the new logo
+     * @return 
      */
-    public void setLogo(MultipartFile file){
-        folder.saveLogo(file);
-        repo.set(LOGO_NAME, file.getOriginalFilename());
+    public Mono<Void> setLogo(FileAdapter file){
+        repo.set(LOGO_NAME, file.getFileName());
+        return folder.saveLogo(file);
     }
 
     /**
@@ -96,12 +100,7 @@ public class WebsiteAppearanceService {
         byte[] bytes = new byte[]{};
 
         if(repo.isConfigured(LOGO_NAME)){
-            try (var inputStream = folder.readLogo(repo.get(LOGO_NAME))){
-                ByteArrayHelper byteArrayHelper = new ByteArrayHelper(inputStream);
-                bytes = byteArrayHelper.toByteArray();
-            } catch(Exception ex){
-                throw new RuntimeException(ex);
-            }
+            bytes = folder.readLogo(repo.get(LOGO_NAME));
         }
 
         return bytes;
@@ -123,14 +122,35 @@ public class WebsiteAppearanceService {
         return repo.get(BANNER_COLOR, "#ffffff");
     }
 
+    public Mono<Void> setBannerImage(FileAdapter file){
+        repo.set(BANNER_IMAGE, file.getFileName());
+        return folder.saveBannerImage(file);
+    }
+
+    /**
+     * defaults to a blank image if the banner hasn't been configured yet
+     * 
+     * @return the banner image bytes
+     */
+    public byte[] getBannerImage(){
+        byte[] bytes = new byte[]{};
+
+        if(repo.isConfigured(BANNER_IMAGE)){
+            bytes = folder.readBannerImage(repo.get(BANNER_IMAGE));
+        }
+
+        return bytes;
+    }
+
     /**
      * Sets & stores the given HTML file as the landing page content.
      *
      * @param file an HTML file, uploaded in a multipart form
+     * @return 
      */
-    public void setLandingPage(MultipartFile file){
-        repo.set(LANDING_PAGE_CONTENT, file.getOriginalFilename());
-        folder.saveLandingPage(file);
+    public Mono<Void> setLandingPage(FileAdapter file){
+        repo.set(LANDING_PAGE_CONTENT, file.getFileName());
+        return folder.saveLandingPage(file);
     }
 
     /**
