@@ -6,6 +6,7 @@ import { AppointmentDateFilterPipe } from 'src/app/services/AppointmentDateFilte
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-appointment-details',
@@ -23,7 +24,7 @@ export class AppointmentDetailsComponent {
   isAuthenticatedValue;
 
   constructor(private appointmentService: AppointmentService, private dateManager: DateManager, 
-    private authenticationService: AuthenticationService, private userService: UserService) {
+    private authenticationService: AuthenticationService, private userService: UserService, private snackBar: MatSnackBar) {
     this.checkIfAuthenticated();
     this.checkIfRegisteredWithVendia();
     this.getAppointments();
@@ -105,12 +106,20 @@ export class AppointmentDetailsComponent {
   // Funciton to book the currently signed in user
   bookUser(appt: IAppointment) {
     if(appt.participants.length < appt.totalSlots) {
-      this.appointmentService.bookCurrentUser(appt._id as string).subscribe(
-        data => { console.log(data) }
+      this.appointmentService.bookOtherUser(appt._id as string, this.userEmail).subscribe(
+        data => { 
+          console.log(data);
+          if(data.status.toString() == '200') {
+            this.openSnackBar("Appointment successfully booked!", "Dismiss", {
+              duration: 5000,
+            }); 
+          } else {
+            this.openSnackBar("An error occured when trying to book this appointment.", "Dismiss", {
+              duration: 5000,
+            }); 
+          }
+        }
       );
-      /* this.appointmentService.bookOtherUser(appt._id as string, this.userEmail).subscribe(
-        data => { console.log(data) }
-      ); */
     } else {
       console.log("Cannot book this appointment. Something went wrong.");
     }
@@ -120,11 +129,24 @@ export class AppointmentDetailsComponent {
     if(!(appt.participants[1] === undefined)) {
       this.appointmentService.unbookOtherUser(appt._id as string, appt.participants[1] as string).subscribe(
         data => { 
-          console.log(data); 
+          console.log(data);
+          if(data.status.toString() == '200') {
+            this.openSnackBar("Appointment successfully unbooked!", "Dismiss", {
+              duration: 5000,
+            }); 
+          } else {
+            this.openSnackBar("An error occured when trying to unbook this appointment.", "Dismiss", {
+              duration: 5000,
+            }); 
+          }
         }
       );
     } else {
       console.log("Cannot unbook this appointment. Something went wrong.");
     }
+  }
+
+  openSnackBar(message, action?, config?) {
+    this.snackBar.open(message, action, config);
   }
 }

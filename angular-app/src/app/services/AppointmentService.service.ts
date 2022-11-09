@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError, map } from 'rxjs';
 import { IAppointment } from "../models/interfaces/IAppointment";
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AppointmentService {
     }
 
     public bookCurrentUser(apptId: string) {
-        return this.httpClient.post(`${this.apiUrl}/book-me/${apptId}`, {})
+        return this.httpClient.post(`${this.apiUrl}/book-me/${apptId}`, {}, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
@@ -44,7 +44,7 @@ export class AppointmentService {
     }
 
     public bookOtherUser(apptId: string, email: string) {
-        return this.httpClient.post(`${this.apiUrl}/book-them/${apptId}?email=${email}`, {})
+        return this.httpClient.post(`${this.apiUrl}/book-them/${apptId}?email=${email}`, {}, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
@@ -52,7 +52,7 @@ export class AppointmentService {
     }
 
     public unbookCurrentUser(apptId: string) {
-        return this.httpClient.post(`${this.apiUrl}/unbook-me/${apptId}`, {})
+        return this.httpClient.post(`${this.apiUrl}/unbook-me/${apptId}`, {}, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
@@ -60,7 +60,7 @@ export class AppointmentService {
     }
     
     public unbookOtherUser(apptId: string, email: string) {
-        return this.httpClient.post(`${this.apiUrl}/unbook-them/${apptId}?email=${email}`, {})
+        return this.httpClient.post(`${this.apiUrl}/unbook-them/${apptId}?email=${email}`, {}, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
