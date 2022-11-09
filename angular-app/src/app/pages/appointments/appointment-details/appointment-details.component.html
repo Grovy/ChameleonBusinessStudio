@@ -1,102 +1,44 @@
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
 <app-default-header></app-default-header>
-
-<div class="header">
-    <h3>My Appointments</h3>
-</div>
-
 <div class="main-container">
-    <div class="left-side">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef> Id </th>
-                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-              </ng-container>
-
-            <ng-container matColumnDef="service">
-              <th mat-header-cell *matHeaderCellDef> Service </th>
-              <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="client-name">
-                <th mat-header-cell *matHeaderCellDef> Client's Display Name (email) </th>
-                <td mat-cell *matCellDef="let element"> {{element.participants[0].email}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef> Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="start-time">
-              <th mat-header-cell *matHeaderCellDef> Start Time </th>
-              <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="end-time">
-              <th mat-header-cell *matHeaderCellDef> End Time </th>
-              <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row class="element-row"
-                *matRowDef="let row;
-                columns: displayedColumns;"
-                (click)="setSelectedAppt(row.id)"
-                >
-            </tr>
-        </table>
-    </div>
-
-    <div class="right-side">
-        <mat-card>
-            <mat-card-title>Appointment Details</mat-card-title>
-
-            <mat-card-content>
-                <div class="card-body">
-                    <div class="organizer">
-                        <h3>Barber: Daniel Ramos</h3>
-                    </div>
-                    <div class="participant">
-                        <h3>Client: {{selectedAppt.participants}} </h3>
-                    </div>
-                    <div class="service">
-                        <h3>Service: {{selectedAppt.description}}</h3>
-                    </div>
-                </div>
-                <div class="card-date">
-                    <div class="date">
-                        <h3>Date: {{selectedAppt.date}}</h3>
-                    </div>
-                    <div class="schedule">
-                        <div class="time-from">
-                            <h3>From: {{selectedAppt.startTime}}</h3>
-                        </div>
-                        <div class="time-to">
-                            <h3>To: {{selectedAppt.endTime}}</h3>
+    <div class="secondary-container">
+        <div class="day-list">
+            <div *ngFor="let date of allDates">
+                <div class="day-list-item">
+                    <h2>{{date | date: 'fullDate' }}</h2>
+                    <div *ngFor="let appt of dateApptDictionary | keyvalue" class="event-list-body">
+                        <div *ngIf="appt.key === date">
+                            <mat-accordion *ngFor="let value of appt.value">
+                                <mat-expansion-panel hideToggle>
+                                    <mat-expansion-panel-header class="event-list-item">
+                                        <div class="time-item"><span>{{value.startTime | date: 'shortTime'}} - {{value.endTime | date: 'shortTime'}}</span></div>
+                                        <div class="title-item"><span>{{value.title}}</span></div>
+                                        <div class="participants-item"><span>Appointment with<br> {{value.participants[0]}}</span></div>
+                                    </mat-expansion-panel-header>
+                                    <div class="appt-content">
+                                        <div class="details-item">
+                                            <span><strong>Appointment Organizer</strong><br>     {{value.participants[0]}}</span><br><br>
+                                            <span><strong>Description</strong><br>               {{value.description}}</span><br><br>
+                                            <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
+                                        </div>
+                                        <div class="appt-actions" *ngIf="(currentUser.role === 'PARTICIPANT')">
+                                            <button mat-raised-button class="action-button">Book Appointment</button><br>
+                                        </div>
+                                        <div class="appt-actions" *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN')">
+                                            <button mat-raised-button class="action-button">Book Another User</button><br>
+                                            <button mat-raised-button class="action-button">Unbook User</button><br>
+                                            <button mat-raised-button class="action-button">Cancel Appointment</button><br>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
                         </div>
                     </div>
                 </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-raised-button>Confirm</button>
-                <button mat-raised-button>Cancel</button>
-            </mat-card-actions>
-        </mat-card>
+            </div>
+        </div>
     </div>
-  <div class="break"></div>
-   <mat-card class="appointment-page-card">
-     <mat-card-title>Create New Appointment</mat-card-title>
-     <mat-card-content class="appointment-page-card-content">
-       <h3>If you want to go to Create New Appointment Page click here!</h3>
-       <button mat-raised-button>Create New Appointment</button>
-     </mat-card-content>
-   </mat-card>
+
 </div>
-
-
-
-
-
-
-

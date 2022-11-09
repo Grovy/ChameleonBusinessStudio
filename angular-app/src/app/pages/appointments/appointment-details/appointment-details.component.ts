@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { MockAppointmentList, MockSelectedAppointment } from '../../../models/mock/mock-appointments';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-
+import { AppointmentService } from 'src/app/services/AppointmentService.service';
+import { DateManager } from 'src/app/services/DateManager';
+import { AppointmentDateFilterPipe } from 'src/app/services/AppointmentDateFilterPipe';
+import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
+import { UserService } from 'src/app/services/UserService.service';
 
 @Component({
   selector: 'app-appointment-details',
@@ -9,20 +12,95 @@ import { IAppointment } from 'src/app/models/interfaces/IAppointment';
   styleUrls: ['./appointment-details.component.css']
 })
 export class AppointmentDetailsComponent {
-  displayedColumns: string[] = ['id', 'service', 'client-name', 'date', 'start-time', 'end-time'];
-  dataSource = MockAppointmentList;
-  selectedAppt = MockSelectedAppointment;
 
-  constructor() { }
+  dateApptDictionary = new Map<string, any[]>();
+  allAppointments;
+  allDates;
+  userEmail;
+  currentUser;
+  isRegisteredValue;
+  isAuthenticatedValue;
 
-  setSelectedAppt(findID: number) {
-    this.selectedAppt = MockAppointmentList.find( ({id}) => id === findID );
+  constructor(private appointmentService: AppointmentService, private dateManager: DateManager, 
+    private authenticationService: AuthenticationService, private userService: UserService) {
+    this.checkIfAuthenticated();
+    this.checkIfRegisteredWithVendia();
+    this.getAppointments();
   }
 
-  getSelectedAppt() {
-    return this.selectedAppt;
+  getAppointments() {
+    this.appointmentService.getAllAppointments().subscribe(
+      data => {
+        data.map(
+          appt => {
+            // Processing each appointment to have Date objects instead of number[]
+            appt.startTime = this.dateManager.arrayToDate(appt.startTime as number[]);
+            appt.endTime = this.dateManager.arrayToDate(appt.endTime as number[]);
+          }
+        ) 
+        this.allAppointments = data;
+        this.getDates(this.allAppointments); 
+      }
+    );
   }
 
-  
+  getDates(appts: IAppointment[]) {
+    let myDates: string[] = [];
+    appts.map(
+      data => {
+        // let startdate: number[] = data.startTime as number[];
+        let tempStartDate: string = data.startTime.toLocaleString().split(",")[0];
+        if( !(myDates.includes(tempStartDate)) ) {
+          myDates.push(tempStartDate);
+          return data;
+        }
+        return data;
+      }
+    )
+    this.allDates = myDates.sort();
+    this.getApptsPerDate(appts, this.allDates);
+  }
+
+  getApptsPerDate(appts: IAppointment[], dates: string[]) {
+    let dictionary: Map<string, any[]> = new Map<string, any[]>();
+    dates.map(
+      data => {
+        console.log("Processing date: " + data);
+        let apptArray: any[] = [];
+        for(let i = 0; i < appts.length; i++) {
+          if(appts[i].startTime.toLocaleString().split(",")[0] == data) {
+            apptArray.push(appts[i]);
+          }
+        }
+        console.log("The appointment array for date: " + data + " is: " + apptArray);
+        dictionary.set(data, apptArray);
+      }
+    )
+    this.dateApptDictionary = dictionary;
+    console.log(this.dateApptDictionary);
+  }
+
+  getUserEmail() {
+    this.authenticationService.getPrincipal().subscribe(
+      data => { 
+        this.userEmail = data.valueOf(); 
+        this.userService.getUser(this.userEmail).subscribe(data => {this.currentUser = data});
+    });  
+  }
+
+  checkIfAuthenticated() {
+    this.authenticationService.isAuthenticated().subscribe(
+      data => { 
+        this.isAuthenticatedValue = data;
+    });
+  }
+
+  checkIfRegisteredWithVendia() {
+    this.authenticationService.isUserRegistered().subscribe(
+      data => { 
+        this.isRegisteredValue = data;
+        this.getUserEmail();
+    });
+  }  
 
 }
