@@ -169,7 +169,7 @@ public class AppointmentService {
             return Mono.just(appt);
         }
         if (!isSlotAvailable(appt)) {
-            throw new UnsupportedOperationException(String.format("Cannot register \"%s\" in appointment [%s]: no slots available", email, appt.get_id()));
+            throw new UnsupportedOperationException(String.format("Cannot register [%s] in appointment [%s]: no slots available", email, appt.get_id()));
         }
         var participants = appt.getParticipants();
         participants.add(email);
