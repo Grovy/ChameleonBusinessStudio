@@ -37,7 +37,8 @@ public class AppointmentRepository {
      * @return Mono of {@link Appointment}
      */
     public Mono<Appointment> getAppointmentById(String id) {
-        var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }".formatted(id);
+        var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }"
+                .formatted(id);
         return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class);
     }
 
@@ -84,7 +85,7 @@ public class AppointmentRepository {
                 .build();
 
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
+                .map(AppointmentResponse::getAppointments)
                 .map(appts -> toPage(appts, page));
     }
 
@@ -108,7 +109,7 @@ public class AppointmentRepository {
                 .build();
 
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
+                .map(AppointmentResponse::getAppointments)
                 .flatMapMany(Flux::fromIterable)
                 .filter(appt -> appt.getTotalSlots() > appt.getParticipants().size()) // can't do in Vendia?
                 .collectList()
@@ -154,21 +155,6 @@ public class AppointmentRepository {
                 .executeQuery(deleteAppointmentMutation, "remove_Appointment.transaction", DeletionResponse.class)
                 .doOnError(l -> log.error(
                         "Something bad happened when executing mutation for deleting appointment, check syntax"));
-    }
-
-    /**
-     *
-     * The preparation for these appointments must be handed
-     * to in the front end.
-     *
-     * @param appts List that has all the appointments you want to make.
-     */
-    public void createAppointments(List<Appointment> appts)
-    {
-        for (Appointment appt : appts)
-        {
-            createAppointment(appt);
-        }
     }
 
 }

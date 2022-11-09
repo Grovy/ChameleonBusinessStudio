@@ -4,10 +4,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,12 +27,6 @@ import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-/**
- * This controller handles routes associated with appointments.
- *
- * @author Ariel Camargo
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 @RestController
 @RequestMapping("/api/v1/appointments")
 @Slf4j
@@ -58,7 +50,7 @@ public class AppointmentController {
     public Mono<ResponseEntity<List<Appointment>>> getAllAppointments() {
         log.info("Retrieving all user appointments from Vendia...");
         return appointments.getAllAppointments()
-                .map(r -> ResponseEntity.ok(r))
+                .map(ResponseEntity::ok)
                 .doOnNext(r -> log.info("Finished retrieving all user appointments from Vendia!"))
                 .doOnError(e -> log.error("Could not retrieve user appointments from Vendia"));
     }
@@ -68,7 +60,7 @@ public class AppointmentController {
             @PathVariable("id") String apptId
     ) {
         return appointments.getAppointmentById(apptId)
-            .map(appt -> ResponseEntity.ok(appt));
+            .map(ResponseEntity::ok);
     }
 
     /**
@@ -89,7 +81,7 @@ public class AppointmentController {
         var email = authentication.getEmailFrom(token);
         return appointments
                 .getAppointmentsForUser(email, pageable)
-                .map(page -> ResponseEntity.ok(page));
+                .map(ResponseEntity::ok);
     }
 
     /**
@@ -109,7 +101,7 @@ public class AppointmentController {
         LocalDate now = LocalDate.now();
         LocalDate later = now.plusDays(days);
         return appointments.getAvailableAppointments(now, later, page)
-                .map(appts -> ResponseEntity.ok(appts));
+                .map(ResponseEntity::ok);
     }
 
     /**
@@ -131,8 +123,7 @@ public class AppointmentController {
     ) {
         appointments.validateAppointment(appointment);
 
-        log.info("Creating an appointment", appointment);
-
+        log.info("Creating an appointment");
         URI at = root // relative to application root
                 .pathSegment("api", "v1", "appointments")
                 .build()
@@ -174,7 +165,7 @@ public class AppointmentController {
     ) {
         return appointments.getAppointmentById(appointmentId)
                 .flatMap(appt -> appointments.unbookEmail(appt, email))
-                .map(appt -> ResponseEntity.ok(appt));
+                .map(ResponseEntity::ok);
     }
 
     /**
@@ -200,7 +191,7 @@ public class AppointmentController {
                     }
                     return appointments.bookEmail(appt, email);
                 })
-                .map(appt -> ResponseEntity.ok(appt));
+                .map(ResponseEntity::ok);
     }
 
     @PostMapping("/unbook-me/{id}")
@@ -211,7 +202,7 @@ public class AppointmentController {
         var email = authentication.getEmailFrom(token);
         return appointments.getAppointmentById(appointmentId)
                 .flatMap(appt -> appointments.unbookEmail(appt, email))
-                .map(appt -> ResponseEntity.ok(appt));
+                .map(ResponseEntity::ok);
     }
 
     /**
@@ -227,7 +218,7 @@ public class AppointmentController {
     ) {
         return appointments.getAppointmentById(id)
                 .flatMap(appointments::cancelAppointment)
-                .map(appt -> ResponseEntity.ok(appt));
+                .map(ResponseEntity::ok);
     }
 
     /**
@@ -259,7 +250,7 @@ public class AppointmentController {
     ) {
         log.info("Deleting an appointment");
         return appointments.deleteAppointment(appointment)
-                .map(r -> ResponseEntity.ok(r))
+                .map(ResponseEntity::ok)
                 .doOnNext(u -> log.info("Appointment deleted in Vendia share!"))
                 .onErrorMap(e -> new Exception("Error deleting appointment in Vendia"));
     }
