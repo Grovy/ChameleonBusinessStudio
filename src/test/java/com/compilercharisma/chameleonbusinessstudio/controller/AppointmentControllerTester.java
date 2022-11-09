@@ -56,7 +56,7 @@ public class AppointmentControllerTester {
         givenTheUserIsValid();
 
         var anInvalidAppointment = new Appointment();
-        when(appointments.getAppointmentById(anInvalidAppointment.get_id()))
+        when(appointments.bookAppointmentForUser(anInvalidAppointment.get_id()))
             .thenThrow(IllegalArgumentException.class);
 
         Assertions.assertThrows(IllegalArgumentException.class, ()->{
@@ -101,7 +101,7 @@ public class AppointmentControllerTester {
         appointment.setStartTime(LocalDateTime.now());
         appointment.setEndTime(appointment.getStartTime().plusHours(1));
 
-        when(appointments.getAppointmentById(appointment.get_id())).thenReturn(Mono.just(appointment));
+        when(appointments.bookAppointmentForUser(appointment.get_id())).thenReturn(Mono.just(appointment));
         when(appointments.isSlotAvailable(appointment)).thenReturn(true);
     }
 }

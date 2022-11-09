@@ -3,6 +3,7 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,21 +31,14 @@ public class AppointmentRepositoryv2 {
         this.vendiaClient = vendiaClient;
     }
 
-    // added by Matt, please make this better!
+    /**
+     * Get an appointment by their ID
+     * @param id Appointment Id
+     * @return Mono of {@link Appointment}
+     */
     public Mono<Appointment> getAppointmentById(String id) {
-        var query = new VendiaQueryBuilder()
-                .select("_id", "title", "startTime", "endTime", "location",
-                        "description", "cancelled", "participants")
-                .from("Appointment")
-                .where(new VendiaField("_id").eq(id))
-                .build();
-
-        return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
-                .map(listOfAppts -> listOfAppts.get(0))
-                .doOnError(IndexOutOfBoundsException.class, (err) -> {
-                    throw new IllegalArgumentException("Invalid appointment ID: " + id);
-                });
+        var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }".formatted(id);
+        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class);
     }
 
     /**
@@ -138,9 +132,12 @@ public class AppointmentRepositoryv2 {
      * @return The {@link} of the appointment getting updated
      */
     public Mono<Appointment> updateAppointment(Appointment appointment) {
-        var query = "mutation {update_Appointment(id: \"%s\"input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: [\"test@gmail.com\", \"test2@gmail.com\"], title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}"
+        var appointmentsString = appointment.getParticipants().stream()
+                .map(s -> String.format("\"%s\"", s))
+                .collect(Collectors.joining(",", "[", "]"));
+        var query = "mutation {update_Appointment(id: \"%s\", input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: %s, title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
-                        appointment.getEndTime(), appointment.getLocation(),
+                        appointment.getEndTime(), appointment.getLocation(), appointmentsString,
                         appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
         return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class)
                 .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
