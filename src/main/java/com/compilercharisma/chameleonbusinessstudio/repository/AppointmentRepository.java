@@ -3,6 +3,7 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,19 +31,15 @@ public class AppointmentRepository {
         this.vendiaClient = vendiaClient;
     }
 
+    /**
+     * Get an appointment by their ID
+     * @param id Appointment Id
+     * @return Mono of {@link Appointment}
+     */
     public Mono<Appointment> getAppointmentById(String id) {
-        var query = new VendiaQueryBuilder()
-                .select("_id", "title", "startTime", "endTime", "location",
-                        "description", "cancelled", "participants")
-                .from("Appointment")
-                .withId(id)
-                .limitOne()
-                .build();
-
-        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class)
-                .doOnError((err) -> {
-                    throw new IllegalArgumentException("Invalid appointment ID: " + id, err);
-                });
+        var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }"
+                .formatted(id);
+        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class);
     }
 
     /**
@@ -88,7 +85,7 @@ public class AppointmentRepository {
                 .build();
 
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
+                .map(AppointmentResponse::getAppointments)
                 .map(appts -> toPage(appts, page));
     }
 
@@ -112,7 +109,7 @@ public class AppointmentRepository {
                 .build();
 
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
+                .map(AppointmentResponse::getAppointments)
                 .flatMapMany(Flux::fromIterable)
                 .filter(appt -> appt.getTotalSlots() > appt.getParticipants().size()) // can't do in Vendia?
                 .collectList()
@@ -136,9 +133,12 @@ public class AppointmentRepository {
      * @return The {@link} of the appointment getting updated
      */
     public Mono<Appointment> updateAppointment(Appointment appointment) {
-        var query = "mutation {update_Appointment(id: \"%s\"input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: [\"test@gmail.com\", \"test2@gmail.com\"], title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}"
+        var appointmentsString = appointment.getParticipants().stream()
+                .map(s -> String.format("\"%s\"", s))
+                .collect(Collectors.joining(",", "[", "]"));
+        var query = "mutation {update_Appointment(id: \"%s\", input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: %s, title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
-                        appointment.getEndTime(), appointment.getLocation(),
+                        appointment.getEndTime(), appointment.getLocation(), appointmentsString,
                         appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
         return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class)
                 .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
@@ -155,38 +155,6 @@ public class AppointmentRepository {
                 .executeQuery(deleteAppointmentMutation, "remove_Appointment.transaction", DeletionResponse.class)
                 .doOnError(l -> log.error(
                         "Something bad happened when executing mutation for deleting appointment, check syntax"));
-    }
-
-    /**
-     *
-     * This would be to help parse arrays into strings for the vendia queries.
-     *
-     * @param array Array that you want as a string
-     * @return A string that can be used to up Vendia
-     */
-    // public String arrayToString(Set<String> array)
-    // {
-    // Integer max = array.size();
-    // String output = "[";
-    // for(int i = 0; i < max; i++)
-    // {
-    // //.forEach
-    // }
-    // }
-
-    /**
-     *
-     * The preparation for these appointments must be handed
-     * to in the front end.
-     *
-     * @param appts List that has all the appointments you want to make.
-     */
-    public void createAppointments(List<Appointment> appts)
-    {
-        for (Appointment appt : appts)
-        {
-            createAppointment(appt);
-        }
     }
 
 }

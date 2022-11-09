@@ -36,7 +36,7 @@ public class NotificationPreferencesController {
             @PathVariable String email
     ){
         return notifications.getNotificationPreferencesForUser(email)
-            .map(np -> ResponseEntity.ok(np));
+            .map(ResponseEntity::ok);
     }
 
     @PostMapping("/for-user/{email}")
@@ -61,7 +61,7 @@ public class NotificationPreferencesController {
     ){
         var email = authenticationService.getEmailFrom(token);
         return notifications.getNotificationPreferencesForUser(email)
-            .map(np -> ResponseEntity.ok(np));
+            .map(ResponseEntity::ok);
     }
 
     @PostMapping("mine")

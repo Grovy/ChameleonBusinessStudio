@@ -79,21 +79,8 @@ public class UserRepository {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user, String id) {
-        String updateUserMutation = """
-                mutation {
-                   update_User(
-                     id: "%s"
-                     input: {displayName: "%s", role: %s, email: "%s"}
-                   ) {
-                     result {
-                       displayName
-                       email
-                       role
-                       appointments
-                     }
-                   }
-                 }
-                """.formatted(id, user.getDisplayName(), user.getRole(), user.getEmail());
+        String updateUserMutation = "mutation { update_User( id: \"%s\" input: {displayName: \"%s\", role: %s, email: \"%s\"} ) { result { displayName email role appointments } } }"
+                .formatted(id, user.getDisplayName(), user.getRole(), user.getEmail());
         return vendiaClient.executeQuery(updateUserMutation, "update_User.result", User.class);
     }
 

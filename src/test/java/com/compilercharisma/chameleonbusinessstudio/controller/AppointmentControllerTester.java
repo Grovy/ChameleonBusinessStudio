@@ -56,7 +56,7 @@ public class AppointmentControllerTester {
         givenTheUserIsValid();
 
         var anInvalidAppointment = new Appointment();
-        when(appointments.getAppointmentById(anInvalidAppointment.get_id()))
+        when(appointments.get(anInvalidAppointment.get_id()))
             .thenThrow(IllegalArgumentException.class);
 
         Assertions.assertThrows(IllegalArgumentException.class, ()->{
