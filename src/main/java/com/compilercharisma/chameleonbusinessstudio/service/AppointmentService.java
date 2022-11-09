@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,21 +32,21 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class AppointmentService {
 
-    private final AppointmentRepositoryv2 appointmentRepositoryv2;
     private final UserService userService;
+    private final AppointmentRepository appointmentRepository;
     private final AppointmentValidator validator;
 
     @Autowired
     public AppointmentService(
-            AppointmentRepositoryv2 appointmentRepositoryv2,
+            AppointmentRepository appointmentRepository,
             UserService userService, AppointmentValidator validator) {
-        this.appointmentRepositoryv2 = appointmentRepositoryv2;
+        this.appointmentRepository = appointmentRepository;
         this.userService = userService;
         this.validator = validator;
     }
 
     public Mono<Appointment> createAppointment(Appointment appt) {
-        return appointmentRepositoryv2.createAppointment(appt);
+        return appointmentRepository.createAppointment(appt);
     }
 
     /**
@@ -61,7 +61,7 @@ public class AppointmentService {
                 .filter(Boolean.TRUE::equals)
                 .switchIfEmpty(Mono.error(new ExternalServiceException(
                         "User with email [%s] already exists".formatted(email), HttpStatus.CONFLICT)))
-                .flatMap(a -> appointmentRepositoryv2.getAppointmentById(appointmentId))
+                .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
                 .flatMap(apt -> bookEmail(apt, email));
     }
 
@@ -71,7 +71,7 @@ public class AppointmentService {
      * @return Mono of {@link Appointment}
      */
     public Mono<Appointment> getAppointmentById(String appointmentId) {
-        return appointmentRepositoryv2.getAppointmentById(appointmentId);
+        return appointmentRepository.getAppointmentById(appointmentId);
     }
 
     /**
@@ -80,7 +80,7 @@ public class AppointmentService {
      * @return a list of all the Vendia appointments
      */
     public Mono<List<Appointment>> getAllAppointments() {
-        return appointmentRepositoryv2.findAllAppointments()
+        return appointmentRepository.findAllAppointments()
                 .map(ar -> ar.getAppointments());
     }
 
@@ -95,7 +95,7 @@ public class AppointmentService {
             String email,
             Pageable pageable
     ) {
-        return appointmentRepositoryv2.getAppointmentsForUser(email, pageable);
+        return appointmentRepository.getAppointmentsForUser(email, pageable);
     }
 
     public Mono<Page<Appointment>> getAvailableAppointments(
@@ -103,7 +103,7 @@ public class AppointmentService {
             LocalDate endTime,
             Pageable page
     ) {
-        return appointmentRepositoryv2.getAvailableAppointments(startTime, endTime, page);
+        return appointmentRepository.getAvailableAppointments(startTime, endTime, page);
     }
 
     /**
@@ -117,12 +117,12 @@ public class AppointmentService {
         log.info("Updating an appointment", appt);
 
         // this might also send notifications to users subscribed to the appointment
-        return appointmentRepositoryv2.updateAppointment(appt);
+        return appointmentRepository.updateAppointment(appt);
     }
 
     public Mono<Appointment> deleteAppointment(Appointment appt) {
         // this might also send notifications to users subscribed to the appointment
-        return appointmentRepositoryv2.deleteAppointment(appt.get_id())
+        return appointmentRepository.deleteAppointment(appt.get_id())
                 .then(Mono.just(appt));
     }
 
@@ -174,7 +174,7 @@ public class AppointmentService {
         var participants = appt.getParticipants();
         participants.add(email);
 
-        return appointmentRepositoryv2.updateAppointment(appt);
+        return appointmentRepository.updateAppointment(appt);
     }
 
     /**

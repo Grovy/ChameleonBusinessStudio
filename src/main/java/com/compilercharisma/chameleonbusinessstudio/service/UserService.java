@@ -83,7 +83,7 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user) {
-        return userRepository.findUserIdByEmail(user.getEmail())
+        return userRepository.findUserByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.updateUser(user, u.get_id()));
     }
@@ -95,7 +95,7 @@ public class UserService {
      * @return {@link UserResponse}
      */
     public Mono<DeletionResponse> deleteUser(String email) {
-        return userRepository.findUserIdByEmail(email)
+        return userRepository.findUserByEmail(email)
                 .mapNotNull(list -> {
                     if (CollectionUtils.isEmpty(list.getUsers())) {
                         log.error("User with email [{}] was not found in Vendia", email);

@@ -24,10 +24,10 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Repository
-public class AppointmentRepositoryv2 {
+public class AppointmentRepository {
     private final VendiaClient vendiaClient;
 
-    public AppointmentRepositoryv2(VendiaClient vendiaClient) {
+    public AppointmentRepository(VendiaClient vendiaClient) {
         this.vendiaClient = vendiaClient;
     }
 
@@ -155,23 +155,6 @@ public class AppointmentRepositoryv2 {
                 .doOnError(l -> log.error(
                         "Something bad happened when executing mutation for deleting appointment, check syntax"));
     }
-
-    /**
-     *
-     * This would be to help parse arrays into strings for the vendia queries.
-     *
-     * @param array Array that you want as a string
-     * @return A string that can be used to up Vendia
-     */
-    // public String arrayToString(Set<String> array)
-    // {
-    // Integer max = array.size();
-    // String output = "[";
-    // for(int i = 0; i < max; i++)
-    // {
-    // //.forEach
-    // }
-    // }
 
     /**
      *
