@@ -1,9 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
