@@ -46,6 +46,16 @@
 
 }
 
+.available-text{
+    color: green;
+    font-weight: bold;
+}
+
+.unavailable-text{
+    color: red;
+    font-weight: bold;
+}
+
 .event-list-item{
     display: flex;
     flex-direction: row;

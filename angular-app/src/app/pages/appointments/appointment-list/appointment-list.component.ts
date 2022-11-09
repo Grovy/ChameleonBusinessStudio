@@ -16,7 +16,7 @@ export class AppointmentListComponent {
     @Input() appointments: IAppointment[];
 
     temp:IAppointment ={
-      id: 123,
+      _id: 123,
       date: "masdf",
       startTime: new Date(),
       endTime: new Date(),

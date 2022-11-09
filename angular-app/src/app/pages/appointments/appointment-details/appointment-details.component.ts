@@ -5,6 +5,7 @@ import { DateManager } from 'src/app/services/DateManager';
 import { AppointmentDateFilterPipe } from 'src/app/services/AppointmentDateFilterPipe';
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-appointment-details',
@@ -65,14 +66,12 @@ export class AppointmentDetailsComponent {
     let dictionary: Map<string, any[]> = new Map<string, any[]>();
     dates.map(
       data => {
-        console.log("Processing date: " + data);
         let apptArray: any[] = [];
         for(let i = 0; i < appts.length; i++) {
           if(appts[i].startTime.toLocaleString().split(",")[0] == data) {
             apptArray.push(appts[i]);
           }
         }
-        console.log("The appointment array for date: " + data + " is: " + apptArray);
         dictionary.set(data, apptArray);
       }
     )
@@ -103,4 +102,29 @@ export class AppointmentDetailsComponent {
     });
   }  
 
+  // Funciton to book the currently signed in user
+  bookUser(appt: IAppointment) {
+    if(appt.participants.length < appt.totalSlots) {
+      this.appointmentService.bookCurrentUser(appt._id as string).subscribe(
+        data => { console.log(data) }
+      );
+      /* this.appointmentService.bookOtherUser(appt._id as string, this.userEmail).subscribe(
+        data => { console.log(data) }
+      ); */
+    } else {
+      console.log("Cannot book this appointment. Something went wrong.");
+    }
+  }
+
+  unbookUser(appt: IAppointment) {
+    if(!(appt.participants[1] === undefined)) {
+      this.appointmentService.unbookOtherUser(appt._id as string, appt.participants[1] as string).subscribe(
+        data => { 
+          console.log(data); 
+        }
+      );
+    } else {
+      console.log("Cannot unbook this appointment. Something went wrong.");
+    }
+  }
 }
