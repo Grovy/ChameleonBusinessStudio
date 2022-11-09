@@ -112,7 +112,8 @@ export class AppointmentDetailsComponent {
           if(data.status.toString() == '200') {
             this.openSnackBar("Appointment successfully booked!", "Dismiss", {
               duration: 5000,
-            }); 
+            });
+            appt.participants[1] = this.userEmail as string; 
           } else {
             this.openSnackBar("An error occured when trying to book this appointment.", "Dismiss", {
               duration: 5000,
@@ -134,6 +135,7 @@ export class AppointmentDetailsComponent {
             this.openSnackBar("Appointment successfully unbooked!", "Dismiss", {
               duration: 5000,
             }); 
+            appt.participants.pop();
           } else {
             this.openSnackBar("An error occured when trying to unbook this appointment.", "Dismiss", {
               duration: 5000,
