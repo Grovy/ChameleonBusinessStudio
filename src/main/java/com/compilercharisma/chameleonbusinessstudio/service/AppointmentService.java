@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,7 @@ public class AppointmentService {
      */
     public Mono<List<Appointment>> getAllAppointments() {
         return appointmentRepository.findAllAppointments()
-                .map(ar -> ar.getAppointments());
+                .map(AppointmentResponse::getAppointments);
     }
 
     /**
@@ -114,7 +115,7 @@ public class AppointmentService {
      */
     public Mono<Appointment> updateAppointment(Appointment appt) {
         validateAppointment(appt);
-        log.info("Updating an appointment", appt);
+        log.info("Updating appointment with id [{}]", appt.get_id());
 
         // this might also send notifications to users subscribed to the appointment
         return appointmentRepository.updateAppointment(appt);
@@ -135,7 +136,7 @@ public class AppointmentService {
      */
     public Mono<Appointment> cancelAppointment(Appointment appt) {
         validateAppointment(appt);
-        if (appt.getCancelled() == true) {
+        if (appt.getCancelled()) {
             // already canceled. Don't waste Vendia's time
             return Mono.just(appt);
         }
