@@ -4,6 +4,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
@@ -25,6 +27,58 @@ public class AppointmentServiceTester {
     private final AppointmentValidator validator = mock(AppointmentValidator.class);
     private final Appointment theAppointment = new Appointment();
     private final String theEmail = "test.user@gmail.com";
+
+    @Test
+    public void bookAppointmentForUser_givenTheUserIsNotRegistered_doesNotBookTheUser(){
+        givenTheUserIsInvalid();
+        givenTheAppointmentIsNotFull();
+        var sut = makeSut();
+
+        Assertions.assertThrows(UserNotRegisteredException.class, () -> {
+            sut.bookAppointmentForUser(theAppointment.get_id(), theEmail).block();
+        });
+    }
+
+    @Test
+    public void bookAppointmentForUser_givenAnInvalidAppointment_doesNotBookTheUser(){
+        givenTheUserIsValid();
+        givenTheAppointmentIsInvalid();
+        var sut = makeSut();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            sut.bookAppointmentForUser(theAppointment.get_id(), theEmail).block();
+        });
+    }
+
+    @Test
+    public void bookAppointmentForUser_givenTheUserIsNotBookedAndTheAppointmentIsNotFull_booksTheUser(){
+        givenTheUserIsValid();
+        givenTheEmailIsNotBooked();
+        
+        givenTheAppointmentExistsInVendia(); // need to call before givenTheAppointmentIsValid
+        givenTheAppointmentIsValid();
+        givenTheAppointmentIsNotFull();
+        var sut = makeSut();
+
+        sut.bookAppointmentForUser(theAppointment.get_id(), theEmail).block();
+
+        verify(repo, times(1)).updateAppointment(theAppointment);
+    }
+
+    @Test
+    public void bookAppointmentForUser_givenTheUserIsBookedAndTheAppointmentIsNotFull_doesNotThrowAnExceptionAndDoesNotUpdateTheAppointment(){
+        givenTheUserIsValid();
+        givenTheEmailIsBooked();
+        
+        givenTheAppointmentExistsInVendia(); // need to call before givenTheAppointmentIsValid
+        givenTheAppointmentIsValid();
+        givenTheAppointmentIsNotFull();
+        var sut = makeSut();
+
+        sut.bookAppointmentForUser(theAppointment.get_id(), theEmail).block();
+
+        verify(repo, never()).updateAppointment(theAppointment);
+    }
 
     @Test
     public void cancelAppointment_givenAnInvalidAppointment_throwsAnError(){
@@ -150,11 +204,18 @@ public class AppointmentServiceTester {
         theAppointment.setTotalSlots(3);
         doNothing()
             .when(validator).validate(theAppointment);
+        
+        when(repo.getAppointmentById(theAppointment.get_id()))
+            .thenReturn(Mono.just(theAppointment));
+        when(repo.updateAppointment(theAppointment))
+            .thenReturn(Mono.just(theAppointment));
     }
 
     private void givenTheAppointmentIsInvalid() {
         doThrow(InvalidAppointmentException.class)
             .when(validator).validate(theAppointment);
+        when(repo.getAppointmentById(theAppointment.get_id()))
+            .thenReturn(Mono.error(new IllegalArgumentException())); // not the best way of doing things
     }
 
     private void givenTheAppointmentExistsInVendia(){
@@ -166,6 +227,20 @@ public class AppointmentServiceTester {
     private void givenTheAppointmentIsFull(){
         theAppointment.getParticipants().add("not." + theEmail);
         theAppointment.setTotalSlots(theAppointment.getParticipants().size());
+    }
+
+    private void givenTheAppointmentIsNotFull(){
+        theAppointment.setTotalSlots(theAppointment.getParticipants().size() + 1);
+    }
+
+    private void givenTheUserIsValid(){
+        when(users.isRegistered(theEmail))
+            .thenReturn(Mono.just(true));
+    }
+
+    private void givenTheUserIsInvalid(){
+        when(users.isRegistered(theEmail))
+            .thenReturn(Mono.just(false));
     }
 
     private void givenTheEmailIsBooked(){

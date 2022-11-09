@@ -39,7 +39,8 @@ public class AppointmentRepository {
     public Mono<Appointment> getAppointmentById(String id) {
         var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }"
                 .formatted(id);
-        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class);
+        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("No appointment with ID " + id)));
     }
 
     /**

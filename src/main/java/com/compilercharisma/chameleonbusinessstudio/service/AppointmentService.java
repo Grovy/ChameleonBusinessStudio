@@ -3,15 +3,14 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
-import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
@@ -49,17 +48,18 @@ public class AppointmentService {
     }
 
     /**
-     * Gets the appointment with the given ID. Throws an exception if no such
-     * appointment exists.
+     * Book the user with the given email for the appointment with the given ID,
+     * if the appointment is available.
      *
-     * @param appointmentId the ID of the appointment to get
+     * @param appointmentId the ID of the appointment to book
+     * @param email the email of the participant to book
      * @return an mono containing the appointment, if it exists
      */
     public Mono<Appointment> bookAppointmentForUser(String appointmentId, String email) {
         return userService.isRegistered(email)
                 .filter(Boolean.TRUE::equals)
-                .switchIfEmpty(Mono.error(new ExternalServiceException(
-                        "User with email [%s] already exists".formatted(email), HttpStatus.CONFLICT)))
+                .switchIfEmpty(Mono.error(new UserNotRegisteredException(
+                        "User with email [%s] does not exist".formatted(email))))
                 .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
                 .flatMap(apt -> bookEmail(apt, email));
     }
