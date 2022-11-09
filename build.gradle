@@ -14,6 +14,8 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    integrationTestsImplementation.extendsFrom implementation
+    integrationTestsRuntimeOnly.extendsFrom runtimeOnly
 }
 
 repositories {
@@ -77,9 +79,59 @@ tasks.withType(JavaCompile){
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
+
+    filter {
+        // integration tests fail in GitHub actions
+        //excludeTestsMatching "*integration*"
+    }
+}
+
+sourceSets {
+    integrationTests {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+tasks.register('integrationTests', Test){
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTests.output.classesDirs
+    classpath = sourceSets.integrationTests.runtimeClasspath
+
+    filter {
+        includeTestsMatching "*integration*"
+    }
+    
+    doLast {
+        println 'why is not this running?'
+    }
+
+    shouldRunAfter test
 }
 
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
+}
+
+testing {
+    suites {
+        test {
+            
+        }
+
+        //integrationTests(JvmTestSuite) {
+            //testType = TestSuiteType.INTEGRATION_TEST
+
+            //dependencies {
+             //   implementation project
+            //}
+
+           // filter {
+            //    includeTestsMatching "*integration*"
+            //}
+        //}
+    }
 }
