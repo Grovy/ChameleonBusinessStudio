@@ -46,12 +46,12 @@ public class UserRepository {
     }
 
     /**
-     * Find the id of the user with the specified email
+     * Find the user with the specified email
      *
      * @param email email of the user
      * @return The first occurrence of {@link User}
      */
-    public Mono<UserResponse> findUserIdByEmail(String email) {
+    public Mono<UserResponse> findUserByEmail(String email) {
         var query = "query { list_UserItems(filter: {email: {eq: \"%s\"}}) { _UserItems { _id displayName email role appointments } } }"
                 .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);

@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +30,12 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class AppointmentService {
 
-    private final AppointmentRepositoryv2 repo;
+    private final AppointmentRepository repo;
     private final AppointmentValidator validator;
     
     @Autowired
     public AppointmentService(
-            AppointmentRepositoryv2 repo, 
+            AppointmentRepository repo, 
             AppointmentValidator validator
     ){
         this.repo = repo;
