@@ -5,6 +5,9 @@ package com.compilercharisma.chameleonbusinessstudio.exception;
  * invalid field name. This helps avoid injection attacks.
  */
 public class InvalidVendiaFieldException extends RuntimeException {
+
+    public static final Long serialVersionUID = 1L;
+
     private final String invalidField;
 
     /**

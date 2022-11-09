@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 
 public class AppointmentServiceTester {
     private final AppointmentRepository repo = mock(AppointmentRepository.class);
+    private final UserService users = mock(UserService.class);
     private final AppointmentValidator validator = mock(AppointmentValidator.class);
     private final Appointment theAppointment = new Appointment();
     private final String theEmail = "test.user@gmail.com";
@@ -176,6 +177,6 @@ public class AppointmentServiceTester {
     }
 
     private AppointmentService makeSut(){
-        return new AppointmentService(repo, validator);
+        return new AppointmentService(repo, users, validator);
     }
 }

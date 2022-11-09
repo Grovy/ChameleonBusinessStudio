@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class AppointmentRepositorySpec extends Specification {
 
     def vendiaClient = Mock(VendiaClient)
-    def sut = new AppointmentRepositoryv2(vendiaClient)
+    def sut = new AppointmentRepository(vendiaClient)
 
     def "finding all appointments is successful"() {
         when: "findAllAppointments is called"
