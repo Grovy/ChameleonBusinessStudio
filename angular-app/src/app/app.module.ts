@@ -141,6 +141,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
       {path:'appointment',component:AppointmentComponent},
+      {path:'appointment-creation',component:AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
       { path: 'schedule-configuration', component: ScheduleConfigurationComponent },

@@ -24,6 +24,7 @@ const routes: Routes = [
   { path: 'admin-panel-test', component: AdminPanelTestComponent },
   { path: 'appointment',component:AppointmentComponent},
   { path: 'appointment-details', component: AppointmentDetailsComponent },
+  {path:'appointment-creation',component:AppointmentCreateFormComponent},
   { path: 'booking-page', component: BookingPageComponent },
   { path: 'landing-page-configuration', component: LandingPageConfigurationComponent },
   { path: 'schedule-configuration', component: ScheduleConfigurationComponent },

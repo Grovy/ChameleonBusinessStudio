@@ -1,15 +1,12 @@
-<div class ="appointment" *ngIf="(isSubmitting && !receivedData())">
-  <mat-spinner  aria-label="submitting"></mat-spinner>
-</div>
-<div class="appointment" *ngIf="!receivedData()"><p>You do not have any appointments</p></div>
-<div *ngIf="receivedData()" class="appointment">
+<div class="appointment" *ngIf="!isValid()"><p>You do not have any appointments</p></div>
+<div  class="appointment" *ngIf="isValid()">
 
-  <table mat-table [dataSource]="appointments" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
    <!-- position column -->
    <ng-container matColumnDef="position">
 
     <th mat-header-cell *matHeaderCellDef>No.</th>
-    <td mat-cell *matCellDef="let appt; let  i=index">{{i}}</td>
+    <td mat-cell *matCellDef="let appt; let  i=index">{{i+1}}</td>
    </ng-container>
    <!-- position date -->
    <ng-container matColumnDef="date">
@@ -52,8 +49,7 @@
 
 </table>
 
-<mat-paginator class ="mat-elevation-z8" [pageSizeOptions]="[5, 10, 20]"
-showFirstLastButtons
-aria-label="Select page of appointments">
+<mat-paginator class ="mat-elevation-z8" [length]="appLength" [pageSizeOptions]="[5, 10, 20]"
+showFirstLastButtons>
 </mat-paginator>
 </div>

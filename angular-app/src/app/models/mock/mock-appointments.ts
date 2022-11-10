@@ -52,8 +52,8 @@ export const MockAppointmentList: IAppointment[] = [
       participants: [participants[6], barber],
     }, {
       id: 6,
-      startTime: new Date(2022, 9, 5, 17, 0o0, 0o0),
-      endTime: new Date(2022, 9, 5, 16, 0o0, 0o0),
+      startTime: new Date(2022, 9, 5, 16, 0o0, 0o0),
+      endTime: new Date(2022, 9, 5, 17, 0o0, 0o0),
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut with Beard Trim",

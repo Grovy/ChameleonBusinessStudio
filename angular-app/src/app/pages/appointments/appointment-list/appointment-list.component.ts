@@ -1,9 +1,10 @@
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import format from 'date-fns/format';
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
+import { ChangeDetectionStrategy } from '@angular/compiler';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -15,28 +16,30 @@ appointments.
     styleUrls: ['./appointment-list.component.css']
 })
 
-export class AppointmentListComponent implements AfterViewInit{
+export class AppointmentListComponent implements OnInit, AfterViewInit{
 
     // needs to be nullable, as it cannot initialize in the constructor
     @Input() appointments: IAppointment[] =[];
     @Input() currentUser?: IUser;
     displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
-    isSubmitting: boolean = true;
 
 
+    appLength: number  = 0;
     dataSource: MatTableDataSource<IAppointment>;
 
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    @ViewChild(MatPaginator) paginator:MatPaginator;
-    constructor(){
-      this.dataSource = new MatTableDataSource(this.appointments);
-    }
+    constructor(private cdt: ChangeDetectorRef){
+      }
 
   ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
     this.dataSource.paginator = this.paginator;
-    if(this.appointments.length >0) {
-      this.isSubmitting = false;
-
+    // this.appLength = this.appointments.length;
+  }
+  ngOnInit(): void {
+    this.dataSource = new MatTableDataSource(this.appointments);
       if(this.currentUser?.role === UserRole.PARTICIPANT || this.currentUser?.role== 'PARTICIPANT'){
 
         const pos = this.displayedColumns.indexOf('totalSlots');
@@ -44,15 +47,10 @@ export class AppointmentListComponent implements AfterViewInit{
             this.displayedColumns.splice(pos,1);
         }
       }
-    }
+
 
   }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    this.isSubmitting = true;
-  }
     public padTo2Digits(num: number) {
       return num.toString().padStart(2, '0');
     }
@@ -68,9 +66,7 @@ export class AppointmentListComponent implements AfterViewInit{
 
       );
     }
-    receivedData(){
-      return this.appointments.length > 0;
-    }
+
     /**
      *
      * @param date : Date provided of appointments
@@ -102,8 +98,12 @@ export class AppointmentListComponent implements AfterViewInit{
       }
     }
 
+    isValid(){
+      return this.appointments.length>0;
+    }
     // public isAdmin(){
     //   return this.role == UserRole.ADMIN
     //                  || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;
     // }
 }
+

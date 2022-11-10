@@ -32,9 +32,11 @@ export class AppointmentComponent {
 
   userEmail: string = "";
   @Input()
+  // currentUser: IUser = MockParticipantList[0] ;
+  // currentUser: IUser = MockAdminUserList[0];
   currentUser!: IUser;
-
-
+  reqCompleted: boolean = false;
+    // @Input() appointments: IAppointment[] =  MockAppointmentList;
     @Input() appointments: IAppointment[] =[];
     // @Input() role: UserRole = UserRole.PARTICIPANT;
 
@@ -49,28 +51,60 @@ export class AppointmentComponent {
       this.authService.getPrincipal().subscribe(
         data => {
           this.userEmail = data.valueOf();
-          this.userService.getUser(this.userEmail).subscribe(data => {
+          this.userService.getUser(this.userEmail).subscribe((data) => {
             this.currentUser = data as IUser;
             // this.role = this.currentUser.role as UserRole;
-            this.appointmentService.getAllappointments(this.currentUser.role as UserRole).subscribe(data=>{
-              this.appointments = [...data];
-              this.appointments.map((data)=>{
-                let startDate = data.startTime as number[];
-                let endDate = data.endTime as number [];
-                data.startTime = this.datemng.arrayToDate(startDate);
-                data.endTime = this.datemng.arrayToDate(endDate);
-                return data;
-              });
-          })
-          }); // make sure to import UserService.service.ts in constructor
+            this.appointmentService.getAllappointments(this.currentUser.role as UserRole).subscribe({
+              next:(data) =>{
+
+                  this.appointments = [...data];
+                  this.reqCompleted = true;
+                  this.appointments.map((data)=>{
+                    let startDate = data.startTime as number[];
+                    let endDate = data.endTime as number [];
+                    data.startTime = this.datemng.arrayToDate(startDate);
+                    data.endTime = this.datemng.arrayToDate(endDate);
+                    return data;
+                  });
+                  this.reqCompleted = true;
+
+              },
+              error:(err)=>{
+                  this.reqCompleted = false;
+                  console.log(err);
+              }
+            })
+          },
+
+          ); // make sure to import UserService.service.ts in constructor
       });
 
+    }
 
 
+    /**
+     *
+     * @returns true if there is atleast one appointment
+     */
+    isValid(){
+      return this.appointments.length > 0 ;
+    }
 
+    isAdmin(){
+      if(this.currentUser) return (this.currentUser.role === 'ADMIN' || this.currentUser.role === UserRole.ADMIN)
+      else return false;
+    }
 
+    dataFromMock(){
 
-
+      this.appointments.map((data)=>{
+                    let startDate = data.startTime as number[];
+                    let endDate = data.endTime as number [];
+                    data.startTime = this.datemng.arrayToDate(startDate);
+                    data.endTime = this.datemng.arrayToDate(endDate);
+                    return data;
+                  });
+      this.reqCompleted = true;
     }
 
 }

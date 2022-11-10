@@ -1,15 +1,17 @@
 <mat-toolbar class = "header">
-  <div *ngIf="(currentUser.role === 'ADMIN') ">
+  <div *ngIf="isAdmin() ">
   <span><a href="/appointment-creation"><mat-icon>schedule</mat-icon>Build Schedule</a></span></div>
   <span class="active"><a href="/appointment"><mat-icon>event</mat-icon>Current Schedule</a></span>
 </mat-toolbar>
 <div class="appt-list">
-
+    <div *ngIf="!isValid() && reqCompleted"> <mat-spinner  aria-label="submitting"></mat-spinner> </div>
     <div class="table-view">
+      <div *ngIf="isValid()||reqCompleted">
         <appointment-list  [currentUser]="currentUser" [appointments]="appointments"></appointment-list>
+        </div>
     </div>
     <div class="calender-view">
-      <app-calender-view [appointments]="appointments"></app-calender-view>
+      <div *ngIf="isValid()||reqCompleted"><app-calender-view [appointments]="appointments"></app-calender-view></div>
     </div>
 </div>
 <br/>
