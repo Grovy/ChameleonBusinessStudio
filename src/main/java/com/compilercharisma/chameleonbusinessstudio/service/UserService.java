@@ -131,13 +131,16 @@ public class UserService {
      */
     public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
         return userRepository.getUserAppointments(userId)
+                .filter(u -> !u.getAppointments().contains(appointmentId))
+                .switchIfEmpty(Mono.error(new ExternalServiceException(
+                        "User already is booked for appointment with id [%s]".formatted(appointmentId), HttpStatus.BAD_REQUEST)))
                 .map(appointments -> {
                     appointments.getAppointments().add(appointmentId);
                     return appointments.getAppointments().stream()
                             .map(s -> String.format("\"%s\"", s))
                             .collect(Collectors.joining(",", "[", "]"));
                 })
-                .flatMap(userRepository::updateAppointmentsForUser);
+                .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
     }
 
 }

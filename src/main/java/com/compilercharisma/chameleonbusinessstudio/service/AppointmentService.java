@@ -62,6 +62,7 @@ public class AppointmentService {
                         "User with email [%s] does not exist".formatted(email))))
                 .flatMap(u -> userService.getUser(email))
                 .flatMap(u -> userService.addNewAppointmentForUser(u.get_id(), appointmentId))
+                .doOnSuccess(u -> log.info("Appointment [{}] was added to user with email [{}]", appointmentId, email))
                 .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
                 .flatMap(apt -> bookEmail(apt, email));
     }

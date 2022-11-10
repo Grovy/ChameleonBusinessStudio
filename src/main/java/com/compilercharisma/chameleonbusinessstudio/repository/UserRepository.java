@@ -117,9 +117,10 @@ public class UserRepository {
      * @param appointments String that contains the appointments
      * @return {@link Mono} of a {@link User}
      */
-    public Mono<User> updateAppointmentsForUser(String appointments) {
-        var query = "mutation { update_User(id: \"%s\", input: {appointments: }) { result { _id displayName email phoneNumber role appointments } } }";
-        return vendiaClient.executeQuery(query, "update_User", User.class);
+    public Mono<User> updateAppointmentsForUser(String userId, String appointments) {
+        var query = "mutation { update_User(id: \"%s\", input: {appointments: %s}) { result { _id displayName email phoneNumber role appointments } } }"
+                .formatted(userId, appointments);
+        return vendiaClient.executeQuery(query, "update_User.result", User.class);
     }
 
 }
