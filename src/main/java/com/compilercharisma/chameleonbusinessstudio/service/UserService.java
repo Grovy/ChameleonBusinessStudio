@@ -1,12 +1,10 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
@@ -18,9 +16,11 @@ import reactor.core.publisher.Mono;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AppointmentRepository appointmentRepository) {
         this.userRepository = userRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     /**
@@ -104,6 +104,20 @@ public class UserService {
                     return list.getUsers().stream().findFirst().orElse(null);
                 })
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
+    }
+
+    /**
+     * Fetches all the Appointments for a user in Vendia
+     *
+     * @param id The id to look up.
+     * @return {@link UserAppointments}
+     */
+    public Mono<UserAppointmentsResponse> getUserAppointments(String id) {
+        return userRepository.getUserAppointments(id)
+                .flatMapIterable(UserAppointments::getAppointments)
+                .flatMap(appointmentRepository::getAppointment)
+                .collectList()
+                .map(UserAppointmentsResponse::new);
     }
 
 }
