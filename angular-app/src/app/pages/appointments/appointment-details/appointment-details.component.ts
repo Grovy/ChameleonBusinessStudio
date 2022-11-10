@@ -127,14 +127,15 @@ export class AppointmentDetailsComponent {
 
   unbookUser(appt: IAppointment) {
     if(!(appt.participants[1] === undefined)) {
-      this.appointmentService.unbookOtherUser(appt._id as string, appt.participants[1] as string).subscribe(
+      let email = appt.participants[1] as string;
+      this.appointmentService.unbookOtherUser(appt._id as string, email).subscribe(
         data => { 
           console.log(data);
           if(data.status.toString() == '200') {
             this.openSnackBar("Appointment successfully unbooked!", "Dismiss", {
               duration: 5000,
             }); 
-            appt.participants.pop();
+            appt.participants[1] == email ? appt.participants.pop() : appt.participants.splice(appt.participants.indexOf(email), 1);
           } else {
             this.openSnackBar("An error occured when trying to unbook this appointment.", "Dismiss", {
               duration: 5000,
