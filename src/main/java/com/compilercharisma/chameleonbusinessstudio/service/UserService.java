@@ -1,5 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
@@ -104,6 +105,19 @@ public class UserService {
                     return list.getUsers().stream().findFirst().orElse(null);
                 })
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
+    }
+
+    /**
+     * Adds a new appointment to the user's appointment array when they are booked
+     *
+     * @param userId        id of the user
+     * @param appointmentId id of the appointment
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
+        // Get all existing appointments for a user
+        // check if its empty
+        var query = "mutation exampleMutation { update_User(id: \"%s\", input: {appointments: }) { result { _id displayName email phoneNumber role appointments } } }";
     }
 
 }
