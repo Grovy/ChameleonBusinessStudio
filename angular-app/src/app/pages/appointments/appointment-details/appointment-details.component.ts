@@ -6,7 +6,6 @@ import { AppointmentDateFilterPipe } from 'src/app/services/AppointmentDateFilte
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-appointment-details',
