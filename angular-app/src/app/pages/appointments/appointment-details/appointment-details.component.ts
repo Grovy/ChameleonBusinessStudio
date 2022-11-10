@@ -103,9 +103,9 @@ export class AppointmentDetailsComponent {
   }  
 
   // Funciton to book the currently signed in user
-  bookUser(appt: IAppointment) {
+  bookCurrentUser(appt: IAppointment) {
     if(appt.participants.length < appt.totalSlots) {
-      this.appointmentService.bookOtherUser(appt._id as string, this.userEmail).subscribe(
+      this.appointmentService.bookCurrentUser(appt._id as string).subscribe(
         data => { 
           console.log(data);
           if(data.status.toString() == '200') {

@@ -28,7 +28,7 @@
                                             <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
                                         </div>
                                         <div class="appt-actions" *ngIf="(currentUser.role === 'PARTICIPANT')">
-                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)" (click)="bookUser(value)">Book Appointment</button><br>
+                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)" (click)="bookCurrentUser(value)">Book Appointment</button><br>
                                         </div>
                                         <div class="appt-actions" *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN')">
                                             <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)">Book Another User</button><br>

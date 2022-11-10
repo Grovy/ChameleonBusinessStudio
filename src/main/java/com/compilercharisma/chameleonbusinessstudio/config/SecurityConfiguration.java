@@ -22,8 +22,8 @@ public class SecurityConfiguration {
                 .authorizeExchange()
                 .pathMatchers("/api/v1/users/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/v1/users").authenticated() // allow logged-in users to register themselves
-                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me").authenticated() // allow any role to book-me
-                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/unbook-me").authenticated() // allow any role to unbook-me
+                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/book-me/{id}").authenticated() // allow any role to book-me
+                .pathMatchers(HttpMethod.POST, "/api/v1/appointments/unbook-me/{id}").authenticated() // allow any role to unbook-me
                 .pathMatchers(HttpMethod.POST, "/api/v1/notification-preferences/mine").authenticated() // all users can update their notification preferences
                 .pathMatchers(HttpMethod.GET, "/api/v1/config/**").permitAll() // need to allow unauthenticated users
                 .pathMatchers(
