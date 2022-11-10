@@ -5,6 +5,7 @@ import { DateManager } from 'src/app/services/DateManager';
 import { AppointmentDateFilterPipe } from 'src/app/services/AppointmentDateFilterPipe';
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-appointment-details',
@@ -22,7 +23,7 @@ export class AppointmentDetailsComponent {
   isAuthenticatedValue;
 
   constructor(private appointmentService: AppointmentService, private dateManager: DateManager, 
-    private authenticationService: AuthenticationService, private userService: UserService) {
+    private authenticationService: AuthenticationService, private userService: UserService, private snackBar: MatSnackBar) {
     this.checkIfAuthenticated();
     this.checkIfRegisteredWithVendia();
     this.getAppointments();
@@ -65,14 +66,12 @@ export class AppointmentDetailsComponent {
     let dictionary: Map<string, any[]> = new Map<string, any[]>();
     dates.map(
       data => {
-        console.log("Processing date: " + data);
         let apptArray: any[] = [];
         for(let i = 0; i < appts.length; i++) {
           if(appts[i].startTime.toLocaleString().split(",")[0] == data) {
             apptArray.push(appts[i]);
           }
         }
-        console.log("The appointment array for date: " + data + " is: " + apptArray);
         dictionary.set(data, apptArray);
       }
     )
@@ -103,4 +102,53 @@ export class AppointmentDetailsComponent {
     });
   }  
 
+  // Funciton to book the currently signed in user
+  bookUser(appt: IAppointment) {
+    if(appt.participants.length < appt.totalSlots) {
+      this.appointmentService.bookOtherUser(appt._id as string, this.userEmail).subscribe(
+        data => { 
+          console.log(data);
+          if(data.status.toString() == '200') {
+            this.openSnackBar("Appointment successfully booked!", "Dismiss", {
+              duration: 5000,
+            });
+            appt.participants[1] = this.userEmail as string; 
+          } else {
+            this.openSnackBar("An error occured when trying to book this appointment.", "Dismiss", {
+              duration: 5000,
+            }); 
+          }
+        }
+      );
+    } else {
+      console.log("Cannot book this appointment. Something went wrong.");
+    }
+  }
+
+  unbookUser(appt: IAppointment) {
+    if(!(appt.participants[1] === undefined)) {
+      let email = appt.participants[1] as string;
+      this.appointmentService.unbookOtherUser(appt._id as string, email).subscribe(
+        data => { 
+          console.log(data);
+          if(data.status.toString() == '200') {
+            this.openSnackBar("Appointment successfully unbooked!", "Dismiss", {
+              duration: 5000,
+            }); 
+            appt.participants[1] == email ? appt.participants.pop() : appt.participants.splice(appt.participants.indexOf(email), 1);
+          } else {
+            this.openSnackBar("An error occured when trying to unbook this appointment.", "Dismiss", {
+              duration: 5000,
+            }); 
+          }
+        }
+      );
+    } else {
+      console.log("Cannot unbook this appointment. Something went wrong.");
+    }
+  }
+
+  openSnackBar(message, action?, config?) {
+    this.snackBar.open(message, action, config);
+  }
 }
