@@ -39,7 +39,8 @@ public class AppointmentRepository {
     public Mono<Appointment> getAppointmentById(String id) {
         var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }"
                 .formatted(id);
-        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class);
+        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("No appointment with ID " + id)));
     }
 
     /**
@@ -57,10 +58,12 @@ public class AppointmentRepository {
      * @return The {@link} of the appointment created
      */
     public Mono<Appointment> createAppointment(Appointment appointment) {
-        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: [], startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
+        var participantString = makeParticipantStringFor(appointment);
+        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: %s, startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.getCancelled(), appointment.getEndTime(),
                         appointment.getDescription(), appointment.getLocation(),
-                        appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
+                        participantString, appointment.getStartTime(), 
+                        appointment.getTitle(), appointment.getTotalSlots());
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
     }
 
@@ -133,12 +136,10 @@ public class AppointmentRepository {
      * @return The {@link} of the appointment getting updated
      */
     public Mono<Appointment> updateAppointment(Appointment appointment) {
-        var appointmentsString = appointment.getParticipants().stream()
-                .map(s -> String.format("\"%s\"", s))
-                .collect(Collectors.joining(",", "[", "]"));
+        var participantString = makeParticipantStringFor(appointment);
         var query = "mutation {update_Appointment(id: \"%s\", input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: %s, title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
-                        appointment.getEndTime(), appointment.getLocation(), appointmentsString,
+                        appointment.getEndTime(), appointment.getLocation(), participantString,
                         appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
         return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class)
                 .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
@@ -157,4 +158,10 @@ public class AppointmentRepository {
                         "Something bad happened when executing mutation for deleting appointment, check syntax"));
     }
 
+    private String makeParticipantStringFor(Appointment appointment){
+        var participantString = appointment.getParticipants().stream()
+                .map(s -> String.format("\"%s\"", s))
+                .collect(Collectors.joining(",", "[", "]"));
+        return participantString;
+    }
 }

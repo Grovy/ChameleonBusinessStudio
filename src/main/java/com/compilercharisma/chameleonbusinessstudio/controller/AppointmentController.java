@@ -22,7 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.service.AppointmentService;
 import com.compilercharisma.chameleonbusinessstudio.service.AuthenticationService;
-import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -34,16 +33,13 @@ public class AppointmentController {
 
     private final AppointmentService appointments;
     private final AuthenticationService authentication;
-    private final UserService users;
 
     public AppointmentController(
             AppointmentService appointments,
-            AuthenticationService authentication,
-            UserService users
+            AuthenticationService authentication
     ) {
         this.appointments = appointments;
         this.authentication = authentication;
-        this.users = users;
     }
 
     @GetMapping
@@ -185,12 +181,6 @@ public class AppointmentController {
         var email = authentication.getEmailFrom(token);
 
         return appointments.bookAppointmentForUser(appointmentId, email)
-                .flatMap(appt -> {
-                    if (!appointments.isSlotAvailable(appt)) {
-                        return Mono.error(new UnsupportedOperationException("Appointment is full; it cannot have any more participants"));
-                    }
-                    return appointments.bookEmail(appt, email);
-                })
                 .map(ResponseEntity::ok);
     }
 
