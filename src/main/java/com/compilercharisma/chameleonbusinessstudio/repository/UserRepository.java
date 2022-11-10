@@ -8,6 +8,7 @@ import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 import java.util.List;
@@ -39,18 +40,21 @@ public class UserRepository {
      * @return The {@link User} that was created
      */
     public Mono<User> createUser(User user) {
-        var query = "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", role: %s}) { result { _id appointments displayName email role } } }"
-                .formatted(user.getDisplayName(), user.getEmail(), user.getRole());
+        var query = StringUtils.isBlank(user.getPhoneNumber()) ?
+                "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", role: %s}) { result { _id appointments displayName email role } } }"
+                        .formatted(user.getDisplayName(), user.getEmail(), user.getRole()) :
+                "mutation { add_User(input: {appointments: [], displayName: \"%s\", email: \"%s\", phoneNumber: \"%s\", role: %s}) { result { _id appointments displayName email phoneNumber role } } }"
+                        .formatted(user.getDisplayName(), user.getEmail(), user.getPhoneNumber(), user.getRole());
         return vendiaClient.executeQuery(query, "add_User.result", User.class);
     }
 
     /**
-     * Find the id of the user with the specified email
+     * Find the user with the specified email
      *
      * @param email email of the user
      * @return The first occurrence of {@link User}
      */
-    public Mono<UserResponse> findUserIdByEmail(String email) {
+    public Mono<UserResponse> findUserByEmail(String email) {
         var query = "query { list_UserItems(filter: {email: {eq: \"%s\"}}) { _UserItems { _id displayName email role appointments } } }"
                 .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
@@ -78,21 +82,8 @@ public class UserRepository {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user, String id) {
-        String updateUserMutation = """
-                mutation {
-                   update_User(
-                     id: "%s"
-                     input: {displayName: "%s", role: %s, email: "%s"}
-                   ) {
-                     result {
-                       displayName
-                       email
-                       role
-                       appointments
-                     }
-                   }
-                 }
-                """.formatted(id, user.getDisplayName(), user.getRole(), user.getEmail());
+        String updateUserMutation = "mutation { update_User( id: \"%s\" input: {displayName: \"%s\", role: %s, email: \"%s\"} ) { result { displayName email role appointments } } }"
+                .formatted(id, user.getDisplayName(), user.getRole(), user.getEmail());
         return vendiaClient.executeQuery(updateUserMutation, "update_User.result", User.class);
     }
 

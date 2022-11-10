@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class AppointmentRepositorySpec extends Specification {
 
     def vendiaClient = Mock(VendiaClient)
-    def sut = new AppointmentRepositoryv2(vendiaClient)
+    def sut = new AppointmentRepository(vendiaClient)
 
     def "finding all appointments is successful"() {
         when: "findAllAppointments is called"
@@ -26,7 +26,7 @@ class AppointmentRepositorySpec extends Specification {
         0 * _
     }
 
-    def "finding all appointments is successful"() {
+    def "finding all appointments is successful if they're not empty"() {
         given: "some test data"
         def appointmentResponse = new AppointmentResponse(appointments: [
                 new Appointment(_id: "1", title: "Appointment1", startTime: LocalDateTime.now(), endTime: LocalDateTime.now(),

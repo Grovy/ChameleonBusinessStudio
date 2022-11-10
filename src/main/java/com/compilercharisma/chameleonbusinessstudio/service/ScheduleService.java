@@ -151,7 +151,15 @@ public class ScheduleService {
         return copies;
     }
 
-    private Appointment copyToDay(Appointment appt, LocalDateTime day){
+    /**
+     * Creates a deep copy of the given appointment, except it occurs on the 
+     * given day instead of the input's day.
+     * 
+     * @param appt the appointment to copy
+     * @param day the day to copy the appointment to
+     * @return a copy of the appointment, except on the given day
+     */
+    public Appointment copyToDay(Appointment appt, LocalDateTime day){
         // https://github.com/FasterXML/jackson-modules-java8
         var serializer = new ObjectMapper().registerModule(new JavaTimeModule());
         
@@ -165,6 +173,7 @@ public class ScheduleService {
         }
         copy.setStartTime(LocalDateTime.of(day.toLocalDate(), appt.getStartTime().toLocalTime()));
         copy.setEndTime(LocalDateTime.of(day.toLocalDate(), appt.getEndTime().toLocalTime()));
+        copy.set_id(null); // prevent overriding existing appointments
 
         return copy;
     }

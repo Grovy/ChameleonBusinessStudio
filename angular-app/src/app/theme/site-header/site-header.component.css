@@ -4,6 +4,13 @@ mat-toolbar{
   padding: 15px;
 }
 
+#site_header {
+  background-attachment: fixed;
+  background-image: url("/api/v1/config/banner-image");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .icon{
   padding: 0 20px;
   margin: 0 20px;
@@ -17,48 +24,6 @@ mat-toolbar{
 .example-spacer{
   flex: 1 1 auto;
 }
-
-.main{
-  display: flex;
-  align-content: center;
-}
-
-.main-content{
-  display: flex;
-  flex-flow: row wrap;
-  scroll-behavior: smooth;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  alignment: center;
-  margin: auto;
-}
-
-.card{
-  margin: 15px;
-  width: 25%;
-  text-align: center;
-}
-
-.label{
-  text-align: center;
-}
-
-.main-icon{
-  width: 100px;
-  height: 100px;
-  min-height: 80px;
-  min-width: 80px;
-  max-height: 180px;
-  max-width: 180px;
-}
-
-.description{
-  text-align: center;
-  min-height: 80px;
-  min-width: 300px;
-}
-
 
 img {
   max-width: 250px;

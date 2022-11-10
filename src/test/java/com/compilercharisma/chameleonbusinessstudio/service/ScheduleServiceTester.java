@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.function.Predicate;
 
@@ -31,6 +32,8 @@ public class ScheduleServiceTester {
     private final ScheduleValidator validator;
     private final AppointmentService appointments;
     private final ScheduleService sut;
+    private final String aParticipant = "foo.bar@baz.qux";
+    private Appointment anAppointment;
 
     public ScheduleServiceTester(){
         repo = Mockito.mock(ScheduleRepository.class);
@@ -127,6 +130,30 @@ public class ScheduleServiceTester {
         };
         Assertions.assertTrue(!created.isEmpty());
         Assertions.assertTrue(created.stream().allMatch(onMondayOrThursday));
+    }
+
+    @Test
+    public void copyToDay_givenAParticipantInTheAppointment_includesThemInTheCopy(){
+        givenAValidAppointment();
+        givenAParticipantInTheAppointment();
+
+        var copy = sut.copyToDay(anAppointment, LocalDateTime.now());
+
+        Assertions.assertTrue(
+            copy.getParticipants().contains(aParticipant),
+            "copyToDay failed to copy the participant"
+        );
+    }
+
+    private void givenAValidAppointment(){
+        anAppointment = Appointment.builder()
+            .startTime(LocalDateTime.now())
+            .endTime(LocalDateTime.now().plusHours(2))
+            .build();
+    }
+
+    private void givenAParticipantInTheAppointment(){
+        anAppointment.getParticipants().add(aParticipant);
     }
 
     private void thenNoAppointmentsWereGenerated(){

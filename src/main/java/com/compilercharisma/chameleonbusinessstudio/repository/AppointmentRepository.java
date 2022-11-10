@@ -3,6 +3,7 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,28 +24,23 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Repository
-public class AppointmentRepositoryv2 {
+public class AppointmentRepository {
     private final VendiaClient vendiaClient;
 
-    public AppointmentRepositoryv2(VendiaClient vendiaClient) {
+    public AppointmentRepository(VendiaClient vendiaClient) {
         this.vendiaClient = vendiaClient;
     }
 
-    // added by Matt, please make this better!
+    /**
+     * Get an appointment by their ID
+     * @param id Appointment Id
+     * @return Mono of {@link Appointment}
+     */
     public Mono<Appointment> getAppointmentById(String id) {
-        var query = new VendiaQueryBuilder()
-                .select("_id", "title", "startTime", "endTime", "location",
-                        "description", "cancelled", "participants")
-                .from("Appointment")
-                .where(new VendiaField("_id").eq(id))
-                .build();
-
-        return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
-                .map(listOfAppts -> listOfAppts.get(0))
-                .doOnError(IndexOutOfBoundsException.class, (err) -> {
-                    throw new IllegalArgumentException("Invalid appointment ID: " + id);
-                });
+        var query = "query get_Appointment { get_Appointment(id: \"%s\") { _id cancelled description endTime location participants startTime title totalSlots } }"
+                .formatted(id);
+        return vendiaClient.executeQuery(query, "get_Appointment", Appointment.class)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("No appointment with ID " + id)));
     }
 
     /**
@@ -62,10 +58,12 @@ public class AppointmentRepositoryv2 {
      * @return The {@link} of the appointment created
      */
     public Mono<Appointment> createAppointment(Appointment appointment) {
-        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: [], startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
+        var participantString = makeParticipantStringFor(appointment);
+        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: %s, startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.getCancelled(), appointment.getEndTime(),
                         appointment.getDescription(), appointment.getLocation(),
-                        appointment.getStartTime(), appointment.getTitle(), appointment.getTotalSlots());
+                        participantString, appointment.getStartTime(), 
+                        appointment.getTitle(), appointment.getTotalSlots());
         return vendiaClient.executeQuery(query, "add_Appointment.result", Appointment.class);
     }
 
@@ -90,7 +88,7 @@ public class AppointmentRepositoryv2 {
                 .build();
 
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
+                .map(AppointmentResponse::getAppointments)
                 .map(appts -> toPage(appts, page));
     }
 
@@ -114,7 +112,7 @@ public class AppointmentRepositoryv2 {
                 .build();
 
         return vendiaClient.executeQuery(query, "list_AppointmentItems", AppointmentResponse.class)
-                .map(appts -> appts.getAppointments())
+                .map(AppointmentResponse::getAppointments)
                 .flatMapMany(Flux::fromIterable)
                 .filter(appt -> appt.getTotalSlots() > appt.getParticipants().size()) // can't do in Vendia?
                 .collectList()
@@ -138,9 +136,10 @@ public class AppointmentRepositoryv2 {
      * @return The {@link} of the appointment getting updated
      */
     public Mono<Appointment> updateAppointment(Appointment appointment) {
-        var query = "mutation {update_Appointment(id: \"%s\"input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: [\"test@gmail.com\", \"test2@gmail.com\"], title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}"
+        var participantString = makeParticipantStringFor(appointment);
+        var query = "mutation {update_Appointment(id: \"%s\", input: {cancelled: %s, description: \"%s\", endTime: \"%s\", location: \"%s\", participants: %s, title: \"%s\", totalSlots: %d, startTime: \"%s\"} 		) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.get_id(), appointment.getCancelled(), appointment.getDescription(),
-                        appointment.getEndTime(), appointment.getLocation(),
+                        appointment.getEndTime(), appointment.getLocation(), participantString,
                         appointment.getTitle(), appointment.getTotalSlots(), appointment.getStartTime());
         return vendiaClient.executeQuery(query, "update_Appointment.result", Appointment.class)
                 .doOnNext(u -> log.info("Appointment updated in Vendia share!"))
@@ -173,4 +172,9 @@ public class AppointmentRepositoryv2 {
 
     }
 
+    private String makeParticipantStringFor(Appointment appointment){
+        return appointment.getParticipants().stream()
+                .map(s -> String.format("\"%s\"", s))
+                .collect(Collectors.joining(",", "[", "]"));
+    }
 }

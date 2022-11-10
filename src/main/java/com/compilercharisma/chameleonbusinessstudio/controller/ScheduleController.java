@@ -43,7 +43,7 @@ public class ScheduleController {
         return schedules.getAllSchedules()
             .collectList()
             .map(this::toPage)
-            .map(page->ResponseEntity.ok(page));
+            .map(ResponseEntity::ok);
     }
 
     /**
@@ -54,7 +54,7 @@ public class ScheduleController {
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Schedule>> getScheduleById(@PathVariable String id){
         return schedules.getScheduleById(id)
-            .map(sched->ResponseEntity.ok(sched))
+            .map(ResponseEntity::ok)
             .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
@@ -91,7 +91,7 @@ public class ScheduleController {
         return schedules.saveSchedules(scheduleList) // service handles validation
             .then(Mono.just(scheduleList))
             .map(this::toPage)
-            .map(page->ResponseEntity.ok(page));
+            .map(ResponseEntity::ok);
     }
 
     private Page<Schedule> toPage(List<Schedule> schedules){

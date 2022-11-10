@@ -6,7 +6,7 @@ import {HttpClient} from '@angular/common/http';
 @Component({
     selector: 'site-header',
     templateUrl: './site-header.component.html',
-    styleUrls: []
+    styleUrls: ['./site-header.component.css']
 })
 export class SiteHeaderComponent {
     name="";
@@ -15,8 +15,8 @@ export class SiteHeaderComponent {
         http.get<{name: string}>("/api/v1/config/organization").subscribe((obj: {name: string})=>{
             this.name = obj.name;
         });
-        http.get<{color: string}>("/api/v1/config/banner").subscribe((obj: {color: string})=>{
-            const h = <HTMLElement>document.querySelector("#site-header");
+        http.get<{color: string}>("/api/v1/config/banner-color").subscribe((obj: {color: string})=>{
+            const h = <HTMLElement>document.querySelector("#site_header");
             h.style.backgroundColor = obj.color;
         });
     }

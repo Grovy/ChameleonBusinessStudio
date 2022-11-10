@@ -1,40 +1,24 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
-import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
-import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
-import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
 import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2;
+import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
-    private final AppointmentRepositoryv2 appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public UserService(UserRepository userRepository, AppointmentRepositoryv2 appointmentRepository) {
+    public UserService(UserRepository userRepository, AppointmentRepository appointmentRepository) {
         this.userRepository = userRepository;
         this.appointmentRepository = appointmentRepository;
     }
@@ -99,7 +83,7 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user) {
-        return userRepository.findUserIdByEmail(user.getEmail())
+        return userRepository.findUserByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.updateUser(user, u.get_id()));
     }
@@ -111,7 +95,7 @@ public class UserService {
      * @return {@link UserResponse}
      */
     public Mono<DeletionResponse> deleteUser(String email) {
-        return userRepository.findUserIdByEmail(email)
+        return userRepository.findUserByEmail(email)
                 .mapNotNull(list -> {
                     if (CollectionUtils.isEmpty(list.getUsers())) {
                         log.error("User with email [{}] was not found in Vendia", email);

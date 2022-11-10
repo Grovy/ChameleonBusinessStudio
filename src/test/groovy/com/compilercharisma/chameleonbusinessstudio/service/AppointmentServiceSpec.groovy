@@ -2,7 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.service
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse
-import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepositoryv2
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 class AppointmentServiceSpec extends Specification {
 
-    def appointmentRepository = Mock(AppointmentRepositoryv2)
+    def appointmentRepository = Mock(AppointmentRepository)
     def sut = new AppointmentServicev2(appointmentRepository)
 
 
