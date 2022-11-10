@@ -10,16 +10,17 @@
 
 import { Component, OnInit,
   ChangeDetectorRef,Injectable,ViewEncapsulation,
-  ChangeDetectionStrategy,ViewChild,TemplateRef, Input, ElementRef } from '@angular/core';
+  ChangeDetectionStrategy,ViewChild,TemplateRef, Input, ElementRef, SimpleChanges, OnChanges } from '@angular/core';
 
 import {CalendarEvent,CalendarView,CalendarEventTitleFormatter} from 'angular-calendar'
 import { WeekViewHourSegment } from 'calendar-utils';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
 import { finalize,takeUntil } from 'rxjs/operators';
 
 
 import { startOfDay,setHours,setMinutes,differenceInMinutes,startOfHour} from 'date-fns';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
+import { DateManager } from 'src/app/services/DateManager';
 
 
 @Component({
@@ -35,56 +36,56 @@ import { IAppointment } from 'src/app/models/interfaces/IAppointment';
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class CalenderViewComponent implements OnInit {
-  @Input() appointments?: IAppointment[];
+export class CalenderViewComponent implements OnInit,OnChanges {
+  @Input() appointments: IAppointment[] =[];
   @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
   view: CalendarView = CalendarView.Week;
   viewDate = new Date();
-  events: CalendarEvent[] =[];
-  dragToCreateActive = false;
-  weekStartsOn: 0 =0;
+  events: CalendarEvent[] =[{
+    start: setHours(setMinutes(new Date(), 20), 15),
+    end: setHours(setMinutes(new Date(), 40), 17),
+    title: `Hair cut `,
+  }];
+
+
 
   constructor(private cdr: ChangeDetectorRef) {
 
    }
 
-   private refresh() {
-      this.events = [...this.events];
-      this.cdr.detectChanges();
-  }
-  ngAfterViewInit(){
-    this.scrollToCurrentView();
 
-  }
-  viewChanged(){
-    this.cdr.detectChanges();
-    this.scrollToCurrentView();
-  }
-  private scrollToCurrentView() {
-    if (this.view === CalendarView.Week || CalendarView.Day) {
-      // each hour is 60px high, so to get the pixels to scroll it's just the amount of minutes since midnight
-      const minutesSinceStartOfDay = differenceInMinutes(
-        startOfHour(new Date()),
-        startOfDay(new Date())
-      );
-      const headerHeight = this.view === CalendarView.Week ? 60 : 0;
-      this.scrollContainer.nativeElement.scrollTop =
-        minutesSinceStartOfDay + headerHeight;
+  ngOnChanges(changes: SimpleChanges): void {
+    //if the appointment changes
+    if(changes['appointments'].currentValue!=changes['appointments'].previousValue){
+      //add it to the calender view
+      // Notes:
+      //1. might need to add only appointments that have changed
+      this.appointments?.forEach((data)=>{
+
+        let eve: CalendarEvent = {
+          title:data.title,
+          start:<Date> data.startTime,
+          end :<Date> data.endTime,
+
+        };
+        this.events.push(eve);
+    });
     }
+    console.log("From ngOnChanges");
+    console.log(this.events);
+    this.cdr.detectChanges();
+
   }
 
+  //  private refresh() {
+  //     this.events = [...this.events];
+  //     this.cdr.detectChanges();
+  // }
   ngOnInit(): void {
-    if(this.appointments!= undefined){
-    this.appointments?.forEach((data)=>{
 
-      this.events.push({
-        title:data.title,
-        start:data.startTime,
-        end:data.endTime,
 
-      })
-    })}
 
   }
+
 
 }

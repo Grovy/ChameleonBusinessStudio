@@ -18,3 +18,8 @@ width: 100%;
 mat-paginator{
   width: inherit;
 }
+
+p{
+  text-align: center;
+  font: 500 20px/32px Roboto,Helvetica Neue,sans-serif;
+}

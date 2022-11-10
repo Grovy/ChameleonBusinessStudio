@@ -3,7 +3,7 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import format from 'date-fns/format';
-import { UserRole } from 'src/app/models/interfaces/IUser';
+import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -18,9 +18,11 @@ appointments.
 export class AppointmentListComponent implements AfterViewInit{
 
     // needs to be nullable, as it cannot initialize in the constructor
-    @Input() appointments?: IAppointment[];
-    @Input() role?: UserRole;
+    @Input() appointments: IAppointment[] =[];
+    @Input() currentUser?: IUser;
     displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
+    isSubmitting: boolean = true;
+
 
     dataSource: MatTableDataSource<IAppointment>;
 
@@ -32,16 +34,25 @@ export class AppointmentListComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    if(this.role == UserRole.PARTICIPANT){
+    if(this.appointments.length >0) {
+      this.isSubmitting = false;
 
-      const pos = this.displayedColumns.indexOf('totalSlots');
-      if(pos!==-1){
-          this.displayedColumns.splice(pos,1);
+      if(this.currentUser?.role === UserRole.PARTICIPANT || this.currentUser?.role== 'PARTICIPANT'){
+
+        const pos = this.displayedColumns.indexOf('totalSlots');
+        if(pos!==-1){
+            this.displayedColumns.splice(pos,1);
+        }
       }
     }
+
   }
 
-
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.isSubmitting = true;
+  }
     public padTo2Digits(num: number) {
       return num.toString().padStart(2, '0');
     }
@@ -56,6 +67,9 @@ export class AppointmentListComponent implements AfterViewInit{
         ].join('-')
 
       );
+    }
+    receivedData(){
+      return this.appointments.length > 0;
     }
     /**
      *
@@ -88,8 +102,8 @@ export class AppointmentListComponent implements AfterViewInit{
       }
     }
 
-    public isAdmin(){
-      return this.role == UserRole.ADMIN
-                     || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;
-    }
+    // public isAdmin(){
+    //   return this.role == UserRole.ADMIN
+    //                  || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;
+    // }
 }

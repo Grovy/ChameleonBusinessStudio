@@ -1,12 +1,12 @@
 <mat-toolbar class = "header">
-  <div *ngIf="isAdmin()">
+  <div *ngIf="(currentUser.role === 'ADMIN') ">
   <span><a href="/appointment-creation"><mat-icon>schedule</mat-icon>Build Schedule</a></span></div>
   <span class="active"><a href="/appointment"><mat-icon>event</mat-icon>Current Schedule</a></span>
 </mat-toolbar>
 <div class="appt-list">
 
     <div class="table-view">
-        <appointment-list  [role]="role" [appointments]="appointments"></appointment-list>
+        <appointment-list  [currentUser]="currentUser" [appointments]="appointments"></appointment-list>
     </div>
     <div class="calender-view">
       <app-calender-view [appointments]="appointments"></app-calender-view>

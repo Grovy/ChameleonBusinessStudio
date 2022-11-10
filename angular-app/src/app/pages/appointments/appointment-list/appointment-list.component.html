@@ -1,5 +1,8 @@
-<h1 *ngIf="!appointments">appointment is null</h1>
-<div *ngIf="appointments" class="appointment">
+<div class ="appointment" *ngIf="(isSubmitting && !receivedData())">
+  <mat-spinner  aria-label="submitting"></mat-spinner>
+</div>
+<div class="appointment" *ngIf="!receivedData()"><p>You do not have any appointments</p></div>
+<div *ngIf="receivedData()" class="appointment">
 
   <table mat-table [dataSource]="appointments" class="mat-elevation-z8">
    <!-- position column -->

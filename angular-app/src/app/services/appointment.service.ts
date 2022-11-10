@@ -9,7 +9,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 })
 export class AppointmentService {
   private readonly apiUrl = '/api';
-  private allowedList =[UserRole.ADMIN,UserRole.ORGANIZER,UserRole.TALENT]
+  private allowedList =[UserRole.ADMIN,UserRole.ORGANIZER,UserRole.TALENT,"ADMIN","ORGANIZER"];
   constructor(private httpClient: HttpClient) { }
 
   /**
@@ -20,12 +20,12 @@ export class AppointmentService {
    */
 
   getAllappointments(user: UserRole) : Observable<any>{
-    if(this.allowedList.includes(user)){
+    console.log(`From getAllappointments: user Role is ${user} and type is ${typeof user}`);
+        if(!this.allowedList.includes(user)){
       return throwError(()=>`NOT AUTHORIZED`)
   }
     var st = this.httpClient.get(`${this.apiUrl}/v1/appointments`)
                     .pipe(
-                      tap(console.log),
                       catchError(this.handleError)
                     );
 

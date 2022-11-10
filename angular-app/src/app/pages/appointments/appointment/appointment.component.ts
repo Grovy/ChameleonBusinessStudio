@@ -15,6 +15,7 @@ import { MockAdminUserList, MockParticipantList } from 'src/app/models/mock/mock
 import { AppointmentService } from 'src/app/services/appointment.service';
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
+import { DateManager } from 'src/app/services/DateManager';
 
 /*
 This component is currently responsible for rendering a list of appointments. As
@@ -29,54 +30,49 @@ component.
 })
 export class AppointmentComponent {
 
-  userEmail?: string;
-  currentUser?:IUser;
+  userEmail: string = "";
+  @Input()
+  currentUser!: IUser;
 
 
-    @Input() appointments?: IAppointment[];
-    @Input() role!: UserRole;
-
+    @Input() appointments: IAppointment[] =[];
+    // @Input() role: UserRole = UserRole.PARTICIPANT;
 
 
     constructor(private http: HttpClient,private userService: UserService,private authService: AuthenticationService
-              ,private appointmentService: AppointmentService){
-          this.getUserEmail();
+              ,private appointmentService: AppointmentService,private datemng: DateManager){
+         }
 
-
-    }
-
-    ngOnChanges(changes: SimpleChanges){
-        console.log(changes);
-        this.appointments = changes['appointments'].currentValue;
-    }
     ngOnInit(): void {
-       /// TODO: Instead of the temp appointment
-    ///GET Request from the backend
 
-     // this.http.get<IAppointment>
-      console.log(this.role);
-      this.appointmentService.getAllappointments(this.role).subscribe(data=>{
-          this.appointments = data;
-          console.log(data);
-      })
+
+      this.authService.getPrincipal().subscribe(
+        data => {
+          this.userEmail = data.valueOf();
+          this.userService.getUser(this.userEmail).subscribe(data => {
+            this.currentUser = data as IUser;
+            // this.role = this.currentUser.role as UserRole;
+            this.appointmentService.getAllappointments(this.currentUser.role as UserRole).subscribe(data=>{
+              this.appointments = [...data];
+              this.appointments.map((data)=>{
+                let startDate = data.startTime as number[];
+                let endDate = data.endTime as number [];
+                data.startTime = this.datemng.arrayToDate(startDate);
+                data.endTime = this.datemng.arrayToDate(endDate);
+                return data;
+              });
+          })
+          }); // make sure to import UserService.service.ts in constructor
+      });
+
+
+
+
+
+
 
     }
 
-    isAdmin(){
-      return this.role === UserRole.ADMIN || this.role===UserRole.ORGANIZER;
-    }
-
-
-private getUserEmail() {
-  this.authService.getPrincipal().subscribe(
-    data => {
-      this.userEmail = data.valueOf();
-      this.userService.getUser(this.userEmail).subscribe(data => {
-        this.currentUser = data as IUser;
-        this.role = this.currentUser.role as UserRole;
-      }); // make sure to import UserService.service.ts in constructor
-  });
 }
 
 
-}
