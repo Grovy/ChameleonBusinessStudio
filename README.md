@@ -27,9 +27,7 @@ TODO add instructions for setting environment variables
 
 ### Angular CLI
 
-1. Make sure you have Node.Js installed in your local machine
-
-https://nodejs.org/en/
+1. Make sure you have [Node.Js](https://nodejs.org/en/) installed in your local machine
 
 2. At the time of cloning the repository, if you go to ChameleonBusinessStudio/angular-app and there is no directory called /node_modules
     
@@ -46,27 +44,6 @@ https://nodejs.org/en/
     1. Once everything is installed, go to `/angular-app/` directory
     2. run the command `> npm install --save @angular/material @angular/cdk`
     3. Double check that under `/angular-app/angular.json` in line 32, the first stylesheet Angular is using is `"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"`, if its not, then you can go ahead and copy and paste it as the first element of the json array.
-
-### Database
-
-While the application will eventually be migrated to Vendia, it currently uses a
-a database on the running machine.
-
-1. Run the following commands in mysql:
-
-```
-CREATE DATABASE chameleon_business_studio;
-CREATE USER 'springuser'@'%' IDENTIFIED BY 'password';
-GRANT ALL ON chameleon_business_studio.* TO 'springuser'@'%';
-```
-
-where ```password``` is a password of your choice (remember it for later!)
-
-2. fill in the password field in the application.properties file
-
-for example, if the password is ```password123```, the line should look like 
-this: ```spring.datasource.password=password123```
-
 
 ### Google API Credentials
 
@@ -113,6 +90,21 @@ Sprint 10: Deliver Documentation (User Guide, Maintainance Manual, Test Doc) and
 ## API Documentation
 
 While the app is running, you can view its documentation at http://localhost:8080/webjars/swagger-ui/index.html
+
+## Testing
+
+You can verify the application works using unit-tests and integration tests. For
+more information, see our testing document TODO: link
+
+### Unit Tests
+
+You can run unit tests using the command `gradle test` or `./gradlew test`.
+These tests are very fast, and check if each component works as intended.
+
+### Integration Tests
+
+You can run integration tests using the command `gradle integration` or `./gradlew integration`.
+Note that these tests are very thurough, but are also slow.
 
 ## Misc
 

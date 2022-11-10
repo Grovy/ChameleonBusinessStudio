@@ -16,7 +16,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements Serializable {
 
-    public static final Long serialVersionUID = 1234281491L;
+    public static final long serialVersionUID = 1234281491L;
 
     /**
      * Vendia Id of the user
