@@ -1,27 +1,28 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AppointmentRepository appointmentRepository) {
         this.userRepository = userRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     /**
@@ -108,6 +109,20 @@ public class UserService {
     }
 
     /**
+     * Fetches all the Appointments for a user in Vendia
+     *
+     * @param id The id to look up.
+     * @return {@link UserAppointments}
+     */
+    public Mono<UserAppointmentsResponse> getUserAppointments(String id) {
+        return userRepository.getUserAppointments(id)
+                .flatMapIterable(UserAppointments::getAppointments)
+                .flatMap(appointmentRepository::getAppointment)
+                .collectList()
+                .map(UserAppointmentsResponse::new);
+    }
+
+    /**
      * Adds a new appointment to the user's appointment array when they are booked
      *
      * @param userId        id of the user
@@ -115,9 +130,14 @@ public class UserService {
      * @return {@link Mono} of a {@link User}
      */
     public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
-        // Get all existing appointments for a user
-        // check if its empty
-        var query = "mutation exampleMutation { update_User(id: \"%s\", input: {appointments: }) { result { _id displayName email phoneNumber role appointments } } }";
+        return userRepository.getUserAppointments(userId)
+                .map(appointments -> {
+                    appointments.getAppointments().add(appointmentId);
+                    return appointments.getAppointments().stream()
+                            .map(s -> String.format("\"%s\"", s))
+                            .collect(Collectors.joining(",", "[", "]"));
+                })
+                .flatMap(userRepository::updateAppointmentsForUser);
     }
 
 }

@@ -1,12 +1,10 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import com.compilercharisma.chameleonbusinessstudio.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -92,6 +90,22 @@ public class UserController {
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .doOnNext(u -> log.info("User deleted in Vendia share!"))
                 .doOnError(u -> log.error("Something unexpected happened!"));
+    }
+
+    /**
+     * Get all appointments for a user based on their id
+     *
+     * @param _id of the user
+     * @return the appointments associated with the _id
+     * from the user.
+     */
+    @GetMapping("/getUserAppointments/{id}")
+    public Mono<ResponseEntity<UserAppointmentsResponse>> getUserAppointments(@PathVariable(value="id") String _id)
+    {
+        log.info("Fetching User's appointment(s) for user with id [{}]", _id);
+        return userService.getUserAppointments(_id)
+                .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
+                .doOnNext(u -> log.info("User's appointment(s) have been received!"));
     }
 
 }

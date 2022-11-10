@@ -2,13 +2,16 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+import java.util.List;
 
 @Slf4j
 @Repository
@@ -95,4 +98,29 @@ public class UserRepository {
         return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction", DeletionResponse.class)
                 .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
     }
+
+    /**
+     * Grab a user's appointments via their id.
+     *
+     * @param _id The id to look up.
+     * @return {@link UserAppointments}
+     */
+    public Mono<UserAppointments> getUserAppointments(String _id) {
+        String getUserAppointmentArray = """
+                query { get_User(id: "%s") { appointments } }""".formatted(_id);
+
+        return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
+    }
+
+    /**
+     * Update a user's appointments after being booking an appointment
+     * @param appointments String that contains the appointments
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> updateAppointmentsForUser(String appointments) {
+        var query = "mutation { update_User(id: \"%s\", input: {appointments: }) { result { _id displayName email phoneNumber role appointments } } }";
+        return vendiaClient.executeQuery(query, "update_User", User.class);
+    }
+
 }
+
