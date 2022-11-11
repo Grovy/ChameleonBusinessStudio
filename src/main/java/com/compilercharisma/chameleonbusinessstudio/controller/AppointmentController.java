@@ -172,8 +172,7 @@ public class AppointmentController {
             @PathVariable("appointment-id") String appointmentId,
             @RequestParam("email") String email
     ) {
-        return appointments.getAppointmentById(appointmentId)
-                .flatMap(appt -> appointments.unbookEmail(appt, email))
+        return appointments.unBookAppointmentForUser(appointmentId, email)
                 .map(ResponseEntity::ok);
     }
 
@@ -210,8 +209,7 @@ public class AppointmentController {
             @PathVariable("id") String appointmentId
     ) {
         var email = authentication.getEmailFrom(token);
-        return appointments.getAppointmentById(appointmentId)
-                .flatMap(appt -> appointments.unbookEmail(appt, email))
+        return appointments.unBookAppointmentForUser(appointmentId, email)
                 .map(ResponseEntity::ok);
     }
 

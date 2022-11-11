@@ -50,7 +50,7 @@ public class AppointmentService {
      *
      * @param appointmentId the ID of the appointment to book
      * @param email         the email of the participant to book
-     * @return an mono containing the appointment, if it exists
+     * @return {@link Mono} of an {@link Appointment}
      */
     public Mono<Appointment> bookAppointmentForUser(String appointmentId, String email) {
         return userService.isRegistered(email)
@@ -61,7 +61,26 @@ public class AppointmentService {
                 .flatMap(u -> userService.addNewAppointmentForUser(u.get_id(), appointmentId))
                 .doOnSuccess(u -> log.info("Appointment [{}] was added to user with email [{}]", appointmentId, email))
                 .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
-                .flatMap(apt -> bookEmail(apt, email));
+                .flatMap(apt -> bookEmailInAppointment(apt, email));
+    }
+
+    /**
+     * Unbook the user with the given email for the appointment with the given Id,
+     * if the appointment is available
+     * @param appointmentId the ID of the appointment to unbook
+     * @param email the email of the participant to unbook
+     * @return {@link Mono} of an {@link Appointment}
+     */
+    public Mono<Appointment> unBookAppointmentForUser(String appointmentId, String email) {
+        return userService.isRegistered(email)
+                .filter(Boolean.TRUE::equals)
+                .switchIfEmpty(Mono.error(new UserNotRegisteredException(
+                        "User with email [%s] does not exist".formatted(email))))
+                .flatMap(u -> userService.getUser(email))
+                .flatMap(u -> userService.removeAppointmentForUser(u.get_id(), appointmentId))
+                .doOnSuccess(u -> log.info("Appointment [{}] was removed for user with email [{}]", appointmentId, email))
+                .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
+                .flatMap(apt -> unbookEmailInAppointment(apt, email));
     }
 
     /**
@@ -176,7 +195,7 @@ public class AppointmentService {
      * @param email the participant's email
      * @return a mono containing the appointment, with the user as a participant
      */
-    public Mono<Appointment> bookEmail(Appointment appt, String email) {
+    public Mono<Appointment> bookEmailInAppointment(Appointment appt, String email) {
         validateAppointment(appt);
 
         if (appt.getParticipants().contains(email)) {
@@ -199,14 +218,14 @@ public class AppointmentService {
      * @param email the user's email
      * @return a mono containing the updated appointment
      */
-    public Mono<Appointment> unbookEmail(Appointment appt, String email) {
+    public Mono<Appointment> unbookEmailInAppointment(Appointment appt, String email) {
         validateAppointment(appt);
         if (!appt.getParticipants().contains(email)) {
             // already unbooked. Don't waste Vendia's time
             return Mono.just(appt);
         }
         appt.getParticipants().remove(email);
-        return updateAppointment(appt);
+        return appointmentRepository.updateAppointment(appt);
     }
 
     /**

@@ -120,7 +120,7 @@ public class AppointmentServiceTester {
         var sut = makeSut();
 
         Assertions.assertThrows(InvalidAppointmentException.class,
-            () -> sut.bookEmail(theAppointment, theEmail).block());
+            () -> sut.bookEmailInAppointment(theAppointment, theEmail).block());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class AppointmentServiceTester {
         givenTheEmailIsNotBooked();
         var sut = makeSut();
 
-        var actual = sut.bookEmail(theAppointment, theEmail).block();
+        var actual = sut.bookEmailInAppointment(theAppointment, theEmail).block();
 
         Assertions.assertEquals(theAppointment.get_id(), actual.get_id());
         Assertions.assertTrue(actual.getParticipants().contains(theEmail), 
@@ -144,7 +144,7 @@ public class AppointmentServiceTester {
         givenTheEmailIsBooked();
         var sut = makeSut();
 
-        sut.bookEmail(theAppointment, theEmail).block();
+        sut.bookEmailInAppointment(theAppointment, theEmail).block();
 
         verify(repo, never()).updateAppointment(theAppointment);
     }
@@ -157,7 +157,7 @@ public class AppointmentServiceTester {
         var sut = makeSut();
 
         Assertions.assertThrows(UnsupportedOperationException.class, 
-            () -> sut.bookEmail(theAppointment, theEmail).block());
+            () -> sut.bookEmailInAppointment(theAppointment, theEmail).block());
     }
 
     @Test
@@ -166,7 +166,7 @@ public class AppointmentServiceTester {
         var sut = makeSut();
 
         Assertions.assertThrows(InvalidAppointmentException.class,
-            () -> sut.unbookEmail(theAppointment, theEmail).block());
+            () -> sut.unbookEmailInAppointment(theAppointment, theEmail).block());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class AppointmentServiceTester {
         givenTheEmailIsBooked();
         var sut = makeSut();
 
-        var actual = sut.unbookEmail(theAppointment, theEmail).block();
+        var actual = sut.unbookEmailInAppointment(theAppointment, theEmail).block();
 
         Assertions.assertEquals(theAppointment.get_id(), actual.get_id());
         Assertions.assertFalse(actual.getParticipants().contains(theEmail),
@@ -190,7 +190,7 @@ public class AppointmentServiceTester {
         givenTheEmailIsNotBooked();
         var sut = makeSut();
 
-        sut.unbookEmail(theAppointment, theEmail).block(); // make sure to block!
+        sut.unbookEmailInAppointment(theAppointment, theEmail).block(); // make sure to block!
 
         verify(repo, never()).updateAppointment(theAppointment);
     }

@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
+import com.compilercharisma.chameleonbusinessstudio.exception.AppointmentNotFound;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
@@ -123,7 +124,7 @@ public class UserService {
     }
 
     /**
-     * Adds a new appointment to the user's appointment array when they are booked
+     * Adds a new appointment to the user's appointments array when they are booked
      *
      * @param userId        id of the user
      * @param appointmentId id of the appointment
@@ -132,13 +133,37 @@ public class UserService {
     public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
         return userRepository.getUserAppointments(userId)
                 .filter(u -> !u.getAppointments().contains(appointmentId))
-                .switchIfEmpty(Mono.error(new ExternalServiceException(
-                        "User already is booked for appointment with id [%s]".formatted(appointmentId), HttpStatus.BAD_REQUEST)))
+                .switchIfEmpty(Mono.error(new AppointmentNotFound(
+                        "User already is booked for appointment with id [%s]".formatted(appointmentId))))
                 .map(appointments -> {
                     appointments.getAppointments().add(appointmentId);
                     return appointments.getAppointments().stream()
                             .map(s -> String.format("\"%s\"", s))
                             .collect(Collectors.joining(",", "[", "]"));
+                })
+                .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
+    }
+
+    /**
+     * Removes an appointment id from the user's appointments array when they are unbooked
+     *
+     * @param userId        Id of the user
+     * @param appointmentId Id of the appointment
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> removeAppointmentForUser(String userId, String appointmentId) {
+        return userRepository.getUserAppointments(userId)
+                .filter(u -> u.getAppointments().contains(appointmentId))
+                .switchIfEmpty(Mono.error(new AppointmentNotFound(
+                        "User with id [%s] is not booked for appointment with id [%s]".formatted(userId, appointmentId))))
+                .map(appointments -> {
+                    var userAppointments = appointments.getAppointments();
+                    userAppointments.remove(appointmentId);
+                    return CollectionUtils.isNotEmpty(userAppointments) ?
+                            userAppointments.stream()
+                            .map(s -> String.format("\"%s\"", s))
+                            .collect(Collectors.joining(",", "[", "]")) :
+                            "[]";
                 })
                 .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
     }
