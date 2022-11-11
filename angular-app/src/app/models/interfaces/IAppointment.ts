@@ -11,5 +11,5 @@ export interface IAppointment {
     cancelled?: boolean;
     totalSlots?: number;
     tags?: string[];
-    participants: string[]| IUser[];
+    participants: string[];
 }

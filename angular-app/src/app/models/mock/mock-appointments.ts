@@ -17,7 +17,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut (Premium)",
-      participants: [participants[0], barber],
+      participants: [],
     }, {
       _id: 2,
       startTime: new Date(2022, 9, 1, 11, 0o0, 0o0),
@@ -25,7 +25,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut",
-      participants: [participants[5], barber],
+      participants: [],
     }, {
       _id: 3,
       startTime: new Date(2022, 9, 1, 12, 0o0, 0o0),
@@ -33,7 +33,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut",
-      participants: [participants[4], barber],
+      participants: [],
     }, {
       _id: 4,
       startTime: new Date(2022, 9, 2, 10, 0o0, 0o0),
@@ -41,7 +41,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut",
-      participants: [participants[1], barber],
+      participants: [],
     }, {
       _id: 5,
       startTime: new Date(2022, 9, 4, 15, 0o0, 0o0),
@@ -49,7 +49,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut with Hot Towel",
-      participants: [participants[6], barber],
+      participants: [],
     }, {
       _id: 6,
       startTime: new Date(2022, 9, 5, 16, 0o0, 0o0),
@@ -57,7 +57,7 @@ export const MockAppointmentList: IAppointment[] = [
       title: "Appointment with Daniel",
       location: "123 Main Street, Sacramento, CA 95810",
       description: "Men's Haircut with Beard Trim",
-      participants: [participants[3], barber],
+      participants: [],
     }
 
 ];

@@ -116,14 +116,18 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
 
     reSchedule(id: any){
+      //go to the booking page
+      if(id){
 
 
+      }
 
 
     }
 
     cancelApp(id :any)
-      {
+    {
+      //Cancel the appointment
 
     }
 
