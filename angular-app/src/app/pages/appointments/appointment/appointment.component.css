@@ -1,20 +1,73 @@
 /*
-    Created on : Apr 28, 2022, 12:10:25 PM
+    Created on : Apr 27, 2022, 12:26:03 PM
     Author     : Matt Crow <mattcrow19@gmail.com>
+
+    updated by: Rojan Maharjan 10/06/2022
+
 */
 
-.appointment {
+/*header nav css*/
+.header{
+  background-color: black;
+  color: whitesmoke;
+  width:100%;
+  justify-content:center ;
+
+}
+.mat-icon{
+  font-size: 16px;
+}
+mat-toolbar span{
+  padding: 10px;
+
+}
+
+
+/* mat-toolbar span:hover{
+  color:darkcyan;
+  cursor: pointer;
+} */
+mat-toolbar span a{
+  text-decoration: none;
+  color: white;
+}
+mat-toolbar span a:hover{
+  color:darkcyan;
+  cursor: pointer;
+}
+
+
+/**/
+
+.appt-list {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    width: 100%;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+.appt-list h1{
+font-size: 22px;
+}
+.table-view{
+  width: 1000px;
 }
 
-.appointment table{
-width: 100%;
+.calender-view{
+  width:1000px;
 }
 
-mat-paginator{
-  width: inherit;
+.active{
+  color:blanchedalmond;
+}
+
+
+
+.footer{
+  position: relative;
+}
+
+.spinner{
+  height: 100vh;
 }

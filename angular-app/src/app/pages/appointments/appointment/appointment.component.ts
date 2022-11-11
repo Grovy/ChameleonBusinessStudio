@@ -1,10 +1,26 @@
+/**
+ * This component is reponsible for rendering list view and calendar view
+ * of the appointments. List view and calendar view are the child of this component
+ * and pass appointments[] to the child components
+ */
+
+
+
+import { HttpClient } from '@angular/common/http';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
+import { MockAppointmentList } from 'src/app/models/mock/mock-appointments';
+import { MockAdminUserList, MockParticipantList } from 'src/app/models/mock/mock-users';
+import { AppointmentService } from 'src/app/services/AppointmentService.service';
+import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
+import { UserService } from 'src/app/services/UserService.service';
+import { DateManager } from 'src/app/services/DateManager';
+
 /*
-we'll need to change this component a bit once we allow listing unavailable
-appointments.
+This component is currently responsible for rendering a list of appointments. As
+our design evolves, we may need to push more responsibilities into this
+component.
 */
 
 @Component({
@@ -12,48 +28,102 @@ appointments.
     templateUrl: './appointment.component.html',
     styleUrls: ['./appointment.component.css']
 })
+export class AppointmentComponent {
 
-export class AppointmentComponent implements AfterViewInit{
+  userEmail: string = "";
+  @Input()
+  // currentUser: IUser = MockParticipantList[0] ;
+  //currentUser: IUser = MockAdminUserList[0];
+  currentUser!: IUser;
+  reqCompleted: boolean = false;
+    // @Input() appointments: IAppointment[] =  MockAppointmentList;
+    @Input() appointments: IAppointment[] =[];
+    // @Input() role: UserRole = UserRole.PARTICIPANT;
 
-    // needs to be nullable, as it cannot initialize in the constructor
-    @Input() appts?: IAppointment[];
-    displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
 
-    dataSource: MatTableDataSource<IAppointment>;
+    constructor(private http: HttpClient,private userService: UserService,private authService: AuthenticationService
+              ,private appointmentService: AppointmentService,private datemng: DateManager){
+         }
+
+    ngOnInit(): void {
 
 
-    @ViewChild(MatPaginator) paginator:MatPaginator;
-    constructor(){
-      this.dataSource = new MatTableDataSource(this.appts);
+      this.authService.getPrincipal().subscribe(
+        data => {
+          this.userEmail = data.valueOf();
+          this.userService.getUser(this.userEmail).subscribe((data) => {
+            this.currentUser = data as IUser;
+            // this.role = this.currentUser.role as UserRole;
+            if(this.isAdmin()){
+              //If the User is Admin then fetch all the appointments
+              this.appointmentService.getAllAppointments().subscribe({
+                next:(data) =>{
+
+                    this.appointments = [...data];
+                    this.reqCompleted = true;
+                    this.appointments.map((data)=>{
+                      let startDate = data.startTime as number[];
+                      let endDate = data.endTime as number [];
+                      data.startTime = this.datemng.arrayToDate(startDate);
+                      data.endTime = this.datemng.arrayToDate(endDate);
+                      return data;
+                    });
+                    this.reqCompleted = true;
+
+                },
+                error:(err)=>{
+                    this.reqCompleted = false;
+                    console.log(err);
+                }
+              })
+            } else{
+
+              // this is participants: they are only allowed to view their appointments
+              this.appointmentService.getMyAppointments().subscribe({
+                next:(data)=>{
+                  console.log("From Participant View");
+                      console.log(data);
+                      this.reqCompleted = true;
+                },
+                error:(err) =>{
+
+                }
+              })
+            }
+
+          },
+
+          ); // make sure to import UserService.service.ts in constructor
+      });
+
     }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
 
-
-    public padTo2Digits(num: number) {
-      return num.toString().padStart(2, '0');
+    /**
+     *
+     * @returns true if there is atleast one appointment
+     */
+    isValid(){
+      return this.appointments.length > 0 ;
     }
 
-    public formatDate(date: Date) {
-      console.log(date);
-      return (
-        [
-          date.getFullYear(),
-          this.padTo2Digits(date.getMonth() + 1),
-          this.padTo2Digits(date.getDate()),
-        ].join('-')
-      );
+    isAdmin(){
+      if(this.currentUser) return (this.currentUser.role === 'ADMIN' || this.currentUser.role === UserRole.ADMIN)
+      else return false;
     }
 
-    public formatTime(date: Date){
-      return (
-        [
-          this.padTo2Digits(date.getHours()),
-          this.padTo2Digits(date.getMinutes()),
-          this.padTo2Digits(date.getSeconds()),
-        ].join(':')
-      );
+    dataFromMock(){
+
+      this.appointments.map((data)=>{
+                    let startDate = data.startTime as number[];
+                    let endDate = data.endTime as number [];
+                    data.startTime = this.datemng.arrayToDate(startDate);
+                    data.endTime = this.datemng.arrayToDate(endDate);
+                    return data;
+                  });
+      this.reqCompleted = true;
     }
+
 }
+
+

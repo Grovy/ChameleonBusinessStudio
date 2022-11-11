@@ -15,17 +15,17 @@ import { SetupWizardComponent } from './pages/auth/setup-wizard/setup-wizard.com
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
 import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
+import { AppointmentComponent } from './pages/appointments/appointment/appointment.component';
 
 const routes: Routes = [
   { path: '', component: SplashComponent },
   { path: 'admin-configuration', component: AdminConfigurationComponent },
   { path: 'admin-panel', component: AdminPanelComponent },
   { path: 'admin-panel-test', component: AdminPanelTestComponent },
-  { path: 'appointment-list',component:AppointmentListComponent},
-  { path: 'appointment-creation',component:AppointmentCreateFormComponent},
+  { path: 'appointment',component:AppointmentComponent},
   { path: 'appointment-details', component: AppointmentDetailsComponent },
+  {path:'appointment-creation',component:AppointmentCreateFormComponent},
   { path: 'booking-page', component: BookingPageComponent },
-  { path: 'calender-view',component: CalenderViewComponent },
   { path: 'landing-page-configuration', component: LandingPageConfigurationComponent },
   { path: 'schedule-configuration', component: ScheduleConfigurationComponent },
   { path: 'setup-wizard', component: SetupWizardComponent },

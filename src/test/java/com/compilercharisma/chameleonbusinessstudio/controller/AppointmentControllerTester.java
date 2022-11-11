@@ -55,7 +55,7 @@ public class AppointmentControllerTester {
 
         Mockito
             .verify(appointments, Mockito.never())
-            .bookEmail(Mockito.any(Appointment.class), Mockito.any(String.class));
+            .bookEmailInAppointment(Mockito.any(Appointment.class), Mockito.any(String.class));
     }
 
     private void givenTheUserIsValid(){
