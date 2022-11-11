@@ -3,6 +3,98 @@
     Author     : Matt Crow <mattcrow19@gmail.com>
 */
 
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+
+  justify-content: space-between;
+}
+
+.element-diagram {
+  width: 50%;
+  min-width: 80px;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  /* height: 185px; */
+}
+
+.element-diag {
+  width: 25%;
+  min-width: 80px;
+
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  /* height: 185px; */
+}
+
+.element-title {
+  font: 500 20px/32px Roboto,Helvetica Neue,sans-serif;
+
+  font-weight: bold;
+  line-height: normal;
+}
+
+.element-description {
+  font: 500 20pxpx Roboto,Helvetica Neue,sans-serif;
+  padding-top: 16px;
+  padding-left: 16px;
+  max-height: 30px;
+}
+
+.material-icons{
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.element-participants{
+
+  padding-left: 16px;
+  padding-bottom: 8px;
+}
+.element-location{
+  padding-left: 16px;
+}
+
+.element-buttons{
+  display: flex ;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
+}
+
+.element-buttons .element-items{
+  margin-bottom: 10px;
+
+
+}
+.element-buttons .element-items button{
+min-width: 95px;
+min-height: 30px;
+
+}
+.element-buttons .element-items button:hover{
+ cursor: pointer;
+  }
 .appointment {
     display: flex;
     align-items: center;

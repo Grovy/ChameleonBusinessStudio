@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IUser, UserRole } from '../models/interfaces/IUser';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, delay, Observable, tap, throwError } from 'rxjs';
 
 
 @Injectable({
@@ -26,7 +26,8 @@ export class AppointmentService {
   }
     var st = this.httpClient.get(`${this.apiUrl}/v1/appointments`)
                     .pipe(
-                      catchError(this.handleError)
+                      catchError(this.handleError),
+                      delay(4000),
                     );
 
     return st;
@@ -40,7 +41,8 @@ export class AppointmentService {
   getappointmentsbyUser():Observable<any>{
       return this.httpClient.get(`${this.apiUrl}/v1/appointments/mine`)
                   .pipe(
-                    catchError(this.handleError)
+                    catchError(this.handleError),
+                    delay(4000),
                   )
   }
 

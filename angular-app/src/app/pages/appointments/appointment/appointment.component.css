@@ -67,3 +67,7 @@ font-size: 22px;
 .footer{
   position: relative;
 }
+
+.spinner{
+  height: 100vh;
+}

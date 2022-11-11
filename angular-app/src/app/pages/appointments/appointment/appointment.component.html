@@ -4,7 +4,7 @@
   <span class="active"><a href="/appointment"><mat-icon>event</mat-icon>Current Schedule</a></span>
 </mat-toolbar>
 <div class="appt-list">
-    <div *ngIf="!isValid() && reqCompleted"> <mat-spinner  aria-label="submitting"></mat-spinner> </div>
+    <div *ngIf="!isValid() && !reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
     <div class="table-view">
       <div *ngIf="isValid()||reqCompleted">
         <appointment-list  [currentUser]="currentUser" [appointments]="appointments"></appointment-list>

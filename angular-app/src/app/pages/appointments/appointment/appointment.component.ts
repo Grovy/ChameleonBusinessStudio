@@ -33,8 +33,8 @@ export class AppointmentComponent {
   userEmail: string = "";
   @Input()
   // currentUser: IUser = MockParticipantList[0] ;
-  // currentUser: IUser = MockAdminUserList[0];
-  currentUser!: IUser;
+  //currentUser: IUser = MockAdminUserList[0];
+  // currentUser!: IUser;
   reqCompleted: boolean = false;
     // @Input() appointments: IAppointment[] =  MockAppointmentList;
     @Input() appointments: IAppointment[] =[];
@@ -54,26 +54,42 @@ export class AppointmentComponent {
           this.userService.getUser(this.userEmail).subscribe((data) => {
             this.currentUser = data as IUser;
             // this.role = this.currentUser.role as UserRole;
-            this.appointmentService.getAllappointments(this.currentUser.role as UserRole).subscribe({
-              next:(data) =>{
+            if(this.isAdmin()){
+              //If the User is Admin then fetch all the appointments
+              this.appointmentService.getAllappointments(this.currentUser.role as UserRole).subscribe({
+                next:(data) =>{
 
-                  this.appointments = [...data];
-                  this.reqCompleted = true;
-                  this.appointments.map((data)=>{
-                    let startDate = data.startTime as number[];
-                    let endDate = data.endTime as number [];
-                    data.startTime = this.datemng.arrayToDate(startDate);
-                    data.endTime = this.datemng.arrayToDate(endDate);
-                    return data;
-                  });
-                  this.reqCompleted = true;
+                    this.appointments = [...data];
+                    this.reqCompleted = true;
+                    this.appointments.map((data)=>{
+                      let startDate = data.startTime as number[];
+                      let endDate = data.endTime as number [];
+                      data.startTime = this.datemng.arrayToDate(startDate);
+                      data.endTime = this.datemng.arrayToDate(endDate);
+                      return data;
+                    });
+                    this.reqCompleted = true;
 
-              },
-              error:(err)=>{
-                  this.reqCompleted = false;
-                  console.log(err);
-              }
-            })
+                },
+                error:(err)=>{
+                    this.reqCompleted = false;
+                    console.log(err);
+                }
+              })
+            } else{
+
+              // this is participants: they are only allowed to view their appointments
+              this.appointmentService.getappointmentsbyUser().subscribe({
+                next:(data)=>{
+                      console.log(data);
+                      this.reqCompleted = true;
+                },
+                error:(err) =>{
+
+                }
+              })
+            }
+
           },
 
           ); // make sure to import UserService.service.ts in constructor

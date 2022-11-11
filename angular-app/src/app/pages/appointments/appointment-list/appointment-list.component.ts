@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import format from 'date-fns/format';
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { ChangeDetectionStrategy } from '@angular/compiler';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -13,7 +14,14 @@ appointments.
 @Component({
     selector: 'appointment-list',
     templateUrl: './appointment-list.component.html',
-    styleUrls: ['./appointment-list.component.css']
+    styleUrls: ['./appointment-list.component.css'],
+    animations: [
+      trigger('detailExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      ]),
+    ],
 })
 
 export class AppointmentListComponent implements OnInit, AfterViewInit{
@@ -21,8 +29,10 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
     // needs to be nullable, as it cannot initialize in the constructor
     @Input() appointments: IAppointment[] =[];
     @Input() currentUser?: IUser;
-    displayedColumns: string[] = ['position', 'date', 'title','startTime', 'endTime','totalSlots'];
+    displayedColumns: string[] = [ 'date', 'title','startTime', 'endTime','totalSlots'];
+    columnsToDisplayWithExpand: string[]= [...this.displayedColumns,'expand'];
 
+    expandedElement: IAppointment | null;
 
     appLength: number  = 0;
     dataSource: MatTableDataSource<IAppointment>;
@@ -46,6 +56,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
         if(pos!==-1){
             this.displayedColumns.splice(pos,1);
         }
+        this.columnsToDisplayWithExpand = [...this.displayedColumns,'expand'];
       }
 
 
