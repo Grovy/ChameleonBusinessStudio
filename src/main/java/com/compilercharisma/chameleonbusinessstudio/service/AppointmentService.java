@@ -17,15 +17,6 @@ import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValida
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-/**
- * https://stackoverflow.com/q/56241495
- * if we filter the Page, then convert to a List, then back to a Page, this
- * loses a lot of info, and so the _links attribute of the JSON response
- * cannot be properly generated. Therefore, we must use the Criteria API to
- * filter
- *
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 @Service
 @Slf4j
 public class AppointmentService {
@@ -43,6 +34,12 @@ public class AppointmentService {
         this.validator = validator;
     }
 
+    /**
+     * Method that creates an appointment in Vendia
+     *
+     * @param appt The appointment that is created
+     * @return {@link Mono} of {@link Appointment}
+     */
     public Mono<Appointment> createAppointment(Appointment appt) {
         return appointmentRepository.createAppointment(appt);
     }
@@ -101,12 +98,20 @@ public class AppointmentService {
         return appointmentRepository.getAppointmentsForUser(email, pageable);
     }
 
+    /**
+     * Get available appointments in a date range
+     *
+     * @param startDate start date of the range
+     * @param endDate   end date of the range
+     * @param page      the page
+     * @return {@link Mono} of an {@link Appointment}
+     */
     public Mono<Page<Appointment>> getAvailableAppointments(
-            LocalDate startTime,
-            LocalDate endTime,
+            LocalDate startDate,
+            LocalDate endDate,
             Pageable page
     ) {
-        return appointmentRepository.getAvailableAppointments(startTime, endTime, page);
+        return appointmentRepository.getAvailableAppointments(startDate, endDate, page);
     }
 
     /**
