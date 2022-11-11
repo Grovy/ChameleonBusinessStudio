@@ -17,15 +17,6 @@ import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValida
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-/**
- * https://stackoverflow.com/q/56241495
- * if we filter the Page, then convert to a List, then back to a Page, this
- * loses a lot of info, and so the _links attribute of the JSON response
- * cannot be properly generated. Therefore, we must use the Criteria API to
- * filter
- *
- * @author Matt Crow <mattcrow19@gmail.com>
- */
 @Service
 @Slf4j
 public class AppointmentService {
@@ -43,6 +34,12 @@ public class AppointmentService {
         this.validator = validator;
     }
 
+    /**
+     * Method that creates an appointment in Vendia
+     *
+     * @param appt The appointment that is created
+     * @return {@link Mono} of {@link Appointment}
+     */
     public Mono<Appointment> createAppointment(Appointment appt) {
         return appointmentRepository.createAppointment(appt);
     }
@@ -52,7 +49,7 @@ public class AppointmentService {
      * if the appointment is available.
      *
      * @param appointmentId the ID of the appointment to book
-     * @param email the email of the participant to book
+     * @param email         the email of the participant to book
      * @return an mono containing the appointment, if it exists
      */
     public Mono<Appointment> bookAppointmentForUser(String appointmentId, String email) {
@@ -60,12 +57,16 @@ public class AppointmentService {
                 .filter(Boolean.TRUE::equals)
                 .switchIfEmpty(Mono.error(new UserNotRegisteredException(
                         "User with email [%s] does not exist".formatted(email))))
+                .flatMap(u -> userService.getUser(email))
+                .flatMap(u -> userService.addNewAppointmentForUser(u.get_id(), appointmentId))
+                .doOnSuccess(u -> log.info("Appointment [{}] was added to user with email [{}]", appointmentId, email))
                 .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
                 .flatMap(apt -> bookEmail(apt, email));
     }
 
     /**
      * Get Appointment by their Id
+     *
      * @param appointmentId the appointment id
      * @return Mono of {@link Appointment}
      */
@@ -97,12 +98,20 @@ public class AppointmentService {
         return appointmentRepository.getAppointmentsForUser(email, pageable);
     }
 
+    /**
+     * Get available appointments in a date range
+     *
+     * @param startDate start date of the range
+     * @param endDate   end date of the range
+     * @param page      the page
+     * @return {@link Mono} of an {@link Appointment}
+     */
     public Mono<Page<Appointment>> getAvailableAppointments(
-            LocalDate startTime,
-            LocalDate endTime,
+            LocalDate startDate,
+            LocalDate endDate,
             Pageable page
     ) {
-        return appointmentRepository.getAvailableAppointments(startTime, endTime, page);
+        return appointmentRepository.getAvailableAppointments(startDate, endDate, page);
     }
 
     /**
@@ -119,6 +128,12 @@ public class AppointmentService {
         return appointmentRepository.updateAppointment(appt);
     }
 
+    /**
+     * Deletes the given appointment in Vendia
+     *
+     * @param appt the appointment in Vendia
+     * @return the deleted appointment
+     */
     public Mono<Appointment> deleteAppointment(Appointment appt) {
         // this might also send notifications to users subscribed to the appointment
         return appointmentRepository.deleteAppointment(appt.get_id())

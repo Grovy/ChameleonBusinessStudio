@@ -4,6 +4,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointmentsResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,11 @@ public class AppointmentController {
         this.authentication = authentication;
     }
 
+    /**
+     * Get all appointments in Vendia
+     *
+     * @return {@link Mono} of List of {@link Appointment}s
+     */
     @GetMapping
     public Mono<ResponseEntity<List<Appointment>>> getAllAppointments() {
         log.info("Retrieving all user appointments from Vendia...");
@@ -51,12 +57,18 @@ public class AppointmentController {
                 .doOnError(e -> log.error("Could not retrieve user appointments from Vendia"));
     }
 
+    /**
+     * Get an Appointment by their id
+     *
+     * @param apptId the appointment id
+     * @return {@link Mono} of an {@link Appointment}
+     */
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Appointment>> getAppointmentById(
             @PathVariable("id") String apptId
     ) {
         return appointments.getAppointmentById(apptId)
-            .map(ResponseEntity::ok);
+                .map(ResponseEntity::ok);
     }
 
     /**
@@ -150,6 +162,7 @@ public class AppointmentController {
         if (!isValidEmail(email)) {
             return Mono.error(new IllegalArgumentException("Invalid email: " + email));
         }
+
         return appointments.bookAppointmentForUser(appointmentId, email)
                 .map(ResponseEntity::ok);
     }
@@ -184,6 +197,13 @@ public class AppointmentController {
                 .map(ResponseEntity::ok);
     }
 
+    /**
+     * Unbooks the currently logged in user from an appointment in Vendia
+     *
+     * @param token         the OAuth2 token of the currently logged in user
+     * @param appointmentId the appointment to be unbooked for
+     * @return {@link Mono} of an {@link Appointment}
+     */
     @PostMapping("/unbook-me/{id}")
     public Mono<ResponseEntity<Appointment>> unbookMe(
             Authentication token,

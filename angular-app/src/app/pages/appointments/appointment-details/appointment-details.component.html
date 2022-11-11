@@ -13,7 +13,11 @@
                             <mat-accordion *ngFor="let value of appt.value">
                                 <mat-expansion-panel hideToggle>
                                     <mat-expansion-panel-header class="event-list-item">
-                                        <div class="time-item"><span>{{value.startTime | date: 'shortTime'}} - {{value.endTime | date: 'shortTime'}}</span></div>
+                                        <div class="time-item">
+                                            <span>{{value.startTime | date: 'shortTime'}} - {{value.endTime | date: 'shortTime'}}</span><br>
+                                            <span *ngIf="(value.participants.length < value.totalSlots)" class="available-text">Appointment Available</span>
+                                            <span *ngIf="(value.participants.length === value.totalSlots)" class="unavailable-text">Appointment Unavailable</span>
+                                        </div>
                                         <div class="title-item"><span>{{value.title}}</span></div>
                                         <div class="participants-item"><span>Appointment with<br> {{value.participants[0]}}</span></div>
                                     </mat-expansion-panel-header>
@@ -24,11 +28,11 @@
                                             <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
                                         </div>
                                         <div class="appt-actions" *ngIf="(currentUser.role === 'PARTICIPANT')">
-                                            <button mat-raised-button class="action-button">Book Appointment</button><br>
+                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)" (click)="bookCurrentUser(value)">Book Appointment</button><br>
                                         </div>
                                         <div class="appt-actions" *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN')">
-                                            <button mat-raised-button class="action-button">Book Another User</button><br>
-                                            <button mat-raised-button class="action-button">Unbook User</button><br>
+                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)">Book Another User</button><br>
+                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length < value.totalSlots)" (click)="unbookUser(value)" >Unbook User</button><br>
                                             <button mat-raised-button class="action-button">Cancel Appointment</button><br>
                                         </div>
                                     </div>

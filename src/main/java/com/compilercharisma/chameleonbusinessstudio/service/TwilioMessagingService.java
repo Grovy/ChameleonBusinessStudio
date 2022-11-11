@@ -24,7 +24,7 @@ public class TwilioMessagingService {
      * Send an SMS to a user with a valid phone number
      *
      * @param userPhoneNumber the receiver's phone number
-     * @param message            the message's body
+     * @param message         the message's body
      */
     public void sendSMSToUser(String userPhoneNumber, String message) {
         var chameleonSID = twilioConfiguration.getSid();
