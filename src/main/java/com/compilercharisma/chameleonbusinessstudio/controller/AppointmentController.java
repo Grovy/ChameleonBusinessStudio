@@ -151,6 +151,7 @@ public class AppointmentController {
         if (!isValidEmail(email)) {
             return Mono.error(new IllegalArgumentException("Invalid email: " + email));
         }
+
         return appointments.bookAppointmentForUser(appointmentId, email)
                 .map(ResponseEntity::ok);
     }

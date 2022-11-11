@@ -52,7 +52,7 @@ public class AppointmentService {
      * if the appointment is available.
      *
      * @param appointmentId the ID of the appointment to book
-     * @param email the email of the participant to book
+     * @param email         the email of the participant to book
      * @return an mono containing the appointment, if it exists
      */
     public Mono<Appointment> bookAppointmentForUser(String appointmentId, String email) {
@@ -60,12 +60,16 @@ public class AppointmentService {
                 .filter(Boolean.TRUE::equals)
                 .switchIfEmpty(Mono.error(new UserNotRegisteredException(
                         "User with email [%s] does not exist".formatted(email))))
+                .flatMap(u -> userService.getUser(email))
+                .flatMap(u -> userService.addNewAppointmentForUser(u.get_id(), appointmentId))
+                .doOnSuccess(u -> log.info("Appointment [{}] was added to user with email [{}]", appointmentId, email))
                 .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
                 .flatMap(apt -> bookEmail(apt, email));
     }
 
     /**
      * Get Appointment by their Id
+     *
      * @param appointmentId the appointment id
      * @return Mono of {@link Appointment}
      */
@@ -119,6 +123,12 @@ public class AppointmentService {
         return appointmentRepository.updateAppointment(appt);
     }
 
+    /**
+     * Deletes the given appointment in Vendia
+     *
+     * @param appt the appointment in Vendia
+     * @return the deleted appointment
+     */
     public Mono<Appointment> deleteAppointment(Appointment appt) {
         // this might also send notifications to users subscribed to the appointment
         return appointmentRepository.deleteAppointment(appt.get_id())

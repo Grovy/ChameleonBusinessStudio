@@ -68,7 +68,7 @@ public class AppointmentRepository {
     }
 
     /**
-     * retrieves the appointments for which the given user is a participant
+     * Retrieves the appointments for which the given user is a participant
      *
      * @param email the user's email
      * @param page  sorting options

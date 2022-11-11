@@ -112,5 +112,16 @@ public class UserRepository {
         return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
     }
 
+    /**
+     * Update a user's appointments after being booking an appointment
+     * @param appointments String that contains the appointments
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> updateAppointmentsForUser(String userId, String appointments) {
+        var query = "mutation { update_User(id: \"%s\", input: {appointments: %s}) { result { _id displayName email phoneNumber role appointments } } }"
+                .formatted(userId, appointments);
+        return vendiaClient.executeQuery(query, "update_User.result", User.class);
+    }
+
 }
 

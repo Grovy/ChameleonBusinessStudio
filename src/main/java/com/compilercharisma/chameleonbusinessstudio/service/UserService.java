@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class UserService {
@@ -118,6 +120,27 @@ public class UserService {
                 .flatMap(appointmentRepository::getAppointment)
                 .collectList()
                 .map(UserAppointmentsResponse::new);
+    }
+
+    /**
+     * Adds a new appointment to the user's appointment array when they are booked
+     *
+     * @param userId        id of the user
+     * @param appointmentId id of the appointment
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
+        return userRepository.getUserAppointments(userId)
+                .filter(u -> !u.getAppointments().contains(appointmentId))
+                .switchIfEmpty(Mono.error(new ExternalServiceException(
+                        "User already is booked for appointment with id [%s]".formatted(appointmentId), HttpStatus.BAD_REQUEST)))
+                .map(appointments -> {
+                    appointments.getAppointments().add(appointmentId);
+                    return appointments.getAppointments().stream()
+                            .map(s -> String.format("\"%s\"", s))
+                            .collect(Collectors.joining(",", "[", "]"));
+                })
+                .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
     }
 
 }
