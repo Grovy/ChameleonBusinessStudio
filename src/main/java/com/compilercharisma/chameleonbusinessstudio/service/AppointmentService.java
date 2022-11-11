@@ -43,6 +43,12 @@ public class AppointmentService {
         this.validator = validator;
     }
 
+    /**
+     * Method that creates an appointment in Vendia
+     *
+     * @param appt The appointment that is created
+     * @return {@link Mono} of {@link Appointment}
+     */
     public Mono<Appointment> createAppointment(Appointment appt) {
         return appointmentRepository.createAppointment(appt);
     }
