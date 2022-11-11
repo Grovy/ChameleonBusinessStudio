@@ -53,7 +53,7 @@ import { UserService } from './services/UserService.service';
 // All Angular Material imports
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox'; 
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -142,10 +142,9 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
       { path: 'admin-panel', component: AdminPanelComponent },
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
-      { path: 'appointment-list',component:AppointmentListComponent},
-      { path: 'appointment-creation',component:AppointmentCreateFormComponent},
+      {path:'appointment',component:AppointmentComponent},
+      {path:'appointment-creation',component:AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
-      { path: 'calender-view',component: CalenderViewComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
       { path: 'schedule-configuration', component: ScheduleConfigurationComponent },
       { path: 'setup-wizard', component: SetupWizardComponent},
@@ -165,7 +164,8 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     AuthenticationService,
     DateManager,
     ScheduleService,
-    UserService
+    UserService,
+    AppointmentService
   ],
   bootstrap: [AppComponent]
 })
