@@ -2,7 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
-import com.compilercharisma.chameleonbusinessstudio.exception.ResourceNotFoundException;
+import com.compilercharisma.chameleonbusinessstudio.exception.AppointmentNotFound;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
@@ -133,7 +133,7 @@ public class UserService {
     public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
         return userRepository.getUserAppointments(userId)
                 .filter(u -> !u.getAppointments().contains(appointmentId))
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException(
+                .switchIfEmpty(Mono.error(new AppointmentNotFound(
                         "User already is booked for appointment with id [%s]".formatted(appointmentId))))
                 .map(appointments -> {
                     appointments.getAppointments().add(appointmentId);
@@ -153,8 +153,8 @@ public class UserService {
      */
     public Mono<User> removeAppointmentForUser(String userId, String appointmentId) {
         return userRepository.getUserAppointments(userId)
-                .filter(u -> !u.getAppointments().contains(appointmentId))
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException(
+                .filter(u -> u.getAppointments().contains(appointmentId))
+                .switchIfEmpty(Mono.error(new AppointmentNotFound(
                         "User with id [%s] is not booked for appointment with id [%s]".formatted(userId, appointmentId))))
                 .map(appointments -> {
                     var userAppointments = appointments.getAppointments();

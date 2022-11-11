@@ -2,20 +2,20 @@ package com.compilercharisma.chameleonbusinessstudio.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class ResourceNotFoundException extends RuntimeException {
+public class AppointmentNotFound extends RuntimeException {
 
     public static final long serialVersionUID = 1L;
 
     private String message;
     private HttpStatus httpStatus;
 
-    public ResourceNotFoundException() {
+    public AppointmentNotFound() {
     }
 
-    public ResourceNotFoundException(String message) {
+    public AppointmentNotFound(String message) {
         super(message);
         this.message = message;
-        this.httpStatus = HttpStatus.NOT_FOUND;
+        this.httpStatus = HttpStatus.BAD_REQUEST;
 
     }
 

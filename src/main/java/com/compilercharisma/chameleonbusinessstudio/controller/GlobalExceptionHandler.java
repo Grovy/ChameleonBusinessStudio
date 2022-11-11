@@ -1,10 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.HttpErrorMessage;
-import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
-import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
-import com.compilercharisma.chameleonbusinessstudio.exception.NoUserLoggedInException;
-import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
+import com.compilercharisma.chameleonbusinessstudio.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +65,16 @@ public class GlobalExceptionHandler {
                 .code(UNSUPPORTED_OPERATION_MESSAGE)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AppointmentNotFound.class)
+    public ResponseEntity<HttpErrorMessage> handleResourceNotFound(AppointmentNotFound ex) {
+        log.error(ex.getMessage(), ex);
+        var response = HttpErrorMessage.builder()
+                .message(ex.getMessage())
+                .code(RESOURCE_NOT_FOUND_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, ex.getHttpStatus());
     }
 
 }
