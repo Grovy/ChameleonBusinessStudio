@@ -11,7 +11,7 @@ const barber = {
 
 export const MockAppointmentList: IAppointment[] = [
     {
-      id: 1,
+      _id: 1,
       startTime: new Date(2022, 9, 1, 10, 0o0, 0o0),
       endTime: new Date(2022, 9, 1, 11, 0o0, 0o0),
       title: "Appointment with Daniel",
@@ -19,7 +19,7 @@ export const MockAppointmentList: IAppointment[] = [
       description: "Men's Haircut (Premium)",
       participants: [participants[0], barber],
     }, {
-      id: 2,
+      _id: 2,
       startTime: new Date(2022, 9, 1, 11, 0o0, 0o0),
       endTime: new Date(2022, 9, 1, 12, 0o0, 0o0),
       title: "Appointment with Daniel",
@@ -27,7 +27,7 @@ export const MockAppointmentList: IAppointment[] = [
       description: "Men's Haircut",
       participants: [participants[5], barber],
     }, {
-      id: 3,
+      _id: 3,
       startTime: new Date(2022, 9, 1, 12, 0o0, 0o0),
       endTime: new Date(2022, 9, 1, 13, 0o0, 0o0),
       title: "Appointment with Daniel",
@@ -35,7 +35,7 @@ export const MockAppointmentList: IAppointment[] = [
       description: "Men's Haircut",
       participants: [participants[4], barber],
     }, {
-      id: 4,
+      _id: 4,
       startTime: new Date(2022, 9, 2, 10, 0o0, 0o0),
       endTime: new Date(2022, 9, 2, 11, 0o0, 0o0),
       title: "Appointment with Daniel",
@@ -43,7 +43,7 @@ export const MockAppointmentList: IAppointment[] = [
       description: "Men's Haircut",
       participants: [participants[1], barber],
     }, {
-      id: 5,
+      _id: 5,
       startTime: new Date(2022, 9, 4, 15, 0o0, 0o0),
       endTime: new Date(2022, 9, 4, 16, 0o0, 0o0),
       title: "Appointment with Daniel",
@@ -51,7 +51,7 @@ export const MockAppointmentList: IAppointment[] = [
       description: "Men's Haircut with Hot Towel",
       participants: [participants[6], barber],
     }, {
-      id: 6,
+      _id: 6,
       startTime: new Date(2022, 9, 5, 16, 0o0, 0o0),
       endTime: new Date(2022, 9, 5, 17, 0o0, 0o0),
       title: "Appointment with Daniel",
@@ -64,7 +64,7 @@ export const MockAppointmentList: IAppointment[] = [
 
 // Will default to the first one on the list
 export const MockSelectedAppointment: IAppointment | undefined = {
-    id: 1,
+    _id: 1,
     date: "09/01/2022",
     startTime: new Date(2022, 9, 1, 10, 0o0, 0o0),
     endTime: new Date(2022, 9, 1, 11, 0o0, 0o0),

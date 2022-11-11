@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- move this to the static folder to use it -->
+<html>
+    <head>
+        <title>temp</title>
+    </head>
+    <body>
+        <form id="my_form" method="post" action="/api/v1/notification-preferences/mine">
+            <input id="email_notifications" type="checkbox" name="wantsEmailNotifications"/>
+            <input id="text_notifications" type="checkbox" name="wantsTextNotifications"/>
+            <input id="advance_minutes" type="number" name="advanceInMinutes"/>
+        </form>
+
+        <script>
+            document.getElementById("my_form").addEventListener("submit", e => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const data = {
+                    wantsEmailNotifications: document.getElementById("email_notifications").checked,
+                    wantsTextNotifications: document.getElementById("text_notifications").checked,
+                    advanceInMinutes: document.getElementById("advance_minutes").value
+                };
+                fetch(document.getElementById("my_form").action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }).then(r => {
+                    console.log(r);
+                }).catch(err => {
+                    console.error(err);
+                });
+            });
+        </script>
+    </body>
+</html>

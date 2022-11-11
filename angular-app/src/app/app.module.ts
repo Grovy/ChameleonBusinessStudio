@@ -13,9 +13,10 @@ import { AdminPanelTestComponent } from './pages/admin-panel/admin-panel-test/ad
 import { AppComponent } from './app.component';
 import { AppointmentComponent} from './pages/appointments/appointment/appointment.component';
 import { AppointmentCreateFormComponent } from './pages/appointments/appointment-create-form/appointment-create-form.component';
+import { AppointmentDateFilterPipe } from './services/AppointmentDateFilterPipe';
 import { AppointmentDetailsComponent } from './pages/appointments/appointment-details/appointment-details.component';
 import { AppointmentListComponent } from './pages/appointments/appointment-list/appointment-list.component';
-import { AppointmentService } from './services/appointment.service';
+import { AppointmentService } from './services/AppointmentService.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthenticationService } from './services/AuthenticationService.service';
 import { BookedApptsWidgetComponent } from './theme/widgets/booked-appts-widget/booked-appts-widget.component';
@@ -83,6 +84,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     AppComponent,
     AppointmentComponent,
     AppointmentCreateFormComponent,
+    AppointmentDateFilterPipe,
     AppointmentDetailsComponent,
     AppointmentListComponent,
     BookedApptsWidgetComponent,
@@ -158,6 +160,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
   ],
 
   providers: [
+    AppointmentService,
     AuthenticationService,
     DateManager,
     ScheduleService,

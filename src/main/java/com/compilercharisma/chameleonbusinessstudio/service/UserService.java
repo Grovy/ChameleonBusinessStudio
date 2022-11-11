@@ -1,26 +1,28 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.*;
 import com.compilercharisma.chameleonbusinessstudio.exception.ExternalServiceException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AppointmentRepository appointmentRepository) {
         this.userRepository = userRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     /**
@@ -83,7 +85,7 @@ public class UserService {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user) {
-        return userRepository.findUserIdByEmail(user.getEmail())
+        return userRepository.findUserByEmail(user.getEmail())
                 .mapNotNull(list -> list.getUsers().stream().findFirst().orElse(null))
                 .flatMap(u -> userRepository.updateUser(user, u.get_id()));
     }
@@ -95,7 +97,7 @@ public class UserService {
      * @return {@link UserResponse}
      */
     public Mono<DeletionResponse> deleteUser(String email) {
-        return userRepository.findUserIdByEmail(email)
+        return userRepository.findUserByEmail(email)
                 .mapNotNull(list -> {
                     if (CollectionUtils.isEmpty(list.getUsers())) {
                         log.error("User with email [{}] was not found in Vendia", email);
@@ -104,6 +106,41 @@ public class UserService {
                     return list.getUsers().stream().findFirst().orElse(null);
                 })
                 .flatMap(u -> userRepository.deleteUser(u.get_id()));
+    }
+
+    /**
+     * Fetches all the Appointments for a user in Vendia
+     *
+     * @param id The id to look up.
+     * @return {@link UserAppointments}
+     */
+    public Mono<UserAppointmentsResponse> getUserAppointments(String id) {
+        return userRepository.getUserAppointments(id)
+                .flatMapIterable(UserAppointments::getAppointments)
+                .flatMap(appointmentRepository::getAppointment)
+                .collectList()
+                .map(UserAppointmentsResponse::new);
+    }
+
+    /**
+     * Adds a new appointment to the user's appointment array when they are booked
+     *
+     * @param userId        id of the user
+     * @param appointmentId id of the appointment
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> addNewAppointmentForUser(String userId, String appointmentId) {
+        return userRepository.getUserAppointments(userId)
+                .filter(u -> !u.getAppointments().contains(appointmentId))
+                .switchIfEmpty(Mono.error(new ExternalServiceException(
+                        "User already is booked for appointment with id [%s]".formatted(appointmentId), HttpStatus.BAD_REQUEST)))
+                .map(appointments -> {
+                    appointments.getAppointments().add(appointmentId);
+                    return appointments.getAppointments().stream()
+                            .map(s -> String.format("\"%s\"", s))
+                            .collect(Collectors.joining(",", "[", "]"));
+                })
+                .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
     }
 
 }

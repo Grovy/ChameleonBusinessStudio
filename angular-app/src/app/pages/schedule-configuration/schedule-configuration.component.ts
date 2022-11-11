@@ -163,14 +163,14 @@ export class ScheduleConfigurationComponent {
     let finalTime  = this.dateManager.toTime(this.myAvailability.hoursTo);
 
     const theAppointment: IAppointment = {
-      id: uuidv4(),
+      _id: uuidv4(),
       title: this.myEvent.title,
       startTime: startDate + "T" + startingTime,
       endTime: startDate + "T" + endingTime,
       location: this.myEvent.location + " " + this.myEvent.locationDetails,
       description: this.myEvent.description ? this.myEvent.description : "",
       cancelled: false,
-      totalSlots: 1,
+      totalSlots: 2,
       participants: [this.currentUser.email],
     };
 
@@ -188,14 +188,14 @@ export class ScheduleConfigurationComponent {
       endingTime = this.dateManager.addTime(startingTime, durationToTime);
 
       const theAppointment: IAppointment = {
-        id: uuidv4(),
+        _id: uuidv4(),
         title: this.myEvent.title,
         startTime: startDate + "T" + startingTime,
         endTime: startDate + "T" + endingTime,
         location: this.myEvent.location + " " + this.myEvent.locationDetails,
         description: this.myEvent.description ? this.myEvent.description : "",
         cancelled: false,
-        totalSlots: 1,
+        totalSlots: 2,
         participants: [this.currentUser.email],
       };
 

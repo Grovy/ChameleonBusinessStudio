@@ -30,6 +30,9 @@ public class VendiaFilter {
      * @return a filter matching the given field with the given value
      */
     public static VendiaFilter fieldEquals(String field, String value){
+        if("_id".equals(field) || "id".equals(field)){
+            throw new IllegalArgumentException("Vendia cannot filter by ID; see the VendiaQueryBuilder documentation");
+        }
         VendiaField.validate(field);
         var q = String.format("%s:{eq:\"%s\"}", field, escape(value));
         return new VendiaFilter(q);

@@ -2,13 +2,16 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
 import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
+import java.util.List;
 
 @Slf4j
 @Repository
@@ -46,12 +49,12 @@ public class UserRepository {
     }
 
     /**
-     * Find the id of the user with the specified email
+     * Find the user with the specified email
      *
      * @param email email of the user
      * @return The first occurrence of {@link User}
      */
-    public Mono<UserResponse> findUserIdByEmail(String email) {
+    public Mono<UserResponse> findUserByEmail(String email) {
         var query = "query { list_UserItems(filter: {email: {eq: \"%s\"}}) { _UserItems { _id displayName email role appointments } } }"
                 .formatted(email);
         return vendiaClient.executeQuery(query, "list_UserItems", UserResponse.class);
@@ -79,21 +82,8 @@ public class UserRepository {
      * @return {@link User}
      */
     public Mono<User> updateUser(User user, String id) {
-        String updateUserMutation = """
-                mutation {
-                   update_User(
-                     id: "%s"
-                     input: {displayName: "%s", role: %s, email: "%s"}
-                   ) {
-                     result {
-                       displayName
-                       email
-                       role
-                       appointments
-                     }
-                   }
-                 }
-                """.formatted(id, user.getDisplayName(), user.getRole(), user.getEmail());
+        String updateUserMutation = "mutation { update_User( id: \"%s\" input: {displayName: \"%s\", role: %s, email: \"%s\"} ) { result { displayName email role appointments } } }"
+                .formatted(id, user.getDisplayName(), user.getRole(), user.getEmail());
         return vendiaClient.executeQuery(updateUserMutation, "update_User.result", User.class);
     }
 
@@ -108,4 +98,30 @@ public class UserRepository {
         return vendiaClient.executeQuery(deleteUserMutation, "remove_User.transaction", DeletionResponse.class)
                 .doOnError(l -> log.error("Something bad happened when executing mutation for deleting user, check syntax"));
     }
+
+    /**
+     * Grab a user's appointments via their id.
+     *
+     * @param _id The id to look up.
+     * @return {@link UserAppointments}
+     */
+    public Mono<UserAppointments> getUserAppointments(String _id) {
+        String getUserAppointmentArray = """
+                query { get_User(id: "%s") { appointments } }""".formatted(_id);
+
+        return vendiaClient.executeQuery(getUserAppointmentArray, "get_User", UserAppointments.class);
+    }
+
+    /**
+     * Update a user's appointments after being booking an appointment
+     * @param appointments String that contains the appointments
+     * @return {@link Mono} of a {@link User}
+     */
+    public Mono<User> updateAppointmentsForUser(String userId, String appointments) {
+        var query = "mutation { update_User(id: \"%s\", input: {appointments: %s}) { result { _id displayName email phoneNumber role appointments } } }"
+                .formatted(userId, appointments);
+        return vendiaClient.executeQuery(query, "update_User.result", User.class);
+    }
+
 }
+

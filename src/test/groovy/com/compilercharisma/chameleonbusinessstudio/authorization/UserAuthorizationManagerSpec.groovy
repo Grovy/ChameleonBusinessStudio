@@ -33,7 +33,7 @@ class UserAuthorizationManagerSpec extends Specification {
         response.granted
 
         and: "the expected interaction occurs"
-        1 * userRepository.findUserIdByEmail("chameleon@gmail.com") >> Mono.just(vendiaResponse)
+        1 * userRepository.findUserByEmail("chameleon@gmail.com") >> Mono.just(vendiaResponse)
         0 * _
     }
 
@@ -55,7 +55,7 @@ class UserAuthorizationManagerSpec extends Specification {
         !response.granted
 
         and: "the expected interaction occurs"
-        1 * userRepository.findUserIdByEmail("chameleon@gmail.com") >> Mono.just(vendiaResponse)
+        1 * userRepository.findUserByEmail("chameleon@gmail.com") >> Mono.just(vendiaResponse)
         0 * _
     }
 
@@ -75,7 +75,7 @@ class UserAuthorizationManagerSpec extends Specification {
         ex.message == "User with email [chameleon@gmail.com] not registered"
 
         and: "the expected interaction occurs"
-        1 * userRepository.findUserIdByEmail("chameleon@gmail.com") >> Mono.just(vendiaResponse)
+        1 * userRepository.findUserByEmail("chameleon@gmail.com") >> Mono.just(vendiaResponse)
         0 * _
     }
 }

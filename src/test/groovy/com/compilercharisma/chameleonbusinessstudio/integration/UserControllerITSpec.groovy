@@ -43,7 +43,7 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$.users[?(@._id == "0183764f-3b7d-2277-29d3-be7c8c43c93b")].appointments.size()').isEqualTo(0)
 
         and: "only one call to /graphql/ was made"
-        verify(1, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
 
     }
 
@@ -277,7 +277,7 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$._id').isEqualTo("01839503-1f82-1357-c21b-20e73e8d5575")
 
         and: "two calls to /graphql/ were made"
-        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(3, postRequestedFor(urlEqualTo("/graphql/")))
     }
 
     @WithMockUser
@@ -308,6 +308,6 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$.message').isEqualTo("User with email [thisEmailDoesNotExist@gmail.com] was not found")
 
         and: "two calls to /graphql/ were made"
-        verify(1, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
     }
 }

@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 public class ExternalServiceException extends RuntimeException {
     public static final long serialVersionUID = 1L;
 
-    private String message;
-    private HttpStatus httpStatus;
+    private final String message;
+    private final HttpStatus httpStatus;
 
     public ExternalServiceException(String message, HttpStatus httpStatus, Throwable inner){
         super(message, inner);

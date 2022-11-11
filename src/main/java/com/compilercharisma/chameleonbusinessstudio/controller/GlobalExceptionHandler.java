@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
 
     public static final String RESOURCE_NOT_FOUND_MESSAGE = "error.message.resourceNotFound";
     public static final String MALFORMED_REQUEST_MESSAGE = "error.message.malformedRequest";
+    public static final String UNSUPPORTED_OPERATION_MESSAGE = "error.message.unsupported";
     public static final String EXTERNAL_ERROR_MESSAGE = "error.message.externalError";
 
     @ExceptionHandler(NoUserLoggedInException.class)
@@ -57,6 +58,16 @@ public class GlobalExceptionHandler {
                 .code(EXTERNAL_ERROR_MESSAGE)
                 .build();
         return new ResponseEntity<>(response, ex.getHttpStatus());
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<HttpErrorMessage> handleExternalError(UnsupportedOperationException ex) {
+        log.error(ex.getMessage(), ex);
+        var response = HttpErrorMessage.builder()
+                .message(ex.getMessage())
+                .code(UNSUPPORTED_OPERATION_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }

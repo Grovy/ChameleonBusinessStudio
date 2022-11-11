@@ -12,7 +12,7 @@ import { IAppointment } from 'src/app/models/interfaces/IAppointment';
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { MockAppointmentList } from 'src/app/models/mock/mock-appointments';
 import { MockAdminUserList, MockParticipantList } from 'src/app/models/mock/mock-users';
-import { AppointmentService } from 'src/app/services/appointment.service';
+import { AppointmentService } from 'src/app/services/AppointmentService.service';
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
 import { DateManager } from 'src/app/services/DateManager';
@@ -56,7 +56,7 @@ export class AppointmentComponent {
             // this.role = this.currentUser.role as UserRole;
             if(this.isAdmin()){
               //If the User is Admin then fetch all the appointments
-              this.appointmentService.getAllappointments(this.currentUser.role as UserRole).subscribe({
+              this.appointmentService.getAllAppointments().subscribe({
                 next:(data) =>{
 
                     this.appointments = [...data];
@@ -79,7 +79,7 @@ export class AppointmentComponent {
             } else{
 
               // this is participants: they are only allowed to view their appointments
-              this.appointmentService.getappointmentsbyUser().subscribe({
+              this.appointmentService.getMyAppointments().subscribe({
                 next:(data)=>{
                   console.log("From Participant View");
                       console.log(data);
