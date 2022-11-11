@@ -25,6 +25,7 @@ public class VendiaClient {
      * @return {@link Mono}
      */
     public <T> Mono<T> executeQuery(String graphQlQuery, final String path, final Class<T> responseClass) {
+        log.debug("Executing vendia query: {}", graphQlQuery);
         return httpGraphQlClient
                 .document(graphQlQuery)
                 .execute()
