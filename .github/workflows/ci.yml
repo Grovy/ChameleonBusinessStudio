@@ -28,7 +28,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'temurin'
+        distribution: 'temurin' # I have no idea what this means either
 
     - name: install Angular app dependencies
       run: |
@@ -46,4 +46,4 @@ jobs:
         arguments: build
 
     - name: Test with Gradle
-      run: gradle test # does not execute unit tests
+      run: gradle test # does not execute integration tests

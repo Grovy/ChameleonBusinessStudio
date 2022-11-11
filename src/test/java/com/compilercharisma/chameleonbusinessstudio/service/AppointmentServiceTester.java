@@ -1,5 +1,7 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.exception.InvalidAppointmentException;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
@@ -27,6 +30,7 @@ public class AppointmentServiceTester {
     private final AppointmentValidator validator = mock(AppointmentValidator.class);
     private final Appointment theAppointment = new Appointment();
     private final String theEmail = "test.user@gmail.com";
+    private final User theUser = User.builder().email(theEmail)._id("a-b-c").build();
 
     @Test
     public void bookAppointmentForUser_givenTheUserIsNotRegistered_doesNotBookTheUser(){
@@ -66,7 +70,7 @@ public class AppointmentServiceTester {
     }
 
     @Test
-    public void bookAppointmentForUser_givenTheUserIsBookedAndTheAppointmentIsNotFull_doesNotThrowAnExceptionAndDoesNotUpdateTheAppointment(){
+    public void bookAppointmentForUser_givenTheUserIsBookedAndTheAppointmentIsNotFull_doesNotThrowAnExceptionAndDoesNotUpdateTheAppointment(){        
         givenTheUserIsValid();
         givenTheEmailIsBooked();
         
@@ -204,9 +208,6 @@ public class AppointmentServiceTester {
         theAppointment.setTotalSlots(3);
         doNothing()
             .when(validator).validate(theAppointment);
-        
-        when(repo.getAppointmentById(theAppointment.get_id()))
-            .thenReturn(Mono.just(theAppointment));
         when(repo.updateAppointment(theAppointment))
             .thenReturn(Mono.just(theAppointment));
     }
@@ -214,12 +215,16 @@ public class AppointmentServiceTester {
     private void givenTheAppointmentIsInvalid() {
         doThrow(InvalidAppointmentException.class)
             .when(validator).validate(theAppointment);
+        when(users.addNewAppointmentForUser(any(), isNull()))
+            .thenReturn(Mono.error(new IllegalArgumentException())); // not the best way of doing things
         when(repo.getAppointmentById(theAppointment.get_id()))
             .thenReturn(Mono.error(new IllegalArgumentException())); // not the best way of doing things
     }
 
     private void givenTheAppointmentExistsInVendia(){
         theAppointment.set_id("foo-bar-baz-qux");
+        when(repo.getAppointmentById(theAppointment.get_id()))
+            .thenReturn(Mono.just(theAppointment));
         when(repo.updateAppointment(theAppointment))
             .thenReturn(Mono.just(theAppointment));
     }
@@ -236,6 +241,10 @@ public class AppointmentServiceTester {
     private void givenTheUserIsValid(){
         when(users.isRegistered(theEmail))
             .thenReturn(Mono.just(true));
+        when(users.getUser(theEmail))
+            .thenReturn(Mono.just(theUser));
+        when(users.addNewAppointmentForUser(any(String.class), any(String.class)))
+            .thenReturn(Mono.just(theUser));
     }
 
     private void givenTheUserIsInvalid(){

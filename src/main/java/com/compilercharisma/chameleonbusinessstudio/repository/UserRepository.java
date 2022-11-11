@@ -1,17 +1,17 @@
 package com.compilercharisma.chameleonbusinessstudio.repository;
 
-import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
-import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
-import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.User;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
-import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
+
+import com.compilercharisma.chameleonbusinessstudio.client.VendiaClient;
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointments;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import java.util.List;
 
 @Slf4j
 @Repository

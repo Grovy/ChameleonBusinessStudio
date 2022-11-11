@@ -3,6 +3,7 @@ package com.compilercharisma.chameleonbusinessstudio.service
 import com.compilercharisma.chameleonbusinessstudio.dto.User
 import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole
+import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository
 import reactor.core.publisher.Mono
 import spock.lang.Specification
@@ -10,7 +11,8 @@ import spock.lang.Specification
 class UserServiceSpec extends Specification {
 
     def userRepository = Mock(UserRepository)
-    def sut = new UserService(userRepository)
+    def appointmentRepository = Mock(AppointmentRepository)
+    def sut = new UserService(userRepository, appointmentRepository)
 
     def "getting all users is successful"() {
         when: "getAllUsers is called"

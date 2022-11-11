@@ -4,7 +4,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointmentsResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
