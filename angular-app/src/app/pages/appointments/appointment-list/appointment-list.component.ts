@@ -112,6 +112,21 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
     isValid(){
       return this.appointments.length>0;
     }
+
+
+
+    reSchedule(id: any){
+
+
+
+
+    }
+
+    cancelApp(id :any)
+      {
+
+    }
+
     // public isAdmin(){
     //   return this.role == UserRole.ADMIN
     //                  || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;

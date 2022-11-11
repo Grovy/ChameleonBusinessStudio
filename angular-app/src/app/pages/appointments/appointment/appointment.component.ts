@@ -34,7 +34,7 @@ export class AppointmentComponent {
   @Input()
   // currentUser: IUser = MockParticipantList[0] ;
   //currentUser: IUser = MockAdminUserList[0];
-  // currentUser!: IUser;
+  currentUser!: IUser;
   reqCompleted: boolean = false;
     // @Input() appointments: IAppointment[] =  MockAppointmentList;
     @Input() appointments: IAppointment[] =[];
@@ -81,6 +81,7 @@ export class AppointmentComponent {
               // this is participants: they are only allowed to view their appointments
               this.appointmentService.getappointmentsbyUser().subscribe({
                 next:(data)=>{
+                  console.log("From Participant View");
                       console.log(data);
                       this.reqCompleted = true;
                 },
