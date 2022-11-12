@@ -40,16 +40,36 @@ jobs:
           name: java-app
           path: '${{ github.workspace }}/build/libs/*.jar'
           if-no-files-found: error
-
-  deploy:
-    env:
-      publishProfile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-    
-    # only runs if publish profile is set in GitHub
-    if: ${{ env.publishProfile != '' }} # cannot directly check secrets, so use env
-
+  
+  # GitHub requires convoluted ways of checking if an environment variable is set
+  # https://github.com/actions/runner/issues/1189
+  # https://stackoverflow.com/a/70249520
+  should-deploy:
     runs-on: ubuntu-latest
-    needs: build
+    environment:
+      name: 'Production'
+    outputs:
+      foo: ${{ steps.foo.outputs.is-defined}}
+    steps:
+      - id: foo
+        env:
+          publishProfile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+        if: "${{ env.publishProfile != '' }}"
+        run: echo "::set-output name=is-defined::true"
+  
+  do-not-deploy:
+    # only runs if publish profile is not set in GitHub
+    if: ${{ needs.should-deploy.outputs.foo != 'true' }}
+    runs-on: ubuntu-latest
+    needs: [should-deploy]
+    steps:
+      - run: echo AZUREAPPSERVICE_PUBLISHPROFILE not set
+    
+  deploy:
+    # only runs if publish profile is set in GitHub
+    if: ${{ needs.should-deploy.outputs.foo == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [build, should-deploy]
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
