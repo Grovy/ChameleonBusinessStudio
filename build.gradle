@@ -1,3 +1,8 @@
+/*
+    Integration tests derived from
+    https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests
+ */
+
 plugins {
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
@@ -14,6 +19,8 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntimeOnly.extendsFrom runtimeOnly
 }
 
 repositories {
@@ -74,9 +81,31 @@ tasks.withType(JavaCompile){
     // Add -Werror later
 }
 
+// tasks.named('foo') modifies an existing task
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+sourceSets {
+    integration {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+        compileClasspath += sourceSets.test.output
+        runtimeClasspath += sourceSets.test.output
+    }
+}
+
+// integration "extends" Test
+tasks.register('integration', Test){
+    useJUnitPlatform()
+    dependsOn tasks.test // run unit tests first. If they fail, this doesn't run
+
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
 }
 
 tasks.named('asciidoctor') {
