@@ -1,6 +1,13 @@
 .main-container{
-    width: 980px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+
+    color: var(--text-color,rgb(26,26,26));
+    font-size: 16px;
+    font-family: "Lato";
+    line-height: 1.5;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .content-container{
@@ -47,6 +54,16 @@
     overflow-wrap: break-word;
 }
 
+.event-list-item{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 24px;
+    text-align: left;
+    cursor: pointer;
+    background-color: transparent;
+}
+
 .time-item{
     flex-shrink: 0;
     box-sizing: border-box;
@@ -55,6 +72,41 @@
     padding-left: 50px;
     color: inherit;
     font-family: inherit;
+}
+
+.details-item{
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 510px;
+    padding-right: 80px;
+    padding-left: 50px;
+    color: inherit;
+    font-family: inherit;
+}
+
+.title-item{
+    flex: 1 1 auto;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.participants-item{
+    flex-shrink: 0;
+    color: inherit;
+    font-family: inherit;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    padding-right: 80px;
+    padding-left: 50px;
+
+}
+
+.appt-content{
+    display: flex;
 }
 
 .details-item{

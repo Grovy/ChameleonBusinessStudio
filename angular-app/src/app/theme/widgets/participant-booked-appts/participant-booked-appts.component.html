@@ -1,34 +1,32 @@
-<div>
-    <div class="top-line"></div>
-
-    <div *ngIf="myBookedAppointments === undefined">
-        <h4>No booked appointments found.</h4>
-    </div>
-
-    <div class="day-list">
-        <div class="day-list-item">
-            <div class="event-list-body">
-                <mat-accordion *ngFor="let value of myBookedAppointments">
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header>
-                            <div class="time-item"><span>{{ value.startTime }}</span></div>
-                            <div class="title-item"><span>{{ value.title }}</span></div>
-                            <div class="participants-item"><span>Appointment with<br> {{value.participants[0]}}</span></div>
-                        </mat-expansion-panel-header>
-                        <div class="appt-content">
-                            <div class="details-item">
-                                <span><strong>Appointment Organizer</strong><br>     {{value.participants[0]}}</span><br><br>
-                                <span><strong>Description</strong><br>               {{value.description}}</span><br><br>
-                                <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
-                            </div>
-                        </div>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
+<div class="main-container">
+    <div class="secondary-container">
+        <div class="top-line"></div>
+        <div *ngIf="myBookedAppointments === undefined">
+            <h4>No booked appointments found.</h4>
         </div>
 
+        <div class="day-list">
+            <div class="day-list-item">
+                <div class="event-list-body">
+                    <mat-accordion *ngFor="let value of myBookedAppointments">
+                        <mat-expansion-panel hideToggle>
+                            <mat-expansion-panel-header class="event-list-item">
+                                <div class="time-item"><span>{{ value.startTime }}</span></div>
+                                <div class="title-item"><span>{{ value.title }}</span></div>
+                                <div class="participants-item"><span>Appointment with<br> {{value.participants[0]}}</span></div>
+                            </mat-expansion-panel-header>
+                            <div class="appt-content">
+                                <div class="details-item">
+                                    <span><strong>Appointment Organizer</strong><br>     {{value.participants[0]}}</span><br><br>
+                                    <span><strong>Description</strong><br>               {{value.description}}</span><br><br>
+                                    <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-line"></div>
     </div>
-
-
-    <div class="bottom-line"></div>
 </div>
