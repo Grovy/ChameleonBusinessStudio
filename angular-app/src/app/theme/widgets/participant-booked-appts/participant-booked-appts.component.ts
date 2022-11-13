@@ -7,11 +7,11 @@ import { IUser } from 'src/app/models/interfaces/IUser';
 import { AppointmentService } from 'src/app/services/AppointmentService.service';
 
 @Component({
-  selector: 'app-booked-appts-widget',
-  templateUrl: './booked-appts-widget.component.html',
-  styleUrls: ['./booked-appts-widget.component.css']
+  selector: 'app-participant-booked-appts',
+  templateUrl: './participant-booked-appts.component.html',
+  styleUrls: ['./participant-booked-appts.component.css']
 })
-export class BookedApptsWidgetComponent implements OnInit {
+export class ParticipantBookedApptsComponent implements OnInit {
 
   myBookedAppointments: IAppointment[];
   displayedColumns: string[] = ['startTime', 'endTime', 'title'];
@@ -35,7 +35,7 @@ export class BookedApptsWidgetComponent implements OnInit {
       for(let i = 0; i < user.appointments?.length; i++) {
         this.appointmentService.getAppointmentById(user.appointments[i] as string).subscribe( 
           data => {
-            if(data.participants.length === data.totalSlots) {
+            if(data.participants[1] === user.email) {
               let startdate: number[] = data.startTime as number[];
               let enddate: number[] = data.endTime as number[];
               data.startTime = this.dateManager.arrayToDate(startdate).toLocaleString();
@@ -79,4 +79,5 @@ export class BookedApptsWidgetComponent implements OnInit {
     });
   }
   
+
 }

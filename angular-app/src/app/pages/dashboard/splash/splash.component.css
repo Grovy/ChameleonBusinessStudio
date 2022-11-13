@@ -40,7 +40,7 @@ mat-toolbar{
   width: 100%;
 }
 
-.talent-content{
+.content{
   display: flex;
   justify-content: space-around;
 }
@@ -124,5 +124,9 @@ mat-toolbar{
 }
 
 .booked-appt-widget{
+  margin: 30px 30px 30px 30px;
+}
+
+.p-booked-appts-widget{
   margin: 30px 30px 30px 30px;
 }

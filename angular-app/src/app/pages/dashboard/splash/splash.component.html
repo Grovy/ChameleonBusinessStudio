@@ -53,7 +53,7 @@
   </div>
   
 
-  <div class="talent-content">  
+  <div class="content">  
     <div class="event-widget">
       <app-event-widget></app-event-widget>
     </div>
@@ -61,6 +61,25 @@
     <div class="booked-appts-widget">
       <app-booked-appts-widget></app-booked-appts-widget>
     </div>
+
+  </div>
+
+
+</div>
+
+<!-- Dynamic Rendering for Talent Accounts -->
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'PARTICIPANT')" class="main-content">  
+  <mat-toolbar class="second-toolbar">
+  </mat-toolbar>
+
+  <div class="welcome-message">
+    <p class="welcome-text">Welcome Back {{ currentUser.displayName }}!</p>
+  </div>
+  
+
+  <div class="content">  
+    <app-participant-booked-appts></app-participant-booked-appts>
+
 
   </div>
 
