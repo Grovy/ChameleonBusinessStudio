@@ -1,11 +1,11 @@
 <div class="main-container">
     <div class="secondary-container">
         <div class="top-line"></div>
-        <div *ngIf="myBookedAppointments === undefined">
+        <div *ngIf="(myBookedAppointments === undefined) || (myBookedAppointments[0]._id == '')">
             <h4>No booked appointments found.</h4>
         </div>
 
-        <div class="day-list">
+        <div class="day-list" *ngIf="(myBookedAppointments !== undefined)">
             <div class="day-list-item">
                 <div class="event-list-body">
                     <mat-accordion *ngFor="let value of myBookedAppointments">
@@ -20,6 +20,9 @@
                                     <span><strong>Appointment Organizer</strong><br>     {{value.participants[0]}}</span><br><br>
                                     <span><strong>Description</strong><br>               {{value.description}}</span><br><br>
                                     <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
+                                </div>
+                                <div class="appt-actions" *ngIf="(currentUser.role === 'PARTICIPANT')">
+                                    <button mat-raised-button class="action-button" [disabled]="(value.participants[1] === undefined)" (click)="unBookCurrentUser(value)">Cancel Appointment</button><br>
                                 </div>
                             </div>
                         </mat-expansion-panel>

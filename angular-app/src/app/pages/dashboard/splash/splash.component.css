@@ -55,6 +55,7 @@ app-participant-booked-appts {
   justify-content: center;
   width: 100%;
   margin-bottom: 10px;
+  font-family: 'Lato';
 }
 
 .welcome-text{

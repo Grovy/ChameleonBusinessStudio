@@ -139,3 +139,17 @@
     border-bottom-right-radius: 4px;
     background-color: #12002e;
 }
+
+.appt-actions{
+    flex-shrink: 0;
+    padding-right: 80px;
+    padding-left: 50px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    margin-left: auto;
+}
+
+.action-button{
+    background: #ff4081;
+    margin: 5px 5px 5px 5px;
+}
