@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - chameleon-business-studio
+name: Build and deploy JAR app to Azure Web App
 
 on:
   push:
@@ -40,16 +40,37 @@ jobs:
           name: java-app
           path: '${{ github.workspace }}/build/libs/*.jar'
           if-no-files-found: error
-
-  deploy:
-    env:
-      publishProfile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-    
-    # only runs if publish profile is set in GitHub
-    if: ${{ env.publishProfile != '' }} # cannot directly check secrets, so use env
-
+  
+  # GitHub requires convoluted ways of checking if an environment variable is set
+  # https://github.com/actions/runner/issues/1189
+  # https://stackoverflow.com/a/70249520
+  should-deploy:
     runs-on: ubuntu-latest
-    needs: build
+    environment:
+      name: 'Production'
+    outputs:
+      foo: ${{ steps.foo.outputs.is-defined}}
+    steps:
+      - id: foo
+        env:
+          publishProfile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          appName: ${{ secrets.AZUREAPPSERVICE_APPNAME }}
+        if: "${{ env.publishProfile != '' && env.appName != '' }}"
+        run: echo "::set-output name=is-defined::true"
+  
+  do-not-deploy:
+    # only runs if publish profile or app name are not set in GitHub
+    if: ${{ needs.should-deploy.outputs.foo != 'true' }}
+    runs-on: ubuntu-latest
+    needs: [should-deploy]
+    steps:
+      - run: echo AZUREAPPSERVICE_PUBLISHPROFILE and/or AZUREAPPSERVICE_APPNAME not set
+    
+  deploy:
+    # only runs if publish profile and app name are set in GitHub
+    if: ${{ needs.should-deploy.outputs.foo == 'true' }}
+    runs-on: ubuntu-latest
+    needs: [build, should-deploy]
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
@@ -64,7 +85,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'chameleon-business-studio'
+          app-name: ${{ secrets.AZUREAPPSERVICE_APPNAME }} # after forking, set a repository secret for this
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }} # after forking, set a repository secret for this
           package: '*.jar'

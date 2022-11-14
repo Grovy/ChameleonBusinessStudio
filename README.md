@@ -94,7 +94,7 @@ While the app is running, you can view its documentation at http://localhost:808
 ## Testing
 
 You can verify the application works using unit-tests and integration tests. For
-more information, see our testing document TODO: link
+more information, see our testing document TODO: link to testing document
 
 ### Unit Tests
 
@@ -106,9 +106,19 @@ These tests are very fast, and check if each component works as intended.
 You can run integration tests using the command `gradle integration` or `./gradlew integration`.
 Note that these tests are very thurough, but are also slow.
 
+## Contributors
+
+- [Matt Crow](https://github.com/matt-crow) - mattcrow19@gmail.com
+- todo add yourselves!
+
+## Known Issues
+
+- Since the app stores some configuration information on the local file system,
+  it will not work on distributed systems, so it needs a single host machine.
+
 ## Misc
 
-The application stores website configuration information in your home folder, in
-```ChameleonBusinessStudio```
-
+- The application stores website configuration information in your home folder, 
+  in a folder named ```ChameleonBusinessStudio```
 - [About springdoc](https://springdoc.org/)
+- todo link to user manual
