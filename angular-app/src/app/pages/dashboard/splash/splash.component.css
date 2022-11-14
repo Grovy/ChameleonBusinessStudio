@@ -4,6 +4,10 @@ mat-toolbar{
   padding: 15px;
 }
 
+app-participant-booked-appts {
+  width: 100%;
+}
+
 .icon{
   padding: 0 20px;
   margin: 0 20px;
@@ -40,9 +44,10 @@ mat-toolbar{
   width: 100%;
 }
 
-.talent-content{
+.content{
   display: flex;
   justify-content: space-around;
+  width: 100%;
 }
 
 .welcome-message{
@@ -50,6 +55,7 @@ mat-toolbar{
   justify-content: center;
   width: 100%;
   margin-bottom: 10px;
+  font-family: 'Lato';
 }
 
 .welcome-text{
@@ -124,5 +130,9 @@ mat-toolbar{
 }
 
 .booked-appt-widget{
+  margin: 30px 30px 30px 30px;
+}
+
+.p-booked-appts-widget{
   margin: 30px 30px 30px 30px;
 }
