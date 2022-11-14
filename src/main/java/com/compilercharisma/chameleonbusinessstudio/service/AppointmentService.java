@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.AppointmentResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.validators.AppointmentValidator;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -28,7 +30,8 @@ public class AppointmentService {
     @Autowired
     public AppointmentService(
             AppointmentRepository appointmentRepository,
-            UserService userService, AppointmentValidator validator) {
+            UserService userService, 
+            AppointmentValidator validator) {
         this.appointmentRepository = appointmentRepository;
         this.userService = userService;
         this.validator = validator;
@@ -41,7 +44,16 @@ public class AppointmentService {
      * @return {@link Mono} of {@link Appointment}
      */
     public Mono<Appointment> createAppointment(Appointment appt) {
-        return appointmentRepository.createAppointment(appt);
+        return appointmentRepository.createAppointment(appt)
+            .flatMap(this::addAppointmentToParticipants);
+    }
+
+    private Mono<Appointment> addAppointmentToParticipants(Appointment appt){
+        return Flux.fromIterable(appt.getParticipants())
+            .flatMap(userService::getUser)
+            .map(User::get_id)
+            .flatMap(userId -> userService.addNewAppointmentForUser(userId, appt.get_id()))
+            .then(Mono.just(appt));
     }
 
     /**

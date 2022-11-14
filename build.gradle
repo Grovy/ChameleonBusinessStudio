@@ -112,3 +112,4 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
