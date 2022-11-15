@@ -59,7 +59,7 @@ public class AppointmentRepository {
      */
     public Mono<Appointment> createAppointment(Appointment appointment) {
         var participantString = makeParticipantStringFor(appointment);
-        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: %s, startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {_id, cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
+        var query = "mutation {add_Appointment(input: {cancelled: %s, endTime: \"%s\", description: \"%s\", location: \"%s\", participants: %s, startTime: \"%s\", title: \"%s\", totalSlots: %d}) {result {_id,cancelled,description,endTime,location,participants,startTime,title,totalSlots}}}"
                 .formatted(appointment.getCancelled(), appointment.getEndTime(),
                         appointment.getDescription(), appointment.getLocation(),
                         participantString, appointment.getStartTime(), 
