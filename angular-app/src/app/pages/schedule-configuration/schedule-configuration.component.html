@@ -5,175 +5,181 @@
 <body>
     <app-default-header></app-default-header>
     <div class="main-container">
-        <!-- Step 1: Set up your availability -->
-        <mat-card class="avail-container">
-            <form [formGroup]="availabilityForm" id="ngForm" (ngSubmit)="saveAvailability(availabilityForm.value)">
-                <ng-template matStepLabel>Availability</ng-template>
-                <mat-card-title>Set up your availability</mat-card-title>
-                <mat-card-subtitle>Let us know when you're typically available to accept apppointments</mat-card-subtitle>
-                <mat-card-content>
-                    <!-- Setting up available times in the day -->
-                    <h4>Available Hours</h4>
-                    <mat-form-field class="avail-from-select" appearance="fill">
-                        <mat-label>Available From</mat-label>
-                        <mat-select formControlName="hoursFrom" matInput>
-                            <mat-option *ngFor="let time of availableTimes" [value]="time.value">
-                                {{time.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field class="avail-to-select" appearance="fill">
-                        <mat-label>Available To</mat-label>
-                        <mat-select formControlName="hoursTo" matInput>
-                            <mat-option *ngFor="let time of availableTimes" [value]="time.value">
-                                {{time.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+        <mat-stepper [linear]="isLinear" #stepper class="stepper-container">
+            <mat-step [stepControl]="firstFormGroup">
+                <mat-card class="avail-container">
+                    <form [formGroup]="availabilityForm" id="ngForm" (ngSubmit)="saveAvailability(availabilityForm.value)">
+                        <ng-template matStepLabel>Availability</ng-template>
+                        <mat-card-title>Set up your availability</mat-card-title>
+                        <mat-card-subtitle>Let us know when you're typically available to accept apppointments</mat-card-subtitle>
+                        <mat-card-content>
+                            <!-- Setting up available times in the day -->
+                            <h4>Available Hours</h4>
+                            <mat-form-field class="avail-from-select" appearance="fill">
+                                <mat-label>Available From</mat-label>
+                                <mat-select formControlName="hoursFrom" matInput>
+                                    <mat-option *ngFor="let time of availableTimes" [value]="time.value">
+                                        {{time.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="avail-to-select" appearance="fill">
+                                <mat-label>Available To</mat-label>
+                                <mat-select formControlName="hoursTo" matInput>
+                                    <mat-option *ngFor="let time of availableTimes" [value]="time.value">
+                                        {{time.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                    
+        
+                            <!-- Choosing which days of the week you're available -->
+                            <section class="daysofweek">
+                                <h4>Select your days:</h4>
+                                <ul *ngFor="let day of mydaysOfWeek">
+                                    <input 
+                                        type="checkbox"
+                                        [value]="day.id"
+                                        [checked]="day.select"
+                                        (change)="onChecked($event)"
+                                    />
+                                    {{day.viewName}}
+                                </ul>
+                            </section>
             
+                            <section>
+                                <h4>Enter a title to save this availability</h4>
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <mat-label>Eg. Office Hours, Working Hours, Summer Hours, etc</mat-label>
+                                    <input formControlName="title" matInput>
+                                </mat-form-field>
+                            </section>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-raised-button color="primary" form="ngForm" [disabled]="!availabilityForm.valid" matStepperNext>Save Availability</button>
+                            <button mat-raised-button color="secondary">Clear</button>
+                        </mat-card-actions>
+                    </form>
+                </mat-card>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup">
+                <mat-card class="event-container">
+                    <form [formGroup]="eventForm" id="ngForm1" (ngSubmit)="saveEvent(eventForm.value)">
+                        <ng-template matStepLabel>Event/Service</ng-template>
+                        <mat-card-title>Set up your event/service</mat-card-title>
+                        <mat-card-subtitle>Let us know what kind of event you'd like your appointments to be</mat-card-subtitle>
+                        <mat-card-content>
+                            <!-- Title of the event/service -->
+                            <h4>Enter your event/service's title</h4>
+                            <mat-form-field class="full-width" appearance="fill">
+                                <mat-label>Eg. Haircut Appointment, Office Hours, Interview, etc.</mat-label>
+                                <input formControlName="title" matInput>
+                            </mat-form-field>
+        
+                            <!-- Length of the event/service -->
+                            <h4>How long with each instance of this event/service last</h4>
+                            <mat-form-field>
+                                <mat-label>Duration</mat-label>
+                                <mat-select formControlName="duration" [(ngModel)]="selectedTimeFrame">
+                                    <mat-option *ngFor="let timeFrame of timeFrameValues" [value]="timeFrame">
+                                        {{timeFrame}} minutes
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+        
+                            <!-- Location of the event/service -->
+                            <h4>Choose the location of the event/service</h4>
+                            <mat-form-field>
+                                <mat-label>Location</mat-label>
+                                <mat-select formControlName="location" [(ngModel)]="selectedLocationValue">
+                                    <mat-option *ngFor="let location of locationValues" [value]="location">
+                                        {{location}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+        
+                            <!-- Based on location selected, prompt for more information -->
+                            <div *ngIf="isLocationEqualTo('In Person')">
+                                <h4>Provide more specific information/instructions on the in person location</h4>
+                                <mat-form-field class="full-width" appearance="fill" value="locationDetails">
+                                    <mat-label>Address</mat-label>
+                                    <input formControlName="locationDetails" matInput>
+                                </mat-form-field>
+                            </div>
+        
+                            <div *ngIf="isLocationEqualTo('Phone')">
+                                <h4>Provide the phone number where the event/service will be conducted</h4>
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <mat-label>Phone Number</mat-label>
+                                    <input formControlName="locationDetails" matInput>
+                                </mat-form-field>
+                            </div>
+        
+                            <div *ngIf="isLocationEqualTo('Zoom')">
+                                <h4>Provide the Zoom Meeting ID or Zoom Meeting link</h4>
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <mat-label>Zoom Meeting ID or link</mat-label>
+                                    <input formControlName="locationDetails" matInput>
+                                </mat-form-field>
+                            </div>
+        
+                            <div *ngIf="isLocationEqualTo('Discord')">
+                                <h4>Provide your Discord username or server invite</h4>
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <mat-label>Discord username/server invite</mat-label>
+                                    <input formControlName="locationDetails" matInput>
+                                </mat-form-field>
+                            </div>
+        
+                            <div *ngIf="isLocationEqualTo('Google Hangouts')">
+                                <h4>Provide the Google Hangouts Meeting ID</h4>
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <mat-label>Hangouts Meeting ID</mat-label>
+                                    <input formControlName="locationDetails" matInput>
+                                </mat-form-field>
+                            </div>
+        
+                            <div *ngIf="isLocationEqualTo('Microsoft Teams')">
+                                <h4>Provide the MS Teams Meeting ID or MS Teams Meeting link</h4>
+                                <mat-form-field class="full-width" appearance="fill">
+                                    <mat-label>MS Teams meeting ID or link</mat-label>
+                                    <input formControlName="locationDetails" matInput>
+                                </mat-form-field>
+                            </div>
+        
+                            <!-- Description/Instructions -->
+                            <h4>Provide a description or any other details you'd like your participant to know</h4>
+                            <mat-form-field class="full-width" appearance="fill">
+                                <mat-label>Description/Instructions</mat-label>
+                                <textarea formControlName="description" matInput placeholder="Description/Instructions..."></textarea>
+                            </mat-form-field>
+        
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-raised-button color="primary" form="ngForm1" [disabled]="!eventForm.valid" matStepperNext>Save Event</button>
+                            <button mat-raised-button color="secondary">Clear</button>
+                        </mat-card-actions>
+                    </form>
+                </mat-card>
+            </mat-step>
+            <mat-step>
+                <mat-card class="confirmation-container">
+                    <mat-card-title>Your event/service has been created!</mat-card-title>
+                    <mat-card-content>
+                        <h4>Here are the details of your event/service</h4>
+                        <h4>Title: {{ myEvent.title ? myEvent.title : " " }}</h4>
+                        <h4>Duration: {{ myEvent.duration ? myEvent.duration + " minutes" : " " }}</h4>
+                        <h4>Location: {{ myEvent.location ? myEvent.location : " " }} {{ myEvent.locationDetails }}</h4>
+                        <h4>Description: {{myEvent.description ? myEvent.description : " " }}</h4>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <a routerLink="../appointment-details" routerLinkActive="active">
+                            <button mat-raised-button color="primary">Go to booking page</button>
+                        </a>
+                    </mat-card-actions>
+                </mat-card>
+            </mat-step>
 
-                    <!-- Choosing which days of the week you're available -->
-                    <section class="daysofweek">
-                        <h4>Select your days:</h4>
-                        <ul *ngFor="let day of mydaysOfWeek">
-                            <input 
-                                type="checkbox"
-                                [value]="day.id"
-                                [checked]="day.select"
-                                (change)="onChecked($event)"
-                            />
-                            {{day.viewName}}
-                        </ul>
-                    </section>
-    
-                    <section>
-                        <h4>Enter a title to save this availability</h4>
-                        <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>Eg. Office Hours, Working Hours, Summer Hours, etc</mat-label>
-                            <input formControlName="title" matInput>
-                        </mat-form-field>
-                    </section>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-raised-button color="primary" form="ngForm">Save Availability</button>
-                    <button mat-raised-button color="secondary">Clear</button>
-                </mat-card-actions>
-            </form>
-        </mat-card>
-
-        <mat-card class="event-container">
-            <form [formGroup]="eventForm" id="ngForm1" (ngSubmit)="saveEvent(eventForm.value)">
-                <ng-template matStepLabel>Event/Service</ng-template>
-                <mat-card-title>Set up your event/service</mat-card-title>
-                <mat-card-subtitle>Let us know what kind of event you'd like your appointments to be</mat-card-subtitle>
-                <mat-card-content>
-                    <!-- Title of the event/service -->
-                    <h4>Enter your event/service's title</h4>
-                    <mat-form-field class="full-width" appearance="fill">
-                        <mat-label>Eg. Haircut Appointment, Office Hours, Interview, etc.</mat-label>
-                        <input formControlName="title" matInput>
-                    </mat-form-field>
-
-                    <!-- Length of the event/service -->
-                    <h4>How long with each instance of this event/service last</h4>
-                    <mat-form-field>
-                        <mat-label>Duration</mat-label>
-                        <mat-select formControlName="duration" [(ngModel)]="selectedTimeFrame">
-                            <mat-option *ngFor="let timeFrame of timeFrameValues" [value]="timeFrame">
-                                {{timeFrame}} minutes
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <!-- Location of the event/service -->
-                    <h4>Choose the location of the event/service</h4>
-                    <mat-form-field>
-                        <mat-label>Location</mat-label>
-                        <mat-select formControlName="location" [(ngModel)]="selectedLocationValue">
-                            <mat-option *ngFor="let location of locationValues" [value]="location">
-                                {{location}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <!-- Based on location selected, prompt for more information -->
-                    <div *ngIf="isLocationEqualTo('In Person')">
-                        <h4>Provide more specific information/instructions on the in person location</h4>
-                        <mat-form-field class="full-width" appearance="fill" value="locationDetails">
-                            <mat-label>Address</mat-label>
-                            <input formControlName="locationDetails" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="isLocationEqualTo('Phone')">
-                        <h4>Provide the phone number where the event/service will be conducted</h4>
-                        <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>Phone Number</mat-label>
-                            <input formControlName="locationDetails" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="isLocationEqualTo('Zoom')">
-                        <h4>Provide the Zoom Meeting ID or Zoom Meeting link</h4>
-                        <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>Zoom Meeting ID or link</mat-label>
-                            <input formControlName="locationDetails" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="isLocationEqualTo('Discord')">
-                        <h4>Provide your Discord username or server invite</h4>
-                        <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>Discord username/server invite</mat-label>
-                            <input formControlName="locationDetails" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="isLocationEqualTo('Google Hangouts')">
-                        <h4>Provide the Google Hangouts Meeting ID</h4>
-                        <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>Hangouts Meeting ID</mat-label>
-                            <input formControlName="locationDetails" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="isLocationEqualTo('Microsoft Teams')">
-                        <h4>Provide the MS Teams Meeting ID or MS Teams Meeting link</h4>
-                        <mat-form-field class="full-width" appearance="fill">
-                            <mat-label>MS Teams meeting ID or link</mat-label>
-                            <input formControlName="locationDetails" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Description/Instructions -->
-                    <h4>Provide a description or any other details you'd like your participant to know</h4>
-                    <mat-form-field class="full-width" appearance="fill">
-                        <mat-label>Description/Instructions</mat-label>
-                        <textarea formControlName="description" matInput placeholder="Description/Instructions..."></textarea>
-                    </mat-form-field>
-
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-raised-button color="primary" form="ngForm1">Save Event</button>
-                    <button mat-raised-button color="secondary">Clear</button>
-                </mat-card-actions>
-            </form>
-        </mat-card>
-
-        <mat-card class="confirmation-container">
-            <mat-card-title>Your event/service has been created!</mat-card-title>
-            <mat-card-content>
-                <h4>Here are the details of your event/service</h4>
-                <h4>Title: {{ myEvent.title ? myEvent.title : " " }}</h4>
-                <h4>Duration: {{ myEvent.duration ? myEvent.duration + " minutes" : " " }}</h4>
-                <h4>Location: {{ myEvent.location ? myEvent.location : " " }} {{ myEvent.locationDetails }}</h4>
-                <h4>Description: {{myEvent.description ? myEvent.description : " " }}</h4>
-            </mat-card-content>
-            <mat-card-actions>
-                <a routerLink="../booking-page" routerLinkActive="active">
-                    <button mat-raised-button color="primary">Go to booking page</button>
-                </a>
-            </mat-card-actions>
-        </mat-card>
+        </mat-stepper>
     </div>
 </body>

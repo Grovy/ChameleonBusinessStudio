@@ -53,7 +53,7 @@
   </div>
   
 
-  <div class="content">  
+  <div class="talent-content">  
     <div class="event-widget">
       <app-event-widget></app-event-widget>
     </div>
@@ -67,7 +67,7 @@
 
 </div>
 
-<!-- Dynamic Rendering for Talent Accounts -->
+<!-- Dynamic Rendering for Participant Accounts -->
 <div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'PARTICIPANT')" class="main-content">  
   <mat-toolbar class="second-toolbar">
   </mat-toolbar>

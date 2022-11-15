@@ -49,9 +49,8 @@
                                                             {{user.displayName}}
                                                         </mat-option>
                                                     </mat-select>
-                                                    <mat-error *ngIf="userBookingForm.hasError('required')">Please choose a user to book</mat-error>
                                                 </mat-form-field>
-                                                <button mat-raised-button class="action-button" (click)="bookOtherUser(userBookingForm.value, apptValue)" [disabled]="apptValue.participants.length === apptValue.totalSlots || userBookingForm.hasError('required')">Book Selected User</button>
+                                                <button mat-raised-button class="action-button" (click)="bookOtherUser(userBookingForm.value, apptValue)" [disabled]="(apptValue.participants.length === apptValue.totalSlots) || (!userBookingForm.valid)">Book Selected User</button>
                                             </form>
 
                                             <button mat-raised-button class="action-button" (click)="showBookUserForm = false">Cancel</button>

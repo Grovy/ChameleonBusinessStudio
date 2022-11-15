@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AvailableTimes } from 'src/app/models/mock/mock-availabile-times';
 import { Component } from '@angular/core';
 import { DaysOfWeek, IAvailability } from 'src/app/models/interfaces/IAvailability';
@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IUser } from 'src/app/models/interfaces/IUser';
 import { UserService } from 'src/app/services/UserService.service';
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-schedule-configuration',
@@ -52,6 +53,7 @@ export class ScheduleConfigurationComponent {
   }
 
   currentUser: IUser;
+  isLinear = true;
 
   mydaysOfWeek = [
     { id: 1, select: false, name: "MONDAY", viewName: "Monday" },
@@ -63,21 +65,28 @@ export class ScheduleConfigurationComponent {
     { id: 7, select: false, name: "SUNDAY", viewName: "Sunday" },
   ];
 
+  firstFormGroup = this.formBuilder.group({
+    firstCtrl: [''],
+  });
+  secondFormGroup = this.formBuilder.group({
+    secondCtrl: [''],
+  });
+
   constructor(private formBuilder: FormBuilder, private scheduleService: ScheduleService, private dateManager: DateManager,
-    private userService: UserService, private authenticationService: AuthenticationService) {
+    private userService: UserService, private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
     this.availabilityForm = this.formBuilder.group({
-      title: [''],
-      hoursFrom: [''],
-      hoursTo: [''],
+      title: ['', Validators.required],
+      hoursFrom: ['', Validators.required],
+      hoursTo: ['', Validators.required],
       daysOfWeek: [''],
     });
 
     this.eventForm = this.formBuilder.group({
-      title: [''],
-      duration: [''],
-      location: [''],
-      locationDetails: [''],
-      description: [''],
+      title: ['', Validators.required],
+      duration: ['', Validators.required],
+      location: ['', Validators.required],
+      locationDetails: ['', Validators.required],
+      description: ['', Validators.required],
     });
 
     this.getCurrentUser();
@@ -130,6 +139,10 @@ export class ScheduleConfigurationComponent {
     this.myAvailability = newAvailability;
   }
 
+  openSnackBar(message, action?, config?) {
+    this.snackBar.open(message, action, config);
+  }
+
   public saveEvent(data): void {
     const newEvent: IEvent = {
       title: data.title,
@@ -145,7 +158,14 @@ export class ScheduleConfigurationComponent {
 
     // Update with reaction elements later
     this.scheduleService.createSchedule(this.mySchedule).subscribe(
-      data => { console.log(data) }
+      data => { 
+        if(data.status.toString() === '200') {
+          this.openSnackBar("Schedule successfully created!", "Dismiss");
+        } else {
+          this.openSnackBar("An error occured when saving your schedule.", "Dismiss")
+        }
+        console.log(data); 
+      }
     );
 
   }
