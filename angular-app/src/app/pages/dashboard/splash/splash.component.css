@@ -50,6 +50,11 @@ app-participant-booked-appts {
   width: 100%;
 }
 
+.talent-content{
+  display: flex;
+  justify-content: space-around;
+}
+
 .welcome-message{
   display: flex;
   justify-content: center;
