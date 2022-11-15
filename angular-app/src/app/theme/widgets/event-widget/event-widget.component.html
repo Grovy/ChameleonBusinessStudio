@@ -31,8 +31,13 @@
             <div class="break"></div>
         </mat-card-content>
         <mat-card-actions class="mat-card-actions">
+            <div *ngIf="(hasEvent ===  true)" class="first-button">
+                <a  routerLink="../appointment-details" [queryParams]="{event : appointmentName}" routerLinkActive="active">
+                    <button mat-raised-button color="primary">Booking Page</button>
+                </a>
+            </div>
             <div class="first-button">
-                <a routerLink="../booking-page" routerLinkActive="active">
+                <a *ngIf="(hasEvent ===  false)" routerLink="../appointment-details" routerLinkActive="active">
                     <button mat-raised-button color="primary">Booking Page</button>
                 </a>
             </div>
