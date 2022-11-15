@@ -107,11 +107,11 @@ public class ScheduleService {
     }
 
     private boolean canGenerateAppointmentFrom(RepeatingAppointment ra){
-        var now = LocalDateTime.now();
+        var now = LocalDateTime.now().toLocalDate();
         var maxDate = now.plusDays(DAYS_IN_ADVANCE);
         var lastGen = ra.getLastGenerated();
         return ra.getIsEnabled()
-            && (lastGen == null || lastGen.isBefore(maxDate));
+            && (lastGen == null || lastGen.toLocalDate().isBefore(maxDate));
     }
 
     /**

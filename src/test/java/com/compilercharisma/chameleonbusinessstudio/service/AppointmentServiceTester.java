@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -119,6 +120,20 @@ public class AppointmentServiceTester {
     }
 
     @Test
+    public void createAppointment_whenItHasParticipants_alsoAddsIdToParticipants(){
+        givenTheUserIsValid();
+        givenTheEmailIsBooked(); // must be called before givenTheAppointmentIsValid
+        givenTheAppointmentIsValid();
+        var sut = makeSut();
+
+        var result = sut.createAppointment(theAppointment).block();
+
+        Assertions.assertTrue(result.getParticipants().contains(theEmail), 
+            "Failed to add participant to result of createAppointment");
+        verify(users).addNewAppointmentForUser(theUser.get_id(), result.get_id());
+    }
+
+    @Test
     public void bookEmail_givenAnInvalidAppointment_throwsAnError(){
         givenTheAppointmentIsInvalid();
         var sut = makeSut();
@@ -208,6 +223,19 @@ public class AppointmentServiceTester {
         theAppointment.setTotalSlots(3);
         doNothing()
             .when(validator).validate(theAppointment);
+        when(repo.createAppointment(theAppointment))
+            .thenReturn(Mono.just(Appointment.builder()
+                ._id(UUID.randomUUID().toString())
+                .cancelled(theAppointment.getCancelled())
+                .description(theAppointment.getDescription())
+                .endTime(theAppointment.getEndTime())
+                .location(theAppointment.getLocation())
+                .participants(theAppointment.getParticipants().stream().toList()) // copy
+                .startTime(theAppointment.getStartTime())
+                .title(theAppointment.getTitle())
+                .totalSlots(theAppointment.getTotalSlots())
+                .build()
+            ));
         when(repo.updateAppointment(theAppointment))
             .thenReturn(Mono.just(theAppointment));
     }
