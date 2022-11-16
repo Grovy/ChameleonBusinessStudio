@@ -27,6 +27,7 @@ export class AppointmentDetailsComponent {
   isRegisteredValue;
   isAuthenticatedValue;
   showBookUserForm = false;
+  reqCompleted: boolean = false;
 
   userBookingForm: FormGroup;
   myUserResponse: IUserResponse = { users: [] };
@@ -62,6 +63,7 @@ export class AppointmentDetailsComponent {
           this.allAppointments = newAppts;
         }
         this.getDates(this.allAppointments);
+        this.reqCompleted = true;
       }
     );
   }

@@ -4,6 +4,7 @@
 <app-default-header></app-default-header>
 <div class="main-container">
     <div class="secondary-container">
+        <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
         <div class="day-list">
             <div *ngFor="let date of allDates">
                 <div class="day-list-item">
