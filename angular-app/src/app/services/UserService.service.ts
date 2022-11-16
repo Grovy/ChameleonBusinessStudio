@@ -37,6 +37,15 @@ export class UserService {
             );
     }
 
+    // Function to update an existing user in Vendia
+    public updateUser(user: IUser): Observable<any> {
+        return this.httpClient.put(`${this.apiUrl}/`, user, { observe: 'response' })
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
     private handleError(error: HttpErrorResponse): Observable<never> {
         console.log(error);
         return throwError(`An error occured - Error code: ${error.status}`);
