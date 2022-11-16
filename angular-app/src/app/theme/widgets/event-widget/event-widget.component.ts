@@ -14,6 +14,7 @@ import { MatIconRegistry } from "@angular/material/icon";
 export class EventWidgetComponent implements OnInit {
 
   myPage: IPage;
+  appointmentName;
   eventName;
   eventDuration;
   hasEvent = false;
@@ -40,12 +41,14 @@ export class EventWidgetComponent implements OnInit {
     );
   }
 
+  // This function is only supporting 1 schedule right now
   private parsePage(page: IPage) {
     this.eventName = page.content[0].name;
     if (this.eventName == '') {
       this.hasEvent = false;
     } else {
       this.hasEvent = true;
+      this.appointmentName = page.content[0].appointments[0].appointment.title;
     }
   }
 

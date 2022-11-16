@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IUser } from 'src/app/models/interfaces/IUser';
 import { IUserResponse } from 'src/app/models/interfaces/IUserResponse';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-details',
@@ -18,6 +19,7 @@ import { IUserResponse } from 'src/app/models/interfaces/IUserResponse';
 export class AppointmentDetailsComponent {
 
   dateApptDictionary = new Map<string, any[]>();
+  filterApptName;
   allAppointments;
   allDates;
   userEmail;
@@ -31,10 +33,11 @@ export class AppointmentDetailsComponent {
 
   constructor(private appointmentService: AppointmentService, private dateManager: DateManager,
     private authenticationService: AuthenticationService, private userService: UserService, private snackBar: MatSnackBar,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute) {
     this.checkIfAuthenticated();
     this.checkIfRegisteredWithVendia();
     this.getAppointments();
+    this.activatedRoute.queryParams.subscribe( data => { this.filterApptName = data['event']; console.log(this.filterApptName); } );
     this.userBookingForm = this.formBuilder.group({
       email: ['', Validators.required],
     });
@@ -49,8 +52,15 @@ export class AppointmentDetailsComponent {
             appt.startTime = this.dateManager.arrayToDate(appt.startTime as number[]);
             appt.endTime = this.dateManager.arrayToDate(appt.endTime as number[]);
           }
-        )
+        );
         this.allAppointments = data;
+        // When we it recognizes there is a query param, we will apply the title filter
+        if(this.filterApptName) {
+          let newAppts: IAppointment[] = [];
+          newAppts = this.findByApptTitle(this.allAppointments);
+          console.log(newAppts);
+          this.allAppointments = newAppts;
+        }
         this.getDates(this.allAppointments);
       }
     );
@@ -191,8 +201,18 @@ export class AppointmentDetailsComponent {
         console.log(data);
       }
     );
-    
-    
+  }
 
+  findByApptTitle(appts: IAppointment[]) {
+    let newAppts: IAppointment[] = [];
+    if(this.filterApptName) {
+      for(let i = 0; i < appts.length; i++) {
+        if(appts[i].title == this.filterApptName) {
+          newAppts.push(appts[i]);
+        }
+      }
+    }
+   
+    return newAppts;
   }
 }
