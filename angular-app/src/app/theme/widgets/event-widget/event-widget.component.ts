@@ -3,8 +3,10 @@ import { ScheduleService } from 'src/app/services/ScheduleService.service';
 import { IPage } from 'src/app/models/interfaces/IPage';
 import { DateManager } from 'src/app/services/DateManager';
 import { DomSanitizer } from "@angular/platform-browser";
-import { IAppointment } from 'src/app/models/interfaces/IAppointment';
+import { IUser } from 'src/app/models/interfaces/IUser';
 import { MatIconRegistry } from "@angular/material/icon";
+import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
+import { UserService } from 'src/app/services/UserService.service';
 
 @Component({
   selector: 'app-event-widget',
@@ -19,7 +21,15 @@ export class EventWidgetComponent implements OnInit {
   eventDuration;
   hasEvent = false;
 
-  constructor(private scheduleService: ScheduleService, private dateManager: DateManager, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer) {
+  public isRegisteredValue: boolean;
+  public isAuthenticatedValue: boolean;
+  public shouldDisplayModal: boolean;
+  public userEmail: string;
+  public currentUser: IUser;
+  reqCompleted: boolean = false;
+
+  constructor(private scheduleService: ScheduleService, private dateManager: DateManager, private matIconRegistry: MatIconRegistry, 
+    private domSanitizer : DomSanitizer, private authenticationService: AuthenticationService, private userService: UserService) {
     this.matIconRegistry.addSvgIcon(
       "eventIcon",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/eventIcon.svg")
@@ -29,6 +39,32 @@ export class EventWidgetComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.checkIfAuthenticated();
+    this.checkIfRegisteredWithVendia();
+  }
+
+  getUserEmail() {
+    this.authenticationService.getPrincipal().subscribe(
+      data => { 
+        this.userEmail = data.valueOf(); 
+        this.userService.getUser(this.userEmail).subscribe(data => {this.currentUser = data});
+        this.reqCompleted = true;
+    });  
+  }
+
+  checkIfAuthenticated() {
+    this.authenticationService.isAuthenticated().subscribe(
+      data => { 
+        this.isAuthenticatedValue = data;
+    });
+  }
+
+  checkIfRegisteredWithVendia() {
+    this.authenticationService.isUserRegistered().subscribe(
+      data => { 
+        this.isRegisteredValue = data;
+        this.getUserEmail();
+    });
   }
 
   private getEventInformation() {

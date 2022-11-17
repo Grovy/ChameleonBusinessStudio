@@ -6,11 +6,11 @@ export enum UserRole {
 }
 
 export interface IUser {
+    _id: string;
     displayName: string;
     email: string;
     role: UserRole | string;
-    phoneNumber?: string;
-    id?: string; 
+    phoneNumber?: string; 
     appointments?: string[];
     
 }

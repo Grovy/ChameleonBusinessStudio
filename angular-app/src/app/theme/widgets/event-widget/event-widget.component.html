@@ -2,8 +2,9 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 </head>
 
-<div>
+<div class="main-container">
     <div class="top-line"></div>
+    <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
     <mat-card class="event-card">
         <mat-card-title *ngIf="(hasEvent ===  true)">
             <div class="event-card-title">
@@ -41,7 +42,7 @@
                     <button mat-raised-button color="primary">Booking Page</button>
                 </a>
             </div>
-            <div>
+            <div *ngIf="(currentUser.role === 'TALENT')">
                 <a routerLink="../schedule-configuration" routerLinkActive="active">
                     <button mat-raised-button color="secondary">Edit Event</button>
                 </a>

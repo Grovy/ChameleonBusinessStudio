@@ -1,0 +1,45 @@
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
+
+<div class="main-container">
+    <div class="secondary-container">
+    <div class="top-line"></div>
+      <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
+      <div class="event-list-body" *ngFor="let user of myUserResponse.users; let i = index;">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header class="event-list-item">
+            <div class="time-item">
+                <span>User #{{i}}</span><br>
+            </div>
+            <div class="title-item">
+              <span>{{user.displayName}} ({{user.email}})</span>
+            </div>
+            <div class="participants-item">
+              <span>{{user.role}}</span>
+            </div>
+        </mat-expansion-panel-header>
+        <div class="appt-content">
+          <div class="appt-actions">
+            <form [formGroup]="changeRoleForm" class="form-field">
+                <ng-template matStepLabel>Choose new role for this user.</ng-template>
+                <mat-form-field class="avail-to-select" appearance="fill">
+                    <mat-label>Choose new role</mat-label>
+                    <mat-select formControlName="newRole" matInput>
+                        <mat-option *ngFor="let role of roleSelection" [value]="role">
+                            {{role}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button class="action-button" (click)="changeUserRole(changeRoleForm.value, user)" [disabled]="!changeRoleForm.valid">
+                  Change User's Role
+                </button>
+            </form>
+
+          </div>
+        </div>
+        </mat-expansion-panel>
+      </div>
+      <div class="bottom-line"></div>
+    </div>
+  </div>

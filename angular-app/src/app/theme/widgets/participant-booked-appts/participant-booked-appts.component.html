@@ -1,11 +1,11 @@
 <div class="main-container">
     <div class="secondary-container">
         <div class="top-line"></div>
-        <div *ngIf="(myBookedAppointments === undefined) || (myBookedAppointments[0]._id == '')">
+        <div *ngIf="(myBookedAppointments[0] === undefined) || (myBookedAppointments[0]._id == '')">
             <h4>No booked appointments found.</h4>
         </div>
 
-        <div class="day-list" *ngIf="(myBookedAppointments !== undefined)">
+        <div class="day-list" *ngIf="(myBookedAppointments[0] !== undefined)">
             <div class="day-list-item">
                 <div class="event-list-body">
                     <mat-accordion *ngFor="let value of myBookedAppointments">

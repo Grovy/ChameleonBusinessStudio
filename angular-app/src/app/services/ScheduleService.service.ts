@@ -12,7 +12,7 @@ export class ScheduleService {
 
     // Function to create a new schedule
     public createSchedule(schedule: ISchedule): Observable<any> {
-        return this.httpClient.post(`${this.apiUrl}`, schedule)
+        return this.httpClient.post(`${this.apiUrl}`, schedule, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

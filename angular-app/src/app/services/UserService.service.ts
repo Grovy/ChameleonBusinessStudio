@@ -21,7 +21,7 @@ export class UserService {
 
     // Function to create a new user and save in Vendia
     public createUser(user: IUser): Observable<any> {
-        return this.httpClient.post(`${this.apiUrl}`, user)
+        return this.httpClient.post(`${this.apiUrl}`, user, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)
@@ -31,6 +31,15 @@ export class UserService {
     // Function to get the user object from Vendia
     public getUser(email: string): Observable<any> {
         return this.httpClient.get(`${this.apiUrl}/${email}`)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    // Function to update an existing user in Vendia
+    public updateUser(user: IUser): Observable<any> {
+        return this.httpClient.put(`${this.apiUrl}/`, user, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

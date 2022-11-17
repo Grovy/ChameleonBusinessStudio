@@ -11,7 +11,6 @@ mat-tab-group{
 }
 
 .home{
-  background: blanchedalmond;
   width: 100%;
   flex-direction: row;
   display: flex;
@@ -22,33 +21,153 @@ mat-tab-group{
   width: 40rem;
 }
 
+.main-container{
+  display: flex;
+  justify-content: center;
+
+  color: var(--text-color,rgb(26,26,26));
+  font-size: 16px;
+  font-family: "Lato";
+  line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.secondary-container{
+  box-sizing: border-box;
+  max-width: 980px;
+  width: 100%;
+  margin-right: auto;
+  margin-bottom: 30px;
+  margin-left: auto;
+  border: 1px solid var( rgba(26,26,26, 0.1) ); 
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: 0 1px 6px 0 rgb(0, 0, 0/5%);
+}
+
+.day-list-item{
+  width: 100%;
+  font-weight: 400;
+  margin: 0;
+  padding: 16px 24px;
+  box-sizing: inherit;
+  border-top: 1px solid var(--text-color-level3,rgba(26,26,26,0.1));
+  border-bottom: 1px solid var(--text-color-level3,rgba(26,26,26,0.1));
+  background-color: var(--color-bg-grey-2,#FAFAFA);
+  font-size: 12px;
+}
+
+.event-list-body{
+  color: var(--text-color,rgb(26,26,26));
+  font-size: 16px;
+  font-family: 'Lato';
+  box-sizing: inherit;
+  line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
+}
+
+.event-list-item{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 24px;
+  text-align: left;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.time-item{
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 310px;
+  padding-right: 80px;
+  padding-left: 50px;
+  color: inherit;
+  font-family: inherit;
+}
+
+.title-item{
+  flex: 1 1 auto;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.participants-item{
+  flex-shrink: 0;
+  color: inherit;
+  font-family: inherit;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  padding-right: 80px;
+  padding-left: 50px;
+
+}
+
+.appt-content{
+  display: flex;
+}
+
+.avail-to-select{
+  margin-left: 30px;
+}
+
+.details-item{
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 510px;
+  padding-right: 80px;
+  padding-left: 50px;
+  color: inherit;
+  font-family: inherit;
+}
+
+.form-field{
+  display: flex;
+  flex-direction: column;
+}
+
+.action-button{
+  background: #ff4081;
+  color:#fff;
+  margin: 5px 5px 5px 5px;
+}
+
+
 .view-employees-container{
   width: 100%;
   flex-direction: row;
   display: flex;
   overflow: auto;
+  margin-right: 30px;
 }
 
 .add-employees-container{
   width: 100%;
   flex-direction: row;
   display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: auto;
 }
 
 .employee-table-card{
-  width: 30rem;
+  width: 25%;
   display: flex;
   flex-direction: column;
-  background: lightblue;
-  margin-left: 20rem;
 }
 
 .employee-profile-card{
   width: 30rem;
-  margin-left: 5rem;
   display: flex;
   flex-direction: column;
+  margin-right: 20px;
 }
 
 .element-row:hover {
@@ -57,7 +176,7 @@ mat-tab-group{
 }
 
 .mat-elevation-z8{
-  width: 30rem;
+  width: 100%;
 }
 
 .full-width{
@@ -69,8 +188,6 @@ mat-tab-group{
 }
 
 .add-user-card{
-  margin-left: 20rem;
-  background: yellowgreen;
   width: 25rem;
   height: fit-content;
   padding-bottom: 2rem;
@@ -132,4 +249,24 @@ mat-tab-group{
   text-align: center;
   min-height: 80px;
   min-width: 300px;
+}
+
+.top-line{
+  height: 10px;
+  margin-top: -1px;
+  margin-right: -1px;
+  margin-left: -1px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background-color: #ff4081;;
+}
+
+.bottom-line{
+  height: 10px;
+  margin-top: 1px;
+  margin-right: 1px;
+  margin-left: 1px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: #12002e;
 }

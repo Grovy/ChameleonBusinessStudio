@@ -1,3 +1,7 @@
+.main-container{
+    width: fit-content;
+}
+
 .event-card{
     font-family: 'Lato';
     font-size: 22px;

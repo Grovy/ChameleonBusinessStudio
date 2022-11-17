@@ -52,6 +52,7 @@ export class ScheduleConfigurationComponent {
     appointments: []
   }
 
+  newApptTitle = '';
   currentUser: IUser;
   isLinear = true;
 
@@ -193,6 +194,8 @@ export class ScheduleConfigurationComponent {
       totalSlots: 2,
       participants: [this.currentUser.email],
     };
+
+    this.newApptTitle = this.myEvent.title;
 
     const theRepeatingAppointment: IRepeatingAppointment = {
       id: uuidv4(),
