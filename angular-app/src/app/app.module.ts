@@ -74,6 +74,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.component';
+import { AdminPanelWidgetComponent } from './theme/widgets/admin-panel-widget/admin-panel-widget.component';
 
 
 
@@ -110,6 +111,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     AccountModalComponent,
     TalentNavComponent,
     AdminNavComponent,
+    AdminPanelWidgetComponent,
   ],
   imports: [
     AppRoutingModule,

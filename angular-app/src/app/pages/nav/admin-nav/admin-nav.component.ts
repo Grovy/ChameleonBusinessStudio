@@ -19,26 +19,14 @@ export class AdminNavComponent {
         label: 'Admin Configuration',
         link: './admin-configuration',
         index: 0,
-      } , {
-        label: 'Booking Page',
-        link: './booking-page',
-        index: 1,
       }, {
         label: 'Admin Panel',
         link: './admin-panel',
-        index: 2,
-      }, {
-        label: 'Landing Page Configuration',
-        link: './landing-page-configuration',
-        index: 3,
+        index: 1,
       }, {
         label: 'Appointment Details',
         link: './appointment-details',
-        index: 4,
-      }, {
-        label: 'Schedule Configuration Page',
-        link: './schedule-configuration',
-        index: 5,
+        index: 2,
       }
     ]
   }

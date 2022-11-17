@@ -21,7 +21,7 @@ export class UserService {
 
     // Function to create a new user and save in Vendia
     public createUser(user: IUser): Observable<any> {
-        return this.httpClient.post(`${this.apiUrl}`, user)
+        return this.httpClient.post(`${this.apiUrl}`, user, { observe: 'response' })
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

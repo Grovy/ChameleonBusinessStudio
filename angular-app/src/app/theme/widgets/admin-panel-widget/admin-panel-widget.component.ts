@@ -6,14 +6,14 @@ import { UserService } from "src/app/services/UserService.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { v4 as uuidv4 } from 'uuid';
 
-@Component ({
-  selector:'app-admin-panel',
-  templateUrl:'./admin-panel.component.html',
-  styleUrls: ['./admin-panel.component.css']
-})
 
-export class AdminPanelComponent implements OnInit {
-  
+@Component({
+  selector: 'app-admin-panel-widget',
+  templateUrl: './admin-panel-widget.component.html',
+  styleUrls: ['./admin-panel-widget.component.css']
+})
+export class AdminPanelWidgetComponent implements OnInit {
+
   myUserResponse: IUserResponse = { users: [] };
   displayedColumns: string[] = ['displayName', 'email', 'role'];
   roleSelection: string[] = ['PARTICIPANT', 'ADMIN', 'TALENT', 'ORGANIZER'];
@@ -114,5 +114,5 @@ export class AdminPanelComponent implements OnInit {
   onSave() {
     console.log("New employee: " + this.profileForm);
   }
-}
 
+}

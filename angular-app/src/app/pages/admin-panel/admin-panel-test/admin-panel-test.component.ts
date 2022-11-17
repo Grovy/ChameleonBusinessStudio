@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import { IUser } from "src/app/models/interfaces/IUser";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { MockEmployeeList } from "src/app/models/mock/mock-employees";
+import { v4 as uuidv4 } from 'uuid';
 
 @Component ({
   selector:'app-admin-panel',
@@ -38,6 +39,7 @@ export class AdminPanelTestComponent {
 
   onClickSubmit(data) {
     const newProfile: IUser = {
+      _id: uuidv4(),
       displayName: data?.displayName ? data.displayName : data.email,
       email: data.email,
       role: data.role,

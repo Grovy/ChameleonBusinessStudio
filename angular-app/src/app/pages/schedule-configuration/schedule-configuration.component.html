@@ -173,8 +173,12 @@
                         <h4>Description: {{myEvent.description ? myEvent.description : " " }}</h4>
                     </mat-card-content>
                     <mat-card-actions>
-                        <a routerLink="../appointment-details" routerLinkActive="active">
+                        <a routerLink="../appointment-details" [queryParams]="{newEvent: newApptTitle}" routerLinkActive="active">
                             <button mat-raised-button color="primary">Go to booking page</button>
+                        </a>
+                        <br>
+                        <a routerLink="../" routerLinkActive="active">
+                            <button mat-raised-button color="primary">Go to dashboard</button>
                         </a>
                     </mat-card-actions>
                 </mat-card>

@@ -20,17 +20,9 @@ export class TalentNavComponent {
         link: './',
         index: 0,
       }, {
-        label: 'Booking Page',
-        link: './booking-page',
-        index: 1,
-      }, {
         label: 'Edit Schedule',
         link: './schedule-configuration',
-        index: 2,
-      }, {
-        label: 'Appointment Details',
-        link: './appointment-details',
-        index: 3,
+        index: 1,
       }
     ]
   }

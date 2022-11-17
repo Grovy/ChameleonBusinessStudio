@@ -55,6 +55,23 @@ app-participant-booked-appts {
   justify-content: space-around;
 }
 
+.admin-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.participant-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+
+}
+
 .welcome-message{
   display: flex;
   justify-content: center;
@@ -117,7 +134,7 @@ app-participant-booked-appts {
   margin-left: -1px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: #12002e;
+  background-color: #ff4081;;
 }
 
 .bottom-line{
@@ -140,4 +157,10 @@ app-participant-booked-appts {
 
 .p-booked-appts-widget{
   margin: 30px 30px 30px 30px;
+}
+
+#footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }

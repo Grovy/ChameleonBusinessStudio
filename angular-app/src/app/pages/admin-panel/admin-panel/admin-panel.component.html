@@ -2,33 +2,24 @@
   <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 </head>
 
-<mat-toolbar color="accent">
-  <mat-toolbar-row>
-    <p class="business-title">Chameleon <Br>Business Studio</p>
-    <span class="example-spacer"></span>
-    <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
-    <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>
-    <button mat-stroked-button class="icon">About Us</button>
-  </mat-toolbar-row>
-</mat-toolbar>
+<app-default-header></app-default-header>
 
 <div class="home">
   <mat-tab-group>
     <!--The first tab which allows you to view employees-->
     <mat-tab label="View Employees">
-      
       <div class="main-container">
         <div class="secondary-container">
+          <div class="top-line"></div>
           <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
           <div class="event-list-body" *ngFor="let user of myUserResponse.users; let i = index;">
             <mat-expansion-panel hideToggle>
               <mat-expansion-panel-header class="event-list-item">
                 <div class="time-item">
                     <span>User #{{i}}</span><br>
-                    
                 </div>
                 <div class="title-item">
-                  <span>{{user.displayName}}</span>
+                  <span>{{user.displayName}} ({{user.email}})</span>
                 </div>
                 <div class="participants-item">
                   <span>{{user.role}}</span>
@@ -55,6 +46,7 @@
             </div>
             </mat-expansion-panel>
           </div>
+          <div class="bottom-line"></div>
         </div>
       </div>
 
@@ -64,9 +56,10 @@
     <!--The second tab which allows you to add employees-->
     <mat-tab label="Add Employee">
       <div class="add-employees-container">
+        <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
         <!--View the current employee table-->
         <mat-card class="employee-table-card">
-          <mat-card-title>My Employees</mat-card-title>
+          <mat-card-title>My Registered Users</mat-card-title>
           <mat-card-content class="table-container">
             <table mat-table [dataSource]="myUserResponse.users" class="mat-elevation-z8">
               <!--Display Name Column-->                            
@@ -93,10 +86,10 @@
 
         <!--Form to add a new user (employee)-->
         <mat-card class="add-user-card">
-          <mat-card-title class="add-user-card-title">Register a New Employee</mat-card-title>
+          <mat-card-title class="add-user-card-title">Register a New User</mat-card-title>
           <mat-card-subtitle class="add-user-card-subtitle">
-            Enter the following information to create a new employee. <br><br>
-            Guidelines: <br> New employee data should <strong>not</strong> include data of an existing employee.<br>
+            Enter the following information to create a new user. <br><br>
+            Guidelines: <br> New employee data should <strong>not</strong> include data of an existing user.<br>
           </mat-card-subtitle>
           <mat-card-content>
             <form [formGroup]="profileForm" class="form-container" id="ngForm" (ngSubmit)="onClickSubmit(profileForm.value)">
@@ -133,7 +126,7 @@
             </form>
           </mat-card-content>
           <mat-card-actions>
-            <button mat-raised-button color="primary" form="ngForm">Save</button>
+            <button mat-raised-button color="primary" form="ngForm" [disabled]="!profileForm.valid">Save</button>
             <button mat-raised-button color="secondary" (click)="onDiscard()">Discard</button>
           </mat-card-actions>
         </mat-card>

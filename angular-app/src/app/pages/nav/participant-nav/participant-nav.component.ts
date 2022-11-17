@@ -16,13 +16,9 @@ export class ParticipantNavComponent {
   constructor(private router: Router) {
     this.navLinks = [
       {
-        label: 'Booking Page',
-        link: './booking-page',
+        label: 'Your Dashboard',
+        link: './',
         index: 0,
-      }, {
-        label: 'Appointment Details',
-        link: './appointment-details',
-        index: 1,
       }
     ]
   }
