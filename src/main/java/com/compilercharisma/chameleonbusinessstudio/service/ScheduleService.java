@@ -125,7 +125,9 @@ public class ScheduleService {
         return Flux.fromIterable(s.getAppointments())
             .filter(this::canGenerateAppointmentFrom)
             .flatMapIterable(this::copyToDays)
-            .flatMap(appointments::createAppointment) // don't have a method for batch-creating appts in Vendia yet
+            .collectList()
+            .flux() // allows flatMap's signature to match what appointments expects
+            .flatMap(appointments::createAppointments)
             .collectList()
             .doOnSuccess(appts -> log.info("Created %d appointments".formatted(appts.size())))
             .then(Mono.just(s));

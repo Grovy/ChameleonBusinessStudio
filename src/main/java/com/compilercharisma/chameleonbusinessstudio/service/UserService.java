@@ -6,12 +6,16 @@ import com.compilercharisma.chameleonbusinessstudio.exception.AppointmentNotFoun
 import com.compilercharisma.chameleonbusinessstudio.exception.UserNotRegisteredException;
 import com.compilercharisma.chameleonbusinessstudio.repository.AppointmentRepository;
 import com.compilercharisma.chameleonbusinessstudio.repository.UserRepository;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -124,6 +128,50 @@ public class UserService {
     }
 
     /**
+     * Adds multiple appointment IDs to a User's appointment list.
+     * Note that this method does not validate the appointment IDs, and throws
+     * an UnsupportedOperationException if this would add no new appointments to
+     * their array.
+     * 
+     * Calling this method is preferered over multiple calls to multiple calls
+     * to addNewAppointmentForUser, as the latter is vulnerable to race 
+     * conditions and performs more requests.
+     */
+    public Mono<User> addNewAppointmentsForUser(
+            String userId, 
+            List<String> appointmentIds
+    ){
+        log.info("Adding the following appointments for user with id [{}]:", userId);
+        for (var appt : appointmentIds) {
+            log.info("* [{}]", appt);
+        }
+        return userRepository.getUserAppointments(userId)
+                .map(UserAppointments::getAppointments)
+                .filter(oldAppts -> containsNewAppointments(oldAppts, appointmentIds))
+                .switchIfEmpty(Mono.error(new UnsupportedOperationException("must add at least 1 new appointment")))
+                .map(oldAppts -> merge(oldAppts, appointmentIds))
+                .map(this::stringifyAppointmentList)
+                .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
+    }
+
+    private boolean containsNewAppointments(List<String> oldAppts, List<String> newAppts){
+        var oldSet = Set.copyOf(oldAppts);
+        return !oldSet.containsAll(newAppts);
+    }
+
+    private List<String> merge(List<String> list1, List<String> list2){
+        var merged = new HashSet<String>(list1);
+        list2.forEach(merged::add);
+        return merged.stream().toList();
+    }
+
+    private String stringifyAppointmentList(List<String> appointmentList){
+        return appointmentList.stream()
+                .map(s -> String.format("\"%s\"", s))
+                .collect(Collectors.joining(",", "[", "]"));
+    }
+
+    /**
      * Adds a new appointment to the user's appointments array when they are booked
      *
      * @param userId        id of the user
@@ -137,9 +185,7 @@ public class UserService {
                         "User already is booked for appointment with id [%s]".formatted(appointmentId))))
                 .map(appointments -> {
                     appointments.getAppointments().add(appointmentId);
-                    return appointments.getAppointments().stream()
-                            .map(s -> String.format("\"%s\"", s))
-                            .collect(Collectors.joining(",", "[", "]"));
+                    return stringifyAppointmentList(appointments.getAppointments());
                 })
                 .flatMap(apptsString -> userRepository.updateAppointmentsForUser(userId, apptsString));
     }

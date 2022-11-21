@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -46,6 +47,7 @@ public class User implements Serializable {
     /**
      * List of appointment ids that the user has
      */
-    private List<String> appointments;
+    @Builder.Default
+    private List<String> appointments = new ArrayList<String>();
 
 }
