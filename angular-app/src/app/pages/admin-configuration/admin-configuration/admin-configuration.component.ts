@@ -1,14 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { MatIconRegistry } from '@angular/material/icon';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DomSanitizer } from '@angular/platform-browser';
-import { catchError, Observable, tap, throwError } from 'rxjs';
-
-type RGB = `rgb(${number}, ${number}, ${number})`;
-type HEX = `#${string}`;
-type Color = HEX | RGB;
+import { WebsiteAppearanceService } from '../../../services/WebsiteAppearanceService.service';
 
 @Component({
   selector: 'app-admin-configuration',
@@ -22,8 +15,13 @@ export class AdminConfigurationComponent {
   companyNameImage: string = 'assets/images/type-company-name.svg';
   previewAndSaveImage: string = 'assets/images/admin-config-check.svg';
 
-  logoFileName: string;
-  splashFileName: string;
+  logoFile?: File;
+  logoFileName: string = '';
+
+  splashFile?: File;
+  splashFileName: string = '';
+  splashContent: string = '';
+  
   bannerColor = '';
 
   isLinear = false;
@@ -34,12 +32,10 @@ export class AdminConfigurationComponent {
   lastFormGroup: FormGroup;
 
   constructor(
-    private _formBuilder: FormBuilder, 
-    private http: HttpClient, 
+    private service: WebsiteAppearanceService,
+    private _formBuilder: FormBuilder,
     private _snackBar: MatSnackBar,
-  ) { }
-
-  ngOnInit(): void {
+  ) { 
     this.bannerFormGroup = this._formBuilder.group({
       banner_color: ['', Validators.required]
     });
@@ -66,91 +62,131 @@ export class AdminConfigurationComponent {
     });
   }
 
-  // Function changes the name of the file to reflect in the UI
-  onFileSelected(event) {
-    const file: File = event.target.files[0];
-    const splashFile: File = event.target.files[1];
-
-    if(file) {
-      this.logoFileName = file.name;
-      this.splashFileName = splashFile.name;
+  /**
+   * Called whenever the user selects a new banner color
+   * @param event the HTML event that occurs when a new color is selected
+   */
+  onColorSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target != null) {
+      this.bannerColor = target.value ?? '';
+      console.log("Selected color is: " + this.bannerColor);
     }
   }
 
-  onColorSelected(event) {
-    const value = event.target.value;
-    value ? this.bannerColor = value : '';
-    console.log("Selected color is: " + this.bannerColor);
+  /**
+   * posts the banner color to the backend
+   */
+  submitBannerColor() {
+    console.log("Submitting color...");
+    this.service.setBannerColor(this.bannerColor)
+      .subscribe(() => this.showSuccess("Saved banner color successfully!"));
   }
 
+  /**
+   * Called whenever the user selects a new logo file.
+   * 
+   * @param event the HTML event that occurs when the logo is selected
+   */
   onLogoSelected(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target != null && target.files != null && target.files.length > 0) {
       const file = target.files[0];
-      this.logoFormGroup.get("logo")?.setValue(file);
+      this.logoFile = file;
+
+      // update avatar
+      this.logoFormGroup.patchValue({
+        avatar: file
+      });
+      this.logoFormGroup.get('avatar')?.updateValueAndValidity();
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.logoFileName = reader.result as string;
+      }
+      reader.readAsDataURL(file);
+
       console.log("User selected their logo: ", file);
     }
   }
 
   /**
-   * makes a POST request to /api/v1/config/logo with the logo the user selected
+   * posts the new website logo to the backend
    */
   submitLogo() {
-    // TODO move this into the service layer
     console.log("submitting logo...");
-    const formData = new FormData();
-    formData.append("file", this.logoFormGroup.get("logo")?.value);
-    console.log(formData);
-
-    this.http.post<any>("/api/v1/config/logo", formData)
-      .pipe(
-        tap(console.log), // todo better way of showing success or not
-        catchError(this.handleError)
-      )
-      .subscribe();
-  }
-
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    console.error(error);
-    return throwError(() => error.message);
-  }
-
-  showPreviewLogo(event) {
-    const logoFile = (event.target as HTMLInputElement).files[0];
-
-    this.logoFormGroup.patchValue({
-      avatar: logoFile[0]
-    });
-
-    this.logoFormGroup.get('avatar')?.updateValueAndValidity();
-    
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.logoFileName = reader.result as string;
+    if (this.logoFile) {
+      this.service.setLogo(this.logoFile)
+        .subscribe(() => this.showSuccess("Saved logo successfully!"));
+    } else {
+      console.error('No logo found: ', this.logoFormGroup);
     }
-
-    reader.readAsDataURL(logoFile);
   }
 
-  showPreviewSplash(event) {
-    const splashFile = (event.target as HTMLInputElement).files[0];
+  /**
+   * Called whenever the user selects a new splash page file.
+   * 
+   * @param event the HTML event that occurs when the splash page is selected
+   */
+  onSplashPageSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target != null && target.files != null && target.files.length > 0) {
+      this.splashFile = target.files[0];
+      this.splashFormGroup.patchValue({
+        avatar: this.splashFile
+      });
+      this.splashFormGroup.get('avatar')?.updateValueAndValidity();
+      this.splashFileName = this.splashFile.name;
 
-    this.splashFormGroup.patchValue({
-      avatar: splashFile[0]
-    });
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.splashContent = reader.result as string;
+      }
+      reader.readAsDataURL(this.splashFile);
 
-    this.splashFormGroup.get('avatar')?.updateValueAndValidity();
-    
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.splashFileName = reader.result as string;
+      console.log("User selected their splash page: ", this.splashFile);
     }
-
-    reader.readAsDataURL(splashFile);
   }
+
+  /**
+   * posts the selected splash page to the backend
+   */
+  submitSplashPage() {
+    console.log("Submitting splash page...");
+    if (this.splashFile != null) {
+      this.service.setSplashPage(this.splashFile)
+        .subscribe(() => this.showSuccess("Saved splash page successfully!"));
+    }
+  }
+
+  /**
+   * posts the selected organization name to the backend
+   */
+  submitOrganizationName() {
+    console.log("Submitting organization name...");
+    const orgName = this.orgNameFormGroup.get('org_name')?.value; 
+    if (orgName != null) {
+      this.service.setOrganizationName(orgName)
+        .subscribe(() => this.showSuccess("Save organization name successfully!"));
+    }
+  }
+
+
 
   openSnackBar() {
     this._snackBar.open(
       "Configuration saved!", "Close");
+  }
+
+
+
+  /**
+   * Shows a success message for a brief period of time.
+   * 
+   * @param message the message to display
+   */
+  private showSuccess(message: string) {
+    this._snackBar.open(message, "OK", {
+      duration: 3000
+    });
   }
 }

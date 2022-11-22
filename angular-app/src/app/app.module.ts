@@ -48,6 +48,7 @@ import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
 import { TalentNavComponent } from './pages/nav/talent-nav/talent-nav.component';
 import { UserService } from './services/UserService.service';
+import { WebsiteAppearanceService } from './services/WebsiteAppearanceService.service';
 
 
 
@@ -170,7 +171,7 @@ import { AdminPanelWidgetComponent } from './theme/widgets/admin-panel-widget/ad
     DateManager,
     ScheduleService,
     UserService,
-    AppointmentService
+    WebsiteAppearanceService
   ],
   bootstrap: [AppComponent]
 })
