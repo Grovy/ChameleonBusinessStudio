@@ -65,7 +65,7 @@
       </form>
     </mat-step>
 
-    <!--Step 3: Choose background image-->
+    <!--Step 3: Choose splash page-->
     <mat-step [stepControl]="splashFormGroup">
       <form [formGroup]="splashFormGroup">
         <ng-template matStepLabel>Upload your splash page content</ng-template>
@@ -120,29 +120,7 @@
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
           <button mat-raised-button (click)="submitOrganizationName()">Save</button>
-          <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
-      </form>
-    </mat-step>
-
-    <!--Step 4: Submit Form-->
-    <!-- no longer needed, as we save at each step -->
-    <mat-step [stepControl]="lastFormGroup">
-      <form [formGroup]="lastFormGroup">
-        <ng-template matStepLabel>Preview and Save</ng-template>
-
-          <mat-card class="preview-and-save-card">
-            <div class="card-image-container">
-              <img class="save-image" [src]=previewAndSaveImage alt="preview-and-save-image">
-            </div>
-            <div class="card-content-container">
-              <p class="card-title">Preview and Save</p>
-              All fields in this form are required. Check to make sure you have uploaded all fields, then click save to save your configuration!
-            </div>
-          </mat-card>
-
-          <button mat-raised-button matStepperPrevious>Back</button>
-          <button mat-raised-button type="submit" (click)="openSnackBar()" class="next-button" control>Save</button>
       </form>
     </mat-step>
   </mat-horizontal-stepper>

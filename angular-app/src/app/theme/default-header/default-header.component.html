@@ -1,6 +1,7 @@
-<mat-toolbar color="accent">
+<mat-toolbar color="accent" id="site_header">
   <mat-toolbar-row>
-    <p class="business-title">Chameleon <Br>Business Studio</p>
+    <img id="logo" src="/api/v1/config/logo" alt="website logo"/>
+    <p class="business-title">{{ organizationName }}</p>
     <span class="example-spacer"></span>
     <a href="https://www.linkedin.com/company/vendiahq/" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="linkedIn"></mat-icon></button></a>
     <a href="https://github.com/Grovy/ChameleonBusinessStudio" target="_blank"><button mat-icon-button class="icon"><mat-icon svgIcon="github"></mat-icon></button></a>

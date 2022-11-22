@@ -4,6 +4,10 @@ mat-toolbar{
   padding: 15px;
 }
 
+#logo {
+  max-height: 100px;
+}
+
 .icon{
   padding: 0 20px;
   margin: 0 20px;

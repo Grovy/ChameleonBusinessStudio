@@ -36,6 +36,19 @@ export class WebsiteAppearanceService {
     }
 
     /**
+     * Retrieves the banner color from the backend.
+     * 
+     * @returns an object containing the color of the website banner
+     */
+    public getBannerColor(): Observable<{color: string}> {
+        return this.httpClient.get<{color: string}>(this.route('banner-color'))
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    /**
      * Sets the website logo in the backend.
      * 
      * @param file the new image file to use as a website logo
@@ -80,6 +93,19 @@ export class WebsiteAppearanceService {
         formData.append("organizationName", name);
 
         return this.httpClient.post<any>(this.route('organization'), formData)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    /**
+     * Gets the organization name from the backend.
+     * 
+     * @returns an observable containing the organization name
+     */
+    public getOrganizationName(): Observable<{name: string}> {
+        return this.httpClient.get<{name: string}>(this.route('organization'))
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

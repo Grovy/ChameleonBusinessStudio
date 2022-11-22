@@ -13,7 +13,7 @@ export class AdminConfigurationComponent {
   bannerColorImage: string = 'assets/images/paintbrush.png';
   logoCardImage: string = 'assets/images/upload-logo.svg';
   companyNameImage: string = 'assets/images/type-company-name.svg';
-  previewAndSaveImage: string = 'assets/images/admin-config-check.svg';
+  previewAndSaveImage: string = 'assets/images/admin-config-check.svg'; // not used
 
   logoFile?: File;
   logoFileName: string = '';
@@ -21,7 +21,7 @@ export class AdminConfigurationComponent {
   splashFile?: File;
   splashFileName: string = '';
   splashContent: string = '';
-  
+
   bannerColor = '';
 
   isLinear = false;
@@ -29,7 +29,6 @@ export class AdminConfigurationComponent {
   logoFormGroup: FormGroup; 
   splashFormGroup: FormGroup;
   orgNameFormGroup: FormGroup;
-  lastFormGroup: FormGroup;
 
   constructor(
     private service: WebsiteAppearanceService,
@@ -55,11 +54,6 @@ export class AdminConfigurationComponent {
     this.orgNameFormGroup = this._formBuilder.group({
       org_name: ['', Validators.required]
     });
-  
-
-    this.lastFormGroup = this._formBuilder.group({
-      submit: ['', Validators.required]
-    });
   }
 
   /**
@@ -80,7 +74,7 @@ export class AdminConfigurationComponent {
   submitBannerColor() {
     console.log("Submitting color...");
     this.service.setBannerColor(this.bannerColor)
-      .subscribe(() => this.showSuccess("Saved banner color successfully!"));
+      .subscribe(this.showSnackBar("Saved banner color successfully!"));
   }
 
   /**
@@ -116,9 +110,7 @@ export class AdminConfigurationComponent {
     console.log("submitting logo...");
     if (this.logoFile) {
       this.service.setLogo(this.logoFile)
-        .subscribe(() => this.showSuccess("Saved logo successfully!"));
-    } else {
-      console.error('No logo found: ', this.logoFormGroup);
+        .subscribe(this.showSnackBar("Saved logo successfully!"));
     }
   }
 
@@ -154,7 +146,7 @@ export class AdminConfigurationComponent {
     console.log("Submitting splash page...");
     if (this.splashFile != null) {
       this.service.setSplashPage(this.splashFile)
-        .subscribe(() => this.showSuccess("Saved splash page successfully!"));
+        .subscribe(this.showSnackBar("Saved splash page successfully!"));
     }
   }
 
@@ -166,27 +158,24 @@ export class AdminConfigurationComponent {
     const orgName = this.orgNameFormGroup.get('org_name')?.value; 
     if (orgName != null) {
       this.service.setOrganizationName(orgName)
-        .subscribe(() => this.showSuccess("Save organization name successfully!"));
+        .subscribe(this.showSnackBar("Save organization name successfully!"));
     }
   }
-
-
-
-  openSnackBar() {
-    this._snackBar.open(
-      "Configuration saved!", "Close");
-  }
-
-
 
   /**
    * Shows a success message for a brief period of time.
    * 
-   * @param message the message to display
+   * @param successMessage the message to display
+   * @returns an observer to pass to `Observable::subscribe`
    */
-  private showSuccess(message: string) {
-    this._snackBar.open(message, "OK", {
-      duration: 3000
-    });
+  private showSnackBar(successMessage: string) {
+    return {
+      next: () => this._snackBar.open(successMessage, "OK", {
+        duration: 3000
+      }),
+      error: (error: Error) => this._snackBar.open(`An error occured: ${error}`, "Yikes", {
+        duration: 3000
+      })
+    }
   }
 }
