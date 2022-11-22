@@ -1,9 +1,10 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 type RGB = `rgb(${number}, ${number}, ${number})`;
 type HEX = `#${string}`;
@@ -82,6 +83,37 @@ export class AdminConfigurationComponent {
     console.log("Selected color is: " + this.bannerColor);
   }
 
+  onLogoSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target != null && target.files != null && target.files.length > 0) {
+      const file = target.files[0];
+      this.logoFormGroup.get("logo")?.setValue(file);
+      console.log("User selected their logo: ", file);
+    }
+  }
+
+  /**
+   * makes a POST request to /api/v1/config/logo with the logo the user selected
+   */
+  submitLogo() {
+    // TODO move this into the service layer
+    console.log("submitting logo...");
+    const formData = new FormData();
+    formData.append("file", this.logoFormGroup.get("logo")?.value);
+    console.log(formData);
+
+    this.http.post<any>("/api/v1/config/logo", formData)
+      .pipe(
+        tap(console.log), // todo better way of showing success or not
+        catchError(this.handleError)
+      )
+      .subscribe();
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error(error);
+    return throwError(() => error.message);
+  }
 
   showPreviewLogo(event) {
     const logoFile = (event.target as HTMLInputElement).files[0];

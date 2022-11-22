@@ -34,7 +34,7 @@
 
     <!--Step 2: Choose logo-->
     <mat-step [stepControl]="logoFormGroup">
-      <form [formGroup]="logoFormGroup">
+      <form [formGroup]="logoFormGroup" (ngSubmit)="submitLogo()">
         <ng-template matStepLabel>Upload your Company Logo</ng-template>
 
           <!--Company Logo Instruction Card-->
@@ -49,7 +49,7 @@
           </mat-card>
         
           <input matInput formControlName="logo" required>
-          <input type="file" class="logo-file-input" (change)="showPreviewLogo($event)" #logoFileUpload>
+          <input type="file" class="logo-file-input" (change)="showPreviewLogo($event);onLogoSelected($event)" #logoFileUpload>
 
           <div class="logo-file-upload">
             <button mat-mini-fab color="primary" class="logo-upload-btn" (click)="logoFileUpload.click()">
@@ -59,7 +59,7 @@
           
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
-          <button mat-raised-button matStepperNext class="next-button">Next</button>
+          <button mat-raised-button matStepperNext class="next-button" (click)="submitLogo">Next</button>
         </div>
       </form>
     </mat-step>
