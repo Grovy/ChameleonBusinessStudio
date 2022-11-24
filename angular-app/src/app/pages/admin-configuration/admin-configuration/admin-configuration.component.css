@@ -20,7 +20,7 @@
 }
 
 .splash-file-input{
-  display: none;
+  border: 5px groove black;
 }
 
 .logo-upload-btn{

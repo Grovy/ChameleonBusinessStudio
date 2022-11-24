@@ -1,16 +1,10 @@
 appt: see resource-examples folder
 
-landing-page {
-    // html content
-    content: string
-}
-
 org {
     name: string
 }
 
 splash {
-    // html content
     content: string
 }
 

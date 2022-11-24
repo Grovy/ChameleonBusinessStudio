@@ -18,10 +18,6 @@ export class AdminConfigurationComponent {
   logoFile?: File;
   logoFileName: string = '';
 
-  splashFile?: File;
-  splashFileName: string = '';
-  splashContent: string = '';
-
   bannerColor = '';
 
   isLinear = false;
@@ -65,6 +61,10 @@ export class AdminConfigurationComponent {
     if (target != null) {
       this.bannerColor = target.value ?? '';
       console.log("Selected color is: " + this.bannerColor);
+      const e = document.getElementById("banner-color-display");
+      if (e != null) {
+        e.style.backgroundColor = this.bannerColor;
+      }
     }
   }
 
@@ -115,37 +115,14 @@ export class AdminConfigurationComponent {
   }
 
   /**
-   * Called whenever the user selects a new splash page file.
-   * 
-   * @param event the HTML event that occurs when the splash page is selected
-   */
-  onSplashPageSelected(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target != null && target.files != null && target.files.length > 0) {
-      this.splashFile = target.files[0];
-      this.splashFormGroup.patchValue({
-        avatar: this.splashFile
-      });
-      this.splashFormGroup.get('avatar')?.updateValueAndValidity();
-      this.splashFileName = this.splashFile.name;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.splashContent = reader.result as string;
-      }
-      reader.readAsText(this.splashFile);
-
-      console.log("User selected their splash page: ", this.splashFile);
-    }
-  }
-
-  /**
-   * posts the selected splash page to the backend
+   * posts the splash page to the backend
    */
   submitSplashPage() {
     console.log("Submitting splash page...");
-    if (this.splashFile != null) {
-      this.service.setSplashPage(this.splashFile)
+    const text = this.splashFormGroup.get('splash')?.value;
+
+    if (text != null) {
+      this.service.setSplashPage(text)
         .subscribe(this.showSnackBar("Saved splash page successfully!"));
     }
   }

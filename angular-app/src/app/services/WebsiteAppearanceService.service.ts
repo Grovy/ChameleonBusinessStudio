@@ -70,12 +70,12 @@ export class WebsiteAppearanceService {
     /**
      * Sets the splash page content in the backend.
      * 
-     * @param file an HTML file to use in the splash page
+     * @param text the text to use in the splash page
      * @returns an observable that must be subscribed to
      */
-    public setSplashPage(file: File): Observable<any> {
+    public setSplashPage(text: string): Observable<any> {
         const formData = new FormData();
-        formData.append("file", file); // backend requires this exact name "file"
+        formData.append("content", text);
 
         return this.httpClient.post<any>(this.route('splash'), formData)
             .pipe(

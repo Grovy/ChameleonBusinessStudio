@@ -12,7 +12,7 @@
         <ng-template matStepLabel>Choose your banner color</ng-template>
 
         <!--Banner Color Instruction Card-->
-        <mat-card class="banner-color-card">
+        <mat-card class="banner-color-card" id="banner-color-display">
           <div class="card-image-container">
             <img class="paintbrush" [src]=bannerColorImage alt="my-image">
           </div>
@@ -82,7 +82,7 @@
     <!--Step 3: Choose splash page-->
     <mat-step [stepControl]="splashFormGroup">
       <form [formGroup]="splashFormGroup">
-        <ng-template matStepLabel>Upload your splash page content</ng-template>
+        <ng-template matStepLabel>Upload your splash page text</ng-template>
 
         <!--Background Image Instruction Card (reusing logo card code since they share same svg image)-->
         <mat-card class="logo-card">
@@ -90,32 +90,15 @@
             <img class="logo-image" [src]=logoCardImage alt="logo-image">
           </div>
           <div class="card-content-container">
-            <p class="card-title">Upload your splash page content</p>
-            Upload an HTML file that will be displayed in your splash page.
+            <p class="card-title">Upload your splash page text</p>
+            Enter the text that will be displayed in your splash page.
           </div>
-        </mat-card>
-
-        <!--Preview your splash page content before sending to server-->
-        <mat-card class="splash-container-outline">
-          <mat-card class="splash-container">
-            <mat-card-title class="splash-container-title">Preview the Splash Page</mat-card-title>
-            <div class="break"></div>
-            <mat-card-content>
-              <div class="splash-box">
-                <div class="splash-image-preview" [innerHtml]="splashContent"></div>
-              </div>
-            </mat-card-content>
-          </mat-card>
         </mat-card>
         
         <input matInput formControlName="splash" required>
-        <input type="file" class="splash-file-input" (change)="onSplashPageSelected($event)" #splashFileUpload>
+        <textarea class="splash-file-input" rows="5" cols="80" #splashFileUpload>
 
-        <div class="splash-file-upload" >
-          <button mat-mini-fab color="primary" class="splash-upload-btn" (click)="splashFileUpload.click()">
-            <mat-icon>attach_file</mat-icon>
-          </button>
-        </div>
+        </textarea>
 
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
