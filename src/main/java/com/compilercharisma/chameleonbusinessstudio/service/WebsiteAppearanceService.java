@@ -142,6 +142,14 @@ public class WebsiteAppearanceService {
         return bytes;
     }
 
+    /**
+     * removes the currently set banner image so the site will display the
+     * banner color instead
+     */
+    public void removeBannerImage() {
+        repo.unset(BANNER_IMAGE);
+    }
+
     private String extractHtmlBody(String content){
         // strip some HTML formatting
         if(content.contains("<html>")){

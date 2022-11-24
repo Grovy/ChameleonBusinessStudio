@@ -90,4 +90,16 @@ public interface WebsiteConfigurationRepository {
         var props = load();
         return props.getProperty(property, defaultValue);
     }
+
+    /**
+     * Removes the given property from the file in the backing store, if the
+     * property is set.
+     * 
+     * @param property the property to remove from the backing store.
+     */
+    public default void unset(String property) {
+        var props = load();
+        props.remove(property);
+        store(props);
+    }
 }

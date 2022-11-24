@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -107,6 +108,18 @@ public class WebsiteAppearanceController {
         var at = makeUri(root, "banner-image");
         return serv.setBannerImage(adapted)
             .then(Mono.just(ResponseEntity.created(at).build()));
+    }
+
+    /**
+     * removes the current banner image so the site will display the banner
+     * color instead
+     * 
+     * @return an OK response
+     */
+    @DeleteMapping("/banner-image")
+    public Mono<ResponseEntity<Void>> deleteBannerImage() {
+        serv.removeBannerImage();
+        return Mono.just(ResponseEntity.ok().build());
     }
 
     /**
