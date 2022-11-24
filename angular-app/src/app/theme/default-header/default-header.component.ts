@@ -15,11 +15,11 @@ import { WebsiteAppearanceService } from 'src/app/services/WebsiteAppearanceServ
 })
 export class DefaultHeaderComponent {
   organizationName: string = 'Chameleon Business Studio';
-  public isRegisteredValue: boolean;
-  public isAuthenticatedValue: boolean;
-  public shouldDisplayModal: boolean;
-  public userEmail: string;
-  public currentUser: IUser;
+  public isRegisteredValue: boolean = false;
+  public isAuthenticatedValue: boolean = false;
+  public shouldDisplayModal: boolean = false;
+  public userEmail: string = '';
+  public currentUser?: IUser;
 
   constructor(
     public dialog: MatDialog, 
@@ -85,7 +85,9 @@ export class DefaultHeaderComponent {
   }
 
   onClickProfile(): void {
-    this.displayProfileModal(this.currentUser);
+    if (this.currentUser != null) {
+      this.displayProfileModal(this.currentUser);
+    }
   }
 
   displayProfileModal(user: IUser) {

@@ -4,6 +4,13 @@ mat-toolbar{
   padding: 15px;
 }
 
+#site_header {
+  background-attachment: fixed;
+  background-image: url("/api/v1/config/banner-image");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 #logo {
   max-height: 100px;
 }
@@ -34,7 +41,6 @@ mat-toolbar{
   align-items: center;
   justify-content: center;
   padding: 20px;
-  alignment: center;
   margin: auto;
 }
 

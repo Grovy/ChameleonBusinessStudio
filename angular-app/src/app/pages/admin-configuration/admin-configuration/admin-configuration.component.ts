@@ -133,7 +133,7 @@ export class AdminConfigurationComponent {
       reader.onload = () => {
         this.splashContent = reader.result as string;
       }
-      reader.readAsDataURL(this.splashFile);
+      reader.readAsText(this.splashFile);
 
       console.log("User selected their splash page: ", this.splashFile);
     }

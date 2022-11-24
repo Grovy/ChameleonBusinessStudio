@@ -47,6 +47,20 @@
               Upload a small image that will be used as your company logo. It will be displayed on your banner
             </div>
           </mat-card>
+
+          <!--Preview your logo before sending to server-->
+          <mat-card class="logo-container-outline">
+            <mat-card class="logo-container"> 
+              <mat-card-title class="logo-container-title">Preview the Logo</mat-card-title>
+              <mat-card-content>
+                <div class="logo-box">
+                  <div class="logo-image-preview" *ngIf="logoFileName && logoFileName !== ''">
+                      <img class="logo-image" [src]="logoFileName" [alt]="logoFormGroup.value.name">
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-card>
         
           <input matInput formControlName="logo" required>
           <input type="file" class="logo-file-input" (change)="onLogoSelected($event)" #logoFileUpload>
@@ -80,15 +94,28 @@
             Upload an HTML file that will be displayed in your splash page.
           </div>
         </mat-card>
-        
-          <input matInput formControlName="splash" required>
-          <input type="file" class="splash-file-input" (change)="onSplashPageSelected($event)" #splashFileUpload>
 
-          <div class="splash-file-upload" >
-            <button mat-mini-fab color="primary" class="splash-upload-btn" (click)="splashFileUpload.click()">
-              <mat-icon>attach_file</mat-icon>
-            </button>
-          </div>
+        <!--Preview your splash page content before sending to server-->
+        <mat-card class="splash-container-outline">
+          <mat-card class="splash-container">
+            <mat-card-title class="splash-container-title">Preview the Splash Page</mat-card-title>
+            <div class="break"></div>
+            <mat-card-content>
+              <div class="splash-box">
+                <div class="splash-image-preview" [innerHtml]="splashContent"></div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-card>
+        
+        <input matInput formControlName="splash" required>
+        <input type="file" class="splash-file-input" (change)="onSplashPageSelected($event)" #splashFileUpload>
+
+        <div class="splash-file-upload" >
+          <button mat-mini-fab color="primary" class="splash-upload-btn" (click)="splashFileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+        </div>
 
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
@@ -128,39 +155,6 @@
 
 <!-- Container that contains the part of the page where the configurations are previewed. -->
 <div class="preview-container">
-  <!--Preview your logo before sending to server-->
-  <mat-card class="logo-container-outline">
-    <mat-card class="logo-container"> 
-      <mat-card-title class="logo-container-title">Preview the Logo</mat-card-title>
-      <mat-card-content>
-        <div class="logo-box">
-          <div class="logo-image-preview" *ngIf="logoFileName && logoFileName !== ''">
-              <img class="logo-image" [src]="logoFileName" [alt]="logoFormGroup.value.name">
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-card>
-  
-
-  <!--Preview your splash page content before sending to server-->
-  <mat-card class="splash-container-outline">
-    <mat-card class="splash-container">
-      <mat-card-title class="splash-container-title">Preview the Splash Page</mat-card-title>
-      <div class="break"></div>
-      <mat-card-content>
-        <div class="splash-box">
-          <div class="splash-image-preview" *ngIf="splashFileName && splashFileName !== ''">
-              {{ splashContent }}
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-card>
-  
-
-  <div class="break"></div>
-
   <mat-card class="banner-container-outline">
     <mat-card class="banner-container">
       <mat-card-title class="banner-container-title">Preview the Banner</mat-card-title>

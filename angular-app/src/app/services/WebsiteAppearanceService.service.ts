@@ -65,6 +65,8 @@ export class WebsiteAppearanceService {
             );
     }
 
+    // no getLogo method: use <img src="/api/v1/config/logo"/> instead!
+
     /**
      * Sets the splash page content in the backend.
      * 
@@ -76,6 +78,20 @@ export class WebsiteAppearanceService {
         formData.append("file", file); // backend requires this exact name "file"
 
         return this.httpClient.post<any>(this.route('splash'), formData)
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    /**
+     * Use this to get the custom content that should be embedded in the splash
+     * page.
+     * 
+     * @returns an observable containing the content of the site splash page
+     */
+    public getSplashPage(): Observable<{content: string}> {
+        return this.httpClient.get<{content: string}>(this.route('splash'))
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

@@ -110,6 +110,7 @@ public class WebsiteAppearanceController {
             .then(Mono.just(ResponseEntity.created(at).build()));
     }
 
+    // currently unused
     @GetMapping("/landing-page")
     public Map<String, Object> getLandingPageContent(){
         HashMap<String, Object> json = new HashMap<>();
