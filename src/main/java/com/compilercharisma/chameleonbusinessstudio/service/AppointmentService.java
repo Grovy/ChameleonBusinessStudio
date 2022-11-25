@@ -1,6 +1,8 @@
 package com.compilercharisma.chameleonbusinessstudio.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,83 @@ public class AppointmentService {
             .map(User::get_id)
             .flatMap(userId -> userService.addNewAppointmentForUser(userId, appt.get_id()))
             .then(Mono.just(appt));
+    }
+
+    /**
+     * Creates many appointments at once. This method is prefered to multiple
+     * calls to createAppointment, as the latter makes more requests and is
+     * vulnerable to race conditions.
+     * 
+     * @param appts the appointments to create
+     * @return a flux containing the created appointments
+     */
+    public Flux<Appointment> createAppointments(List<Appointment> appts){
+        /*
+         * Since addAppointmentForUser uses Update in Vendia to update a user’s 
+         * appointment array, the following event may occur:
+         * 
+         * Suppose there exists a user in Vendia with the following values:
+         *  email = user1; appointments = [appt0]
+         * Suppose 
+         *  addAppointmentForUser(appt1, user1) 
+         * and 
+         *  addAppointmentForUser(appt2, user1) 
+         * are called in parallel within a Flux.
+         * Suppose addAppointmentForUser(appt1, user1) begins resolving, and 
+         * retrieves the user from Vendia. It then correctly updates their 
+         * appointments to [appt0, appt1]. Then, it makes a call to post the 
+         * updates user to Vendia.
+         * However, there is nothing preventing 
+         * addAppointmentForUser(appt2, user1) from starting before Vendia is 
+         * updated. Therefore, it will get the user from Vendia, see their 
+         * appointments as [appt0], then update it to [appt0, appt2]. It then 
+         * makes the call to post the updated user to Vendia. Because of this, 
+         * only one of the appointments has been correctly added to the user in 
+         * Vendia.
+         * 
+         * This method was written specifically to solve that problem.
+         */
+
+        if(appts.isEmpty()){
+            return Flux.empty();
+        }
+
+        // need to store appointments in Vendia first to set their IDs
+        return Flux.fromIterable(appts)                        // create appts in parallel, as they do not depend on each other
+            .flatMap(appointmentRepository::createAppointment) // repository doesn't have batch-create
+            .collectList()                                     // users need to process all at once, so block and collect all created appts
+            .flux()                                            // transform to Flux of 1 element so flatMap signature matches return type
+            .flatMap(listOfAppts -> {                          // need to grab created apps so we can return them later
+                return Mono.just(listOfAppts)
+                    .map(this::groupByParticipant)
+                    .map(HashMap::entrySet)
+                    .flatMapMany(Flux::fromIterable)
+                    .flatMap(entry -> updateUserAppointments(entry.getKey(), entry.getValue()))
+                    .thenMany(Flux.fromIterable(listOfAppts)); // return the previously created appts
+            });
+    }
+
+    private HashMap<String, List<Appointment>> groupByParticipant(List<Appointment> appts){
+        var emailToAppts = new HashMap<String, List<Appointment>>();
+        appts.forEach(appt -> {
+            appt.getParticipants().forEach(email -> {
+                if(!emailToAppts.containsKey(email)){
+                    emailToAppts.put(email, new LinkedList<Appointment>());
+                }
+                emailToAppts.get(email).add(appt);
+            });
+        });
+        return emailToAppts;
+    }
+
+    private Mono<User> updateUserAppointments(String email, List<Appointment> appts){
+        var apptIds = appts.stream()
+            .map(Appointment::get_id)
+            .toList();
+        
+        return userService.getUser(email)
+            .map(User::get_id)
+            .flatMap(userId -> userService.addNewAppointmentsForUser(userId, apptIds));
     }
 
     /**
