@@ -1,13 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MatIconRegistry } from '@angular/material/icon';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DomSanitizer } from '@angular/platform-browser';
-
-type RGB = `rgb(${number}, ${number}, ${number})`;
-type HEX = `#${string}`;
-type Color = HEX | RGB;
+import { WebsiteAppearanceService } from '../../../services/WebsiteAppearanceService.service';
 
 @Component({
   selector: 'app-admin-configuration',
@@ -19,10 +13,11 @@ export class AdminConfigurationComponent {
   bannerColorImage: string = 'assets/images/paintbrush.png';
   logoCardImage: string = 'assets/images/upload-logo.svg';
   companyNameImage: string = 'assets/images/type-company-name.svg';
-  previewAndSaveImage: string = 'assets/images/admin-config-check.svg';
+  previewAndSaveImage: string = 'assets/images/admin-config-check.svg'; // not used
 
-  logoFileName: string;
-  splashFileName: string;
+  logoFile?: File;
+  logoFileName: string = '';
+
   bannerColor = '';
 
   isLinear = false;
@@ -30,15 +25,12 @@ export class AdminConfigurationComponent {
   logoFormGroup: FormGroup; 
   splashFormGroup: FormGroup;
   orgNameFormGroup: FormGroup;
-  lastFormGroup: FormGroup;
 
   constructor(
-    private _formBuilder: FormBuilder, 
-    private http: HttpClient, 
+    private service: WebsiteAppearanceService,
+    private _formBuilder: FormBuilder,
     private _snackBar: MatSnackBar,
-  ) { }
-
-  ngOnInit(): void {
+  ) { 
     this.bannerFormGroup = this._formBuilder.group({
       banner_color: ['', Validators.required]
     });
@@ -58,67 +50,109 @@ export class AdminConfigurationComponent {
     this.orgNameFormGroup = this._formBuilder.group({
       org_name: ['', Validators.required]
     });
-  
-
-    this.lastFormGroup = this._formBuilder.group({
-      submit: ['', Validators.required]
-    });
   }
 
-  // Function changes the name of the file to reflect in the UI
-  onFileSelected(event) {
-    const file: File = event.target.files[0];
-    const splashFile: File = event.target.files[1];
-
-    if(file) {
-      this.logoFileName = file.name;
-      this.splashFileName = splashFile.name;
+  /**
+   * Called whenever the user selects a new banner color
+   * @param event the HTML event that occurs when a new color is selected
+   */
+  onColorSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target != null) {
+      this.bannerColor = target.value ?? '';
+      console.log("Selected color is: " + this.bannerColor);
+      const e = document.getElementById("banner-color-display");
+      if (e != null) {
+        e.style.backgroundColor = this.bannerColor;
+      }
     }
   }
 
-  onColorSelected(event) {
-    const value = event.target.value;
-    value ? this.bannerColor = value : '';
-    console.log("Selected color is: " + this.bannerColor);
+  /**
+   * posts the banner color to the backend
+   */
+  submitBannerColor() {
+    console.log("Submitting color...");
+    this.service.setBannerColor(this.bannerColor)
+      .subscribe(this.showSnackBar("Saved banner color successfully!"));
   }
 
+  /**
+   * Called whenever the user selects a new logo file.
+   * 
+   * @param event the HTML event that occurs when the logo is selected
+   */
+  onLogoSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target != null && target.files != null && target.files.length > 0) {
+      const file = target.files[0];
+      this.logoFile = file;
 
-  showPreviewLogo(event) {
-    const logoFile = (event.target as HTMLInputElement).files[0];
+      // update avatar
+      this.logoFormGroup.patchValue({
+        avatar: file
+      });
+      this.logoFormGroup.get('avatar')?.updateValueAndValidity();
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.logoFileName = reader.result as string;
+      }
+      reader.readAsDataURL(file);
 
-    this.logoFormGroup.patchValue({
-      avatar: logoFile[0]
-    });
-
-    this.logoFormGroup.get('avatar')?.updateValueAndValidity();
-    
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.logoFileName = reader.result as string;
+      console.log("User selected their logo: ", file);
     }
-
-    reader.readAsDataURL(logoFile);
   }
 
-  showPreviewSplash(event) {
-    const splashFile = (event.target as HTMLInputElement).files[0];
-
-    this.splashFormGroup.patchValue({
-      avatar: splashFile[0]
-    });
-
-    this.splashFormGroup.get('avatar')?.updateValueAndValidity();
-    
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.splashFileName = reader.result as string;
+  /**
+   * posts the new website logo to the backend
+   */
+  submitLogo() {
+    console.log("submitting logo...");
+    if (this.logoFile) {
+      this.service.setLogo(this.logoFile)
+        .subscribe(this.showSnackBar("Saved logo successfully!"));
     }
-
-    reader.readAsDataURL(splashFile);
   }
 
-  openSnackBar() {
-    this._snackBar.open(
-      "Configuration saved!", "Close");
+  /**
+   * posts the splash page to the backend
+   */
+  submitSplashPage() {
+    console.log("Submitting splash page...");
+    const text = this.splashFormGroup.get('splash')?.value;
+
+    if (text != null) {
+      this.service.setSplashPage(text)
+        .subscribe(this.showSnackBar("Saved splash page successfully!"));
+    }
+  }
+
+  /**
+   * posts the selected organization name to the backend
+   */
+  submitOrganizationName() {
+    console.log("Submitting organization name...");
+    const orgName = this.orgNameFormGroup.get('org_name')?.value; 
+    if (orgName != null) {
+      this.service.setOrganizationName(orgName)
+        .subscribe(this.showSnackBar("Save organization name successfully!"));
+    }
+  }
+
+  /**
+   * Shows a success message for a brief period of time.
+   * 
+   * @param successMessage the message to display
+   * @returns an observer to pass to `Observable::subscribe`
+   */
+  private showSnackBar(successMessage: string) {
+    return {
+      next: () => this._snackBar.open(successMessage, "OK", {
+        duration: 3000
+      }),
+      error: (error: Error) => this._snackBar.open(`An error occured: ${error}`, "Yikes", {
+        duration: 3000
+      })
+    }
   }
 }

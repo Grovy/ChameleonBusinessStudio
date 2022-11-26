@@ -12,7 +12,7 @@
         <ng-template matStepLabel>Choose your banner color</ng-template>
 
         <!--Banner Color Instruction Card-->
-        <mat-card class="banner-color-card">
+        <mat-card class="banner-color-card" id="banner-color-display">
           <div class="card-image-container">
             <img class="paintbrush" [src]=bannerColorImage alt="my-image">
           </div>
@@ -26,7 +26,7 @@
           <input matInput type="color" placeholder="Choose your banner color" formControlName="banner_color" (change)="onColorSelected($event)" required>
         </mat-form-field>
         <div>
-          <button mat-raised-button>Set Color</button>
+          <button mat-raised-button (click)="submitBannerColor()">Set Color</button>
           <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
@@ -47,9 +47,23 @@
               Upload a small image that will be used as your company logo. It will be displayed on your banner
             </div>
           </mat-card>
+
+          <!--Preview your logo before sending to server-->
+          <mat-card class="logo-container-outline">
+            <mat-card class="logo-container"> 
+              <mat-card-title class="logo-container-title">Preview the Logo</mat-card-title>
+              <mat-card-content>
+                <div class="logo-box">
+                  <div class="logo-image-preview" *ngIf="logoFileName && logoFileName !== ''">
+                      <img class="logo-image" [src]="logoFileName" [alt]="logoFormGroup.value.name">
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-card>
         
           <input matInput formControlName="logo" required>
-          <input type="file" class="logo-file-input" (change)="showPreviewLogo($event)" #logoFileUpload>
+          <input type="file" class="logo-file-input" (change)="onLogoSelected($event)" #logoFileUpload>
 
           <div class="logo-file-upload">
             <button mat-mini-fab color="primary" class="logo-upload-btn" (click)="logoFileUpload.click()">
@@ -59,15 +73,16 @@
           
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button (click)="submitLogo()">Save</button>
           <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
     </mat-step>
 
-    <!--Step 3: Choose background image-->
+    <!--Step 3: Choose splash page-->
     <mat-step [stepControl]="splashFormGroup">
       <form [formGroup]="splashFormGroup">
-        <ng-template matStepLabel>Upload your splash page background</ng-template>
+        <ng-template matStepLabel>Upload your splash page text</ng-template>
 
         <!--Background Image Instruction Card (reusing logo card code since they share same svg image)-->
         <mat-card class="logo-card">
@@ -75,22 +90,19 @@
             <img class="logo-image" [src]=logoCardImage alt="logo-image">
           </div>
           <div class="card-content-container">
-            <p class="card-title">Upload your splash page background</p>
-            Upload a large image that will be displayed as the background of your splash page.
+            <p class="card-title">Upload your splash page text</p>
+            Enter the text that will be displayed in your splash page.
           </div>
         </mat-card>
         
-          <input matInput formControlName="splash" required>
-          <input type="file" class="splash-file-input" (change)="showPreviewSplash($event)" #splashFileUpload>
+        <input matInput formControlName="splash" required>
+        <textarea class="splash-file-input" rows="5" cols="80" #splashFileUpload>
 
-          <div class="splash-file-upload" >
-            <button mat-mini-fab color="primary" class="splash-upload-btn" (click)="splashFileUpload.click()">
-              <mat-icon>attach_file</mat-icon>
-            </button>
-          </div>
+        </textarea>
 
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button (click)="submitSplashPage()">Save</button>
           <button mat-raised-button matStepperNext class="next-button">Next</button>
         </div>
       </form>
@@ -117,28 +129,8 @@
         </mat-form-field>
         <div>
           <button mat-raised-button matStepperPrevious>Back</button>
-          <button mat-raised-button matStepperNext class="next-button">Next</button>
+          <button mat-raised-button (click)="submitOrganizationName()">Save</button>
         </div>
-      </form>
-    </mat-step>
-
-    <!--Step 4: Submit Form-->
-    <mat-step [stepControl]="lastFormGroup">
-      <form [formGroup]="lastFormGroup">
-        <ng-template matStepLabel>Preview and Save</ng-template>
-
-          <mat-card class="preview-and-save-card">
-            <div class="card-image-container">
-              <img class="save-image" [src]=previewAndSaveImage alt="preview-and-save-image">
-            </div>
-            <div class="card-content-container">
-              <p class="card-title">Preview and Save</p>
-              All fields in this form are required. Check to make sure you have uploaded all fields, then click save to save your configuration!
-            </div>
-          </mat-card>
-
-          <button mat-raised-button matStepperPrevious>Back</button>
-          <button mat-raised-button type="submit" (click)="openSnackBar()" class="next-button" control>Save</button>
       </form>
     </mat-step>
   </mat-horizontal-stepper>
@@ -146,39 +138,6 @@
 
 <!-- Container that contains the part of the page where the configurations are previewed. -->
 <div class="preview-container">
-  <!--Preview your logo before sending to server-->
-  <mat-card class="logo-container-outline">
-    <mat-card class="logo-container"> 
-      <mat-card-title class="logo-container-title">Preview the Logo</mat-card-title>
-      <mat-card-content>
-        <div class="logo-box">
-          <div class="logo-image-preview" *ngIf="logoFileName && logoFileName !== ''">
-              <img class="logo-image" [src]="logoFileName" [alt]="logoFormGroup.value.name">
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-card>
-  
-
-  <!--Preview your splash page image before sending to server-->
-  <mat-card class="splash-container-outline">
-    <mat-card class="splash-container">
-      <mat-card-title class="splash-container-title">Preview the Splash Page Background</mat-card-title>
-      <div class="break"></div>
-      <mat-card-content>
-        <div class="splash-box">
-          <div class="splash-image-preview" *ngIf="splashFileName && splashFileName !== ''">
-              <img class="splash-image" [src]="splashFileName" [alt]="splashFormGroup.value.name">
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </mat-card>
-  
-
-  <div class="break"></div>
-
   <mat-card class="banner-container-outline">
     <mat-card class="banner-container">
       <mat-card-title class="banner-container-title">Preview the Banner</mat-card-title>

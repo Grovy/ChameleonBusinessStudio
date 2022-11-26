@@ -9,5 +9,5 @@ import lombok.Data;
  */
 @Data
 public class UploadedFile {
-    private FilePart file;
+    private FilePart file; // binds to <input type="file" name="file"/>
 }

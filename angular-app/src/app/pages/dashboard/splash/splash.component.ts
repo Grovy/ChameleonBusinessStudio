@@ -8,6 +8,7 @@ import { SignupModalComponent } from 'src/app/theme/modals/signup-modal/signup-m
 import { AccountModalComponent } from 'src/app/theme/modals/account-modal/account-modal.component';
 import { UserService } from 'src/app/services/UserService.service';
 import { IUser } from 'src/app/models/interfaces/IUser';
+import { WebsiteAppearanceService } from 'src/app/services/WebsiteAppearanceService.service';
 
 
 @Component({
@@ -17,14 +18,22 @@ import { IUser } from 'src/app/models/interfaces/IUser';
 })
 export class SplashComponent implements OnInit {
 
-  public isRegisteredValue: boolean;
-  public isAuthenticatedValue: boolean;
-  public shouldDisplayModal: boolean;
-  public userEmail: string;
-  public currentUser: IUser;
+  public isRegisteredValue: boolean = false;
+  public isAuthenticatedValue: boolean = false;
+  public shouldDisplayModal: boolean = false;
+  public userEmail: string = '';
+  public currentUser?: IUser;
+  customPage: string = '';
   reqCompleted: boolean = false;
 
-  constructor(private http: HttpClient, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer, public dialog: MatDialog, private authenticationService: AuthenticationService, private userService: UserService) {
+  constructor(
+    private matIconRegistry: MatIconRegistry, 
+    private domSanitizer : DomSanitizer, 
+    public dialog: MatDialog, 
+    private authenticationService: AuthenticationService, 
+    private userService: UserService,
+    private websiteAppearanceService: WebsiteAppearanceService
+  ) {
     this.matIconRegistry.addSvgIcon(
       "calendar",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/icons8-calendar.svg")
@@ -59,6 +68,7 @@ export class SplashComponent implements OnInit {
   ngOnInit(): void {
     this.checkIfAuthenticated();
     this.checkIfRegisteredWithVendia();
+    this.loadCustomSplashPage();
     this.shouldDisplayModal = (this.isAuthenticatedValue && this.isRegisteredValue === false);
   }
 
@@ -88,6 +98,13 @@ export class SplashComponent implements OnInit {
     });
   }
 
+  loadCustomSplashPage() {
+    this.websiteAppearanceService.getSplashPage()
+      .subscribe((obj: {content: string}) => {
+        this.customPage = obj.content;
+      });
+  }
+
   updateShouldDisplayModal(newRegisteredValue: boolean, email: string): void {
     if(this.shouldDisplayModal = (this.isAuthenticatedValue && newRegisteredValue === false) && email !== undefined){
       this.displayModal(email);
@@ -102,7 +119,9 @@ export class SplashComponent implements OnInit {
   }
   
   onClickProfile(): void {
-    this.displayProfileModal(this.currentUser);
+    if (this.currentUser != null) {
+      this.displayProfileModal(this.currentUser);
+    }
   }
 
   displayProfileModal(user: IUser) {
