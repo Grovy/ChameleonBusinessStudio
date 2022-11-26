@@ -69,13 +69,12 @@ public class WebsiteAppearanceService {
     /**
      * returns the custom splash page content, if it has been configured
      *
-     * @return the HTML content of the custom splash page
+     * @return the text content of the custom splash page
      */
     public String getSplashPageContent(){
         String content = "";
         if(repo.isConfigured(SPLASH_PAGE_CONTENT)){
             content = folder.readSplash(repo.get(SPLASH_PAGE_CONTENT));
-            content = extractHtmlBody(content);
         }
         return content;
     }
@@ -119,7 +118,7 @@ public class WebsiteAppearanceService {
      * @return the CSS color to use for the website banner
      */
     public String getBannerColor(){
-        return repo.get(BANNER_COLOR, "#ffffff");
+        return repo.get(BANNER_COLOR, "#ff4081"); // default to a pink-ish color
     }
 
     public Mono<Void> setBannerImage(FileAdapter file){
@@ -148,22 +147,5 @@ public class WebsiteAppearanceService {
      */
     public void removeBannerImage() {
         repo.unset(BANNER_IMAGE);
-    }
-
-    private String extractHtmlBody(String content){
-        // strip some HTML formatting
-        if(content.contains("<html>")){
-            content = content.substring(
-                    content.indexOf("<html>") + 6,
-                    content.lastIndexOf("</html>")
-            );
-        }
-        if(content.contains("<body>")){
-            content = content.substring(
-                    content.indexOf("<body>") + 6,
-                    content.lastIndexOf("</body>")
-            );
-        }
-        return content;
     }
 }
