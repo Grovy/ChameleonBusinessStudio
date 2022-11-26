@@ -6,6 +6,7 @@ import format from 'date-fns/format';
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { ChangeDetectionStrategy } from '@angular/compiler';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import { AppointmentService } from 'src/app/services/AppointmentService.service';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -31,6 +32,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
     @Input() currentUser?: IUser;
     displayedColumns: string[] = [ 'date', 'title','startTime', 'endTime','totalSlots'];
     columnsToDisplayWithExpand: string[]= [...this.displayedColumns,'expand'];
+    isLoading: boolean = false;
 
     expandedElement: IAppointment | null;
 
@@ -39,7 +41,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private cdt: ChangeDetectorRef){
+    constructor(private cdt: ChangeDetectorRef,private appointmentService: AppointmentService){
       }
 
   ngAfterViewInit(): void {
@@ -115,20 +117,29 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
 
 
-    reSchedule(id: any){
-      //go to the booking page
-      if(id){
 
 
-      }
-
-
-    }
-
-    cancelApp(id :any)
+    public cancelApp(id :any,email: string)
     {
       //Cancel the appointment
+      if(id){
+        this.isLoading = true;
+        console.log(`Email: ${email} and id is ${id}`);
+        this.appointmentService.unbookOtherUser(id, email).subscribe(
+        {
+          next:(data)=>{
 
+            this.isLoading = false;
+            window.location.reload();
+          },
+          error:(err)=>{
+
+          }
+        }
+
+        );
+
+       }
     }
 
     // public isAdmin(){

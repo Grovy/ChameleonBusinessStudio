@@ -60,7 +60,7 @@ export class AppointmentComponent {
                 next:(data) =>{
 
                     this.appointments = [...data];
-                    this.reqCompleted = true;
+
                     this.appointments.map((data)=>{
                       let startDate = data.startTime as number[];
                       let endDate = data.endTime as number [];
@@ -78,15 +78,25 @@ export class AppointmentComponent {
               })
             } else{
 
-              // this is participants: they are only allowed to view their appointments
+              //  participants and TALENT: they are only allowed to view their appointments
               this.appointmentService.getMyAppointments().subscribe({
                 next:(data)=>{
                   console.log("From Participant View");
-                      console.log(data);
+
+                      this.appointments = [...data.content];
                       this.reqCompleted = true;
+                      this.appointments.map((data)=>{
+                        let startDate = data.startTime as number[];
+                        let endDate = data.endTime as number [];
+                        data.startTime = this.datemng.arrayToDate(startDate);
+                        data.endTime = this.datemng.arrayToDate(endDate);
+                        return data;
+                      });
+
                 },
                 error:(err) =>{
-
+                    this.reqCompleted = false;
+                    console.log(err);
                 }
               })
             }
