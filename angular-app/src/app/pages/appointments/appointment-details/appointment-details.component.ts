@@ -6,6 +6,10 @@ import { AppointmentDateFilterPipe } from 'src/app/services/AppointmentDateFilte
 import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
 import { UserService } from 'src/app/services/UserService.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IUser } from 'src/app/models/interfaces/IUser';
+import { IUserResponse } from 'src/app/models/interfaces/IUserResponse';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-details',
@@ -15,18 +19,29 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AppointmentDetailsComponent {
 
   dateApptDictionary = new Map<string, any[]>();
+  filterApptName;
   allAppointments;
   allDates;
   userEmail;
   currentUser;
   isRegisteredValue;
   isAuthenticatedValue;
+  showBookUserForm = false;
+  reqCompleted: boolean = false;
+
+  userBookingForm: FormGroup;
+  myUserResponse: IUserResponse = { users: [] };
 
   constructor(private appointmentService: AppointmentService, private dateManager: DateManager,
-    private authenticationService: AuthenticationService, private userService: UserService, private snackBar: MatSnackBar) {
+    private authenticationService: AuthenticationService, private userService: UserService, private snackBar: MatSnackBar,
+    private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute) {
     this.checkIfAuthenticated();
     this.checkIfRegisteredWithVendia();
     this.getAppointments();
+    this.activatedRoute.queryParams.subscribe( data => { this.filterApptName = data['event']; console.log(this.filterApptName); } );
+    this.userBookingForm = this.formBuilder.group({
+      email: ['', Validators.required],
+    });
   }
 
   getAppointments() {
@@ -38,9 +53,17 @@ export class AppointmentDetailsComponent {
             appt.startTime = this.dateManager.arrayToDate(appt.startTime as number[]);
             appt.endTime = this.dateManager.arrayToDate(appt.endTime as number[]);
           }
-        )
+        );
         this.allAppointments = data;
+        // When we it recognizes there is a query param, we will apply the title filter
+        if(this.filterApptName) {
+          let newAppts: IAppointment[] = [];
+          newAppts = this.findByApptTitle(this.allAppointments);
+          console.log(newAppts);
+          this.allAppointments = newAppts;
+        }
         this.getDates(this.allAppointments);
+        this.reqCompleted = true;
       }
     );
   }
@@ -125,6 +148,24 @@ export class AppointmentDetailsComponent {
     }
   }
 
+  bookOtherUser(data, appt: IAppointment) {
+    this.appointmentService.bookOtherUser(appt._id as string, data.email).subscribe( 
+      data => {
+        console.log(data);
+        if(data.status.toString() == '200') {
+          this.openSnackBar("You have successfully booked " + data.email + " for this appointment!", "Dismiss", {
+            duration: 5000,
+          });
+          appt.participants[1] = data.email as string;
+        } else {
+          this.openSnackBar("An error occured when trying to book user: " + data.email + ".", "Dismiss", {
+            duration: 5000,
+          });
+        }
+      } 
+    );
+  }
+
   unbookUser(appt: IAppointment) {
     if(!(appt.participants[1] === undefined)) {
       let email = appt.participants[1] as string;
@@ -150,5 +191,30 @@ export class AppointmentDetailsComponent {
 
   openSnackBar(message, action?, config?) {
     this.snackBar.open(message, action, config);
+  }
+
+  showBookOtherUserForm() {
+    this.showBookUserForm = true
+    let listOfUsers: IUser[] = [];
+    this.userService.getAllUsers().subscribe(
+      data => { 
+        this.myUserResponse = data;
+        console.log("The value of data: ");
+        console.log(data);
+      }
+    );
+  }
+
+  findByApptTitle(appts: IAppointment[]) {
+    let newAppts: IAppointment[] = [];
+    if(this.filterApptName) {
+      for(let i = 0; i < appts.length; i++) {
+        if(appts[i].title == this.filterApptName) {
+          newAppts.push(appts[i]);
+        }
+      }
+    }
+   
+    return newAppts;
   }
 }

@@ -16,37 +16,17 @@ export class AdminNavComponent {
   constructor(private router: Router) {
     this.navLinks = [
       {
-        label: 'Setup Wizard',
-        link: './setup-wizard',
-        index: 0,
-      }, {
         label: 'Admin Configuration',
         link: './admin-configuration',
-        index: 1,
-      } , {
-        label: 'Booking Page',
-        link: './booking-page',
-        index: 2,
+        index: 0,
       }, {
         label: 'Admin Panel',
         link: './admin-panel',
-        index: 3,
-      }, {
-        label: 'Admin Panel Test',
-        link: './admin-panel-test',
-        index: 4,
-      }, {
-        label: 'Landing Page Configuration',
-        link: './landing-page-configuration',
-        index: 5,
+        index: 1,
       }, {
         label: 'Appointment Details',
         link: './appointment-details',
-        index: 6,
-      }, {
-        label: 'Schedule Configuration Page',
-        link: './schedule-configuration',
-        index: 7,
+        index: 2,
       }
     ]
   }

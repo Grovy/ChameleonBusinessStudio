@@ -1,8 +1,10 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, OnInit } from "@angular/core";
 import { IUser, UserRole } from "src/app/models/interfaces/IUser";
 import { IUserResponse } from "src/app/models/interfaces/IUserResponse";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "src/app/services/UserService.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { v4 as uuidv4 } from 'uuid';
 
 @Component ({
   selector:'app-admin-panel',
@@ -10,20 +12,26 @@ import { UserService } from "src/app/services/UserService.service";
   styleUrls: ['./admin-panel.component.css']
 })
 
-export class AdminPanelComponent {
+export class AdminPanelComponent implements OnInit {
   
   myUserResponse: IUserResponse = { users: [] };
   displayedColumns: string[] = ['displayName', 'email', 'role'];
+  roleSelection: string[] = ['PARTICIPANT', 'ADMIN', 'TALENT', 'ORGANIZER'];
   selectedProfile: IUser | undefined;
   profileForm: FormGroup;
+  changeRoleForm: FormGroup;
+  reqCompleted = false;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService, private snackBar: MatSnackBar) {
     this.selectedProfile = this.myUserResponse.users ? this.myUserResponse.users[0] : undefined;
     this.profileForm = this.fb.group({
-      displayName: [''],
-      email: [''],
-      confirmEmail: [''],
-      role: [''],
+      displayName: ['', Validators.required],
+      email: ['', Validators.required],
+      confirmEmail: ['', Validators.required],
+      role: ['', Validators.required],
+    });
+    this.changeRoleForm = this.fb.group({
+      newRole: ['', Validators.required]
     });
   }
 
@@ -32,6 +40,7 @@ export class AdminPanelComponent {
     this.userService.getAllUsers().subscribe(
       (data) => {
         this.myUserResponse = data;
+        this.reqCompleted = true;
       }
     );
   }
@@ -46,14 +55,56 @@ export class AdminPanelComponent {
 
   onClickSubmit(data) {
     const newUser: IUser = {
+      _id: uuidv4(),
       displayName: data.displayName,
       email: data.email,
       role: data.role as UserRole,
     }
 
     this.userService.createUser(newUser).subscribe(
-      data => console.log(data)
+      data => {
+        if(data.status.toString() == '200') {
+          console.log(data);
+          this.openSnackBar("Successfully updated user's role!", "Dismiss", {
+            duration: 5000,
+          });
+        } else {
+          console.log(data),
+          this.openSnackBar("An error occured when updating user's role.", "Dismiss", {
+            duration: 5000,
+          });
+        }
+      }
     );
+  }
+
+  changeUserRole(data, user: IUser) {
+    let newUser: IUser = {
+      _id: user._id,
+      displayName: user.displayName,
+      email: user.email,
+      role: data.newRole,
+      phoneNumber: user.phoneNumber,
+      appointments: user.appointments
+    };
+
+    this.userService.updateUser(newUser).subscribe(
+      data => {
+        if(data.status.toString() == '200'){
+          this.openSnackBar("Successfully updated user's role!", "Dismiss", {
+            duration: 5000,
+          });
+        } else {
+          this.openSnackBar("An error occured updating user's role", "Dismiss", {
+            duration: 5000,
+          });
+        }
+      }
+    );
+  }
+
+  openSnackBar(message, action?, config?) {
+    this.snackBar.open(message, action, config);
   }
 
   onDiscard() {

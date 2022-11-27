@@ -3,6 +3,7 @@ import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from "src/app/services/UserService.service";
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-signup-modal',
@@ -49,6 +50,7 @@ export class SignupModalComponent implements OnInit {
    
   onClickSubmit(data): void {
     const newUser: IUser = {
+      _id: uuidv4(),
       displayName: data.displayName,
       email: this.userEmailValue,
       role: "PARTICIPANT" as UserRole,

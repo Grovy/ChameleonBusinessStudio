@@ -1,3 +1,8 @@
+<head>
+  <title>Chameleon Business Studio</title>
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
+
 <app-default-header></app-default-header>
 
 <div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'ADMIN' || currentUser.role === 'ORGANIZER')">
@@ -43,13 +48,34 @@
   </div>
 </div>
 
+<!-- Dynamic Rendering for Admin Accounts -->
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'ADMIN' || currentUser.role === 'ORGANIZER')" class="main-content">  
+  <mat-toolbar class="second-toolbar">
+  </mat-toolbar>
+  <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
+
+  <div class="welcome-message">
+    <p class="welcome-text">Welcome Back <em><strong>{{ currentUser.displayName }}</strong></em>!</p>
+  </div>
+  
+
+  <div class="admin-content">  
+    <p class="welcome-text">Manage your registered users</p>
+    <!-- Admin Panel Code Will Go Here-->
+    <app-admin-panel-widget></app-admin-panel-widget>
+  </div>
+
+
+</div>
+
 <!-- Dynamic Rendering for Talent Accounts -->
 <div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'TALENT')" class="main-content">  
   <mat-toolbar class="second-toolbar">
   </mat-toolbar>
+  <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
 
   <div class="welcome-message">
-    <p class="welcome-text">Welcome Back {{ currentUser.displayName }}!</p>
+    <p class="welcome-text">Welcome Back <em><strong>{{ currentUser.displayName }}</strong></em>!</p>
   </div>
   
 
@@ -67,8 +93,27 @@
 
 </div>
 
+<!-- Dynamic Rendering for Participant Accounts -->
+<div *ngIf="(isAuthenticatedValue && isRegisteredValue) && (currentUser.role === 'PARTICIPANT')" class="main-content">  
+  <mat-toolbar class="second-toolbar">
+  </mat-toolbar>
 
-<div class="main-content">
+  <div class="welcome-message">
+    <p class="welcome-text">Welcome Back <em><strong>{{ currentUser.displayName }}</strong></em>!</p>
+  </div>
+
+  <div class="participant-content">
+    <div class="event-widget">
+      <p class="welcome-text">Choose Events to Book An Appointment</p>
+      <app-event-widget></app-event-widget>
+    </div>
+  
+    <div class="content">  
+      <app-participant-booked-appts></app-participant-booked-appts>
+    </div>
+  </div>
+  
+  
+
+
 </div>
-
-<app-site-footer></app-site-footer>

@@ -4,6 +4,10 @@ mat-toolbar{
   padding: 15px;
 }
 
+app-participant-booked-appts {
+  width: 100%;
+}
+
 .icon{
   padding: 0 20px;
   margin: 0 20px;
@@ -40,9 +44,32 @@ mat-toolbar{
   width: 100%;
 }
 
+.content{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
 .talent-content{
   display: flex;
   justify-content: space-around;
+}
+
+.admin-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.participant-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+
 }
 
 .welcome-message{
@@ -50,6 +77,7 @@ mat-toolbar{
   justify-content: center;
   width: 100%;
   margin-bottom: 10px;
+  font-family: 'Lato';
 }
 
 .welcome-text{
@@ -106,7 +134,7 @@ mat-toolbar{
   margin-left: -1px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: #12002e;
+  background-color: #ff4081;;
 }
 
 .bottom-line{
@@ -125,4 +153,14 @@ mat-toolbar{
 
 .booked-appt-widget{
   margin: 30px 30px 30px 30px;
+}
+
+.p-booked-appts-widget{
+  margin: 30px 30px 30px 30px;
+}
+
+#footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }

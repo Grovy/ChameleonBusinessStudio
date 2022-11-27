@@ -1,0 +1,146 @@
+{
+  "data": {
+    "list_UserItems": {
+      "_UserItems": [
+        {
+          "_id": "0183764f-3b7d-2277-29d3-be7c8c43c93b",
+          "email": "daniel@chameleon",
+          "displayName": "Daniel Villavicencio",
+          "appointments": []
+        },
+        {
+          "_id": "018386d0-210f-0bc9-bc36-0bc93a5766b4",
+          "email": "ChameleonBusinessStudio@gmail.com",
+          "displayName": "chameleon",
+          "appointments": []
+        },
+        {
+          "_id": "018386d1-7352-e0ae-72dc-ca3c27e395de",
+          "email": "chameleonbusinessstudio@gmail.com",
+          "displayName": "chameleon",
+          "appointments": []
+        },
+        {
+          "_id": "01839114-6400-37f2-4456-4df18c52b19d",
+          "email": "daniel@gmail.com",
+          "displayName": "Daniel Villavicencio",
+          "appointments": []
+        },
+        {
+          "_id": "01839503-1f82-1357-c21b-20e73e8d5575",
+          "email": "greengrappler12@gmail.com",
+          "displayName": "Matt Crow",
+          "appointments": []
+        },
+        {
+          "_id": "0183a4af-8ed3-e07e-569b-fce53dc8506a",
+          "email": "jDenver@gmail.com",
+          "displayName": "John Denver",
+          "appointments": []
+        },
+        {
+          "_id": "0183a4dd-fc72-41ba-6ab3-3a819e4879ea",
+          "email": "jokotker@chameleon.com",
+          "displayName": "John Kotker",
+          "appointments": []
+        },
+        {
+          "_id": "0183a4de-b4b5-9649-9068-dc7b750bd43a",
+          "email": "mhunt@chameleon.com",
+          "displayName": "Michael Hunt",
+          "appointments": []
+        },
+        {
+          "_id": "0183a583-9b6a-6855-8e6a-db4344130352",
+          "email": "jsmith@chameleon.com",
+          "displayName": "Joe Smith",
+          "appointments": []
+        },
+        {
+          "_id": "0183a592-ee28-763b-fbf2-95c0b641f3b5",
+          "email": "jeff@chameleon.com",
+          "displayName": "Jeffrey Stanford",
+          "appointments": []
+        },
+        {
+          "_id": "0183a5b7-bf17-074e-0b18-d8efb97d483e",
+          "email": "tKittle@chameleon.com",
+          "displayName": "Thomas Kittle",
+          "appointments": []
+        },
+        {
+          "_id": "0183a5e3-e115-2435-e0a3-81953a6525d0",
+          "email": "michael@gmail.com",
+          "displayName": "Michael S",
+          "appointments": []
+        },
+        {
+          "_id": "0183a5ee-42cf-9c3e-cef6-5b0fa9f920e7",
+          "email": "jaredp@gmail.com",
+          "displayName": "Jered Piker",
+          "appointments": []
+        },
+        {
+          "_id": "0183a5ef-e217-90a9-da79-c115c3842bfe",
+          "email": "alicek@chameleon.com",
+          "displayName": "Alice Kay",
+          "appointments": []
+        },
+        {
+          "_id": "0183a5f0-54be-a94d-6bd5-3b6f540ec3eb",
+          "email": "djohnson@chameleon.com",
+          "displayName": "Derek Johnson",
+          "appointments": []
+        },
+        {
+          "_id": "0183a5f3-8c74-de41-48bd-99dda7b502ca",
+          "email": "bjohnson@chameleon.com",
+          "displayName": "Billy Johnson",
+          "appointments": []
+        },
+        {
+          "_id": "0183a956-0cf6-6a95-e57c-c4e85618d22a",
+          "email": "josmith@chameleon.como",
+          "displayName": "Jonah Smith",
+          "appointments": []
+        },
+        {
+          "_id": "0183a957-2b99-28a4-228f-a059362b2b1d",
+          "email": "spatterson@chameleon.com",
+          "displayName": "Sarah Patterson",
+          "appointments": []
+        },
+        {
+          "_id": "0183ab8c-ed04-e3cc-41a9-f14df0616872",
+          "email": "acrocker@gmail.com",
+          "displayName": "Anthony Crocker",
+          "appointments": []
+        },
+        {
+          "_id": "0183ab8f-e53c-57c2-d6da-8ed0014bd494",
+          "email": "iturner@chameleon.com",
+          "displayName": "Isabella Turner",
+          "appointments": []
+        },
+        {
+          "_id": "0183d2b5-c3cd-d7c3-0374-7d8af81c8ac9",
+          "email": "tmichael@chameleon.com",
+          "displayName": "Tara Michael",
+          "appointments": []
+        },
+        {
+          "_id": "0183d92f-cd74-0127-4a40-63c30c9e1e69",
+          "email": "dany.villavicencio30@gmail.com",
+          "displayName": "Daniel V",
+          "appointments": []
+        },
+        {
+          "_id": "0183dda0-35b1-4664-5bfd-e1513094b6f9",
+          "email": "rramsdany@gmail.com",
+          "displayName": "Daniel Ramos",
+          "appointments": []
+        }
+      ]
+    }
+  }
+}

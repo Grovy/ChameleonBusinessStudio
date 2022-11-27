@@ -122,7 +122,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
     public cancelApp(id :any,email: string)
     {
       //Cancel the appointment
-      if(id){
+      if(id && email){
         this.isLoading = true;
         console.log(`Email: ${email} and id is ${id}`);
         this.appointmentService.unbookOtherUser(id, email).subscribe(
@@ -139,6 +139,9 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
         );
 
+       }
+       else{
+        console.log("Something Went Wrong Either Id or Email is undefined");
        }
     }
 

@@ -1,6 +1,5 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { catchError, Observable, tap, throwError, map, delay } from 'rxjs';
 import { IAppointment } from "../models/interfaces/IAppointment";
 
@@ -9,7 +8,7 @@ export class AppointmentService {
 
     private readonly apiUrl = '/api/v1/appointments';
 
-    constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) { }
+    constructor(private httpClient: HttpClient) { }
 
   /**
    *
@@ -74,6 +73,14 @@ export class AppointmentService {
 
     public unbookOtherUser(apptId: string, email: string) {
         return this.httpClient.post(`${this.apiUrl}/unbook-them/${apptId}?email=${email}`, {}, { observe: 'response' })
+            .pipe(
+                tap(console.log),
+                catchError(this.handleError)
+            );
+    }
+
+    public getAppointmentById(apptId: string): Observable<IAppointment> {
+        return this.httpClient.get(`${this.apiUrl}/${apptId}`)
             .pipe(
                 tap(console.log),
                 catchError(this.handleError)

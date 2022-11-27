@@ -3,19 +3,16 @@ package com.compilercharisma.chameleonbusinessstudio.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
@@ -97,24 +94,13 @@ public class ScheduleServiceTester {
     }
 
     @Test
-    public void generateAppointments_withAValidSchedule_copiesAppointmentsToTheProperDays(){
+    public void generateAppointments_withAValidSchedule_forwardsToAppointmentRepo(){
         when(appointments.createAppointment(any(Appointment.class)))
             .thenReturn(Mono.just(new Appointment()));
+        when(appointments.createAppointments(anyList()))
+            .thenReturn(Flux.empty());
         when(repo.storeSchedules(anyList()))
             .thenReturn(Mono.empty());
-        var created = new HashSet<Appointment>();
-
-        /*
-         * Unfortunately, Mockito is really bad at mocking side effects...
-         */
-        when(appointments.createAppointment(any(Appointment.class))).then(new Answer<Mono<Appointment>>() {
-            @Override
-            public Mono<Appointment> answer(InvocationOnMock invocation) throws Throwable {
-                var appt = invocation.getArgument(0, Appointment.class);
-                created.add(appt);
-                return Mono.just(appt);
-            }
-        });
 
         var aValidSchedule = new TestScheduleBuilder()
             .enabled()
@@ -124,12 +110,7 @@ public class ScheduleServiceTester {
         
         sut.generateAppointments().block();
 
-        Predicate<Appointment> onMondayOrThursday = (Appointment appt)->{
-            return appt.getStartTime().getDayOfWeek().equals(DayOfWeek.MONDAY)
-                && appt.getEndTime().getDayOfWeek().equals(DayOfWeek.MONDAY);
-        };
-        Assertions.assertTrue(!created.isEmpty());
-        Assertions.assertTrue(created.stream().allMatch(onMondayOrThursday));
+        verify(appointments, times(1)).createAppointments(anyList());
     }
 
     @Test

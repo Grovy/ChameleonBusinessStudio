@@ -6,7 +6,7 @@ package com.compilercharisma.chameleonbusinessstudio.exception;
  */
 public class InvalidVendiaFieldException extends RuntimeException {
 
-    public static final Long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     private final String invalidField;
 

@@ -1,4 +1,5 @@
 import { IUser, UserRole } from "../interfaces/IUser";
+import { v4 as uuidv4 } from 'uuid';
 /*
     This mock data is for the purposes of developing UI that's centered around displaying user data.
     This file will be modified once our schemas and data modeling is done.
@@ -6,37 +7,37 @@ import { IUser, UserRole } from "../interfaces/IUser";
 
 export const MockAdminUserList: IUser[] = [
     {
-        id: '1',
+        _id: uuidv4(),
         displayName: 'Matt Crow',
         email: 'matt@chameleon.com',
         role: UserRole.ADMIN
     }, {
-        id: '2',
+        _id: uuidv4(),
         displayName: 'Daniel Villavicencio',
         email: 'danielv@chameleon.com',
         role: UserRole.ADMIN
     }, {
-        id: '3',
+        _id: uuidv4(),
         displayName: 'Daniel Ramos',
         email: 'danielr@chameleon.com',
         role: UserRole.ADMIN,
     }, {
-        id: '4',
+        _id: uuidv4(),
         displayName: 'Rojan Maharjan',
         email: 'rojan@chameleon.com',
         role: UserRole.ADMIN
     }, {
-        id: '5',
+        _id: uuidv4(),
         displayName: 'Ariel Camargo',
         email: 'ariel@chameleon.com',
         role: UserRole.ADMIN
     }, {
-        id: '6',
+        _id: uuidv4(),
         displayName: 'Nero Tandel',
         email: 'nero@chameleon.com',
         role: UserRole.ADMIN
     }, {
-        id: '7',
+        _id: uuidv4(),
         displayName: 'Dave Kaercher',
         email: 'dave@chameleon.com',
         role: UserRole.ADMIN
@@ -45,37 +46,37 @@ export const MockAdminUserList: IUser[] = [
 
 export const MockParticipantList: IUser[] = [
     {
-        id: '1',
+        _id: uuidv4(),
         displayName: 'Matt Crow',
         email: 'matt@chameleon.com',
         role: UserRole.PARTICIPANT
     }, {
-        id: '2',
+        _id: uuidv4(),
         displayName: 'Daniel Villavicencio',
         email: 'danielv@chameleon.com',
         role: UserRole.PARTICIPANT
     }, {
-        id: '3',
+        _id: uuidv4(),
         displayName: 'Daniel Ramos',
         email: 'danielr@chameleon.com',
         role: UserRole.PARTICIPANT,
     }, {
-        id: '4',
+        _id: uuidv4(),
         displayName: 'Rojan Maharjan',
         email: 'rojan@chameleon.com',
         role: UserRole.PARTICIPANT
     }, {
-        id: '5',
+        _id: uuidv4(),
         displayName: 'Ariel Camargo',
         email: 'ariel@chameleon.com',
         role: UserRole.PARTICIPANT
     }, {
-        id: '6',
+        _id: uuidv4(),
         displayName: 'Nero Tandel',
         email: 'nero@chameleon.com',
         role: UserRole.PARTICIPANT
     }, {
-        id: '7',
+        _id: uuidv4(),
         displayName: 'Dave Kaercher',
         email: 'dave@chameleon.com',
         role: UserRole.PARTICIPANT
@@ -84,37 +85,37 @@ export const MockParticipantList: IUser[] = [
 
 export const MockTalentList: IUser[] = [
     {
-        id: '1',
+        _id: uuidv4(),
         displayName: 'Matt Crow',
         email: 'matt@chameleon.com',
         role: UserRole.TALENT
     }, {
-        id: '2',
+        _id: uuidv4(),
         displayName: 'Daniel Villavicencio',
         email: 'danielv@chameleon.com',
         role: UserRole.TALENT
     }, {
-        id: '3',
+        _id: uuidv4(),
         displayName: 'Daniel Ramos',
         email: 'danielr@chameleon.com',
         role: UserRole.TALENT,
     }, {
-        id: '4',
+        _id: uuidv4(),
         displayName: 'Rojan Maharjan',
         email: 'rojan@chameleon.com',
         role: UserRole.TALENT
     }, {
-        id: '5',
+        _id: uuidv4(),
         displayName: 'Ariel Camargo',
         email: 'ariel@chameleon.com',
         role: UserRole.TALENT
     }, {
-        id: '6',
+        _id: uuidv4(),
         displayName: 'Nero Tandel',
         email: 'nero@chameleon.com',
         role: UserRole.TALENT
     }, {
-        id: '7',
+        _id: uuidv4(),
         displayName: 'Dave Kaercher',
         email: 'dave@chameleon.com',
         role: UserRole.TALENT
@@ -123,37 +124,37 @@ export const MockTalentList: IUser[] = [
 
 export const MockOrganizerUserList: IUser[] = [
     {
-        id: '1',
+        _id: uuidv4(),
         displayName: 'Matt Crow',
         email: 'matt@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '2',
+        _id: uuidv4(),
         displayName: 'Daniel Villavicencio',
         email: 'danielv@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '3',
+        _id: uuidv4(),
         displayName: 'Daniel Ramos',
         email: 'danielr@chameleon.com',
         role: UserRole.ORGANIZER,
     }, {
-        id: '4',
+        _id: uuidv4(),
         displayName: 'Rojan Maharjan',
         email: 'rojan@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '5',
+        _id: uuidv4(),
         displayName: 'Ariel Camargo',
         email: 'ariel@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '6',
+        _id: uuidv4(),
         displayName: 'Nero Tandel',
         email: 'nero@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '7',
+        _id: uuidv4(),
         displayName: 'Dave Kaercher',
         email: 'dave@chameleon.com',
         role: UserRole.ORGANIZER
@@ -162,37 +163,37 @@ export const MockOrganizerUserList: IUser[] = [
 
 export const MockGenericUserList: IUser[] = [
     {
-        id: '1',
+        _id: uuidv4(),
         displayName: 'Matt Crow',
         email: 'matt@chameleon.com',
         role: UserRole.ADMIN
     }, {
-        id: '2',
+        _id: uuidv4(),
         displayName: 'Daniel Villavicencio',
         email: 'danielv@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '3',
+        _id: uuidv4(),
         displayName: 'Daniel Ramos',
         email: 'danielr@chameleon.com',
         role: UserRole.PARTICIPANT,
     }, {
-        id: '4',
+        _id: uuidv4(),
         displayName: 'Rojan Maharjan',
         email: 'rojan@chameleon.com',
         role: UserRole.TALENT
     }, {
-        id: '5',
+        _id: uuidv4(),
         displayName: 'Ariel Camargo',
         email: 'ariel@chameleon.com',
         role: UserRole.ORGANIZER
     }, {
-        id: '6',
+        _id: uuidv4(),
         displayName: 'Nero Tandel',
         email: 'nero@chameleon.com',
         role: UserRole.PARTICIPANT
     }, {
-        id: '7',
+        _id: uuidv4(),
         displayName: 'Dave Kaercher',
         email: 'dave@chameleon.com',
         role: UserRole.ADMIN

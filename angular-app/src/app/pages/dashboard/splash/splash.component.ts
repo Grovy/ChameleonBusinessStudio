@@ -22,6 +22,7 @@ export class SplashComponent implements OnInit {
   public shouldDisplayModal: boolean;
   public userEmail: string;
   public currentUser: IUser;
+  reqCompleted: boolean = false;
 
   constructor(private http: HttpClient, private matIconRegistry: MatIconRegistry, private domSanitizer : DomSanitizer, public dialog: MatDialog, private authenticationService: AuthenticationService, private userService: UserService) {
     this.matIconRegistry.addSvgIcon(
@@ -67,6 +68,7 @@ export class SplashComponent implements OnInit {
         this.userEmail = data.valueOf(); 
         this.updateShouldDisplayModal(this.isRegisteredValue, this.userEmail);
         this.userService.getUser(this.userEmail).subscribe(data => {this.currentUser = data});
+        this.reqCompleted = true;
     });  
   }
 

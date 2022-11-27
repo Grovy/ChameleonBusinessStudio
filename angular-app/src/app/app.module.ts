@@ -33,6 +33,7 @@ import { FormsModule} from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import { LandingPageConfigurationComponent } from './pages/admin-configuration/landing-page-configuration/landing-page-configuration.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ParticipantBookedApptsComponent } from './theme/widgets/participant-booked-appts/participant-booked-appts.component';
 import { ParticipantNavComponent } from './pages/nav/participant-nav/participant-nav.component';
 import { ReactiveFormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
@@ -73,6 +74,8 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.component';
+import { AdminPanelWidgetComponent } from './theme/widgets/admin-panel-widget/admin-panel-widget.component';
+
 
 
 @NgModule({
@@ -92,8 +95,11 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     CalenderViewComponent,
     CustomBannerDirective,
     DefaultHeaderComponent,
+    EventWidgetComponent,
     LandingPageConfigurationComponent,
     PageNotFoundComponent,
+    ParticipantBookedApptsComponent,
+    ParticipantNavComponent,
     ScheduleConfigurationComponent,
     SetupWizardComponent,
     SignInComponent,
@@ -105,8 +111,7 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
     AccountModalComponent,
     TalentNavComponent,
     AdminNavComponent,
-    ParticipantNavComponent,
-    EventWidgetComponent,
+    AdminPanelWidgetComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -142,8 +147,8 @@ import { EventWidgetComponent } from './theme/widgets/event-widget/event-widget.
       { path: 'admin-panel', component: AdminPanelComponent },
       { path: 'admin-panel-test', component: AdminPanelComponent },
       { path: 'appointment-details', component: AppointmentDetailsComponent },
-      {path:'appointment',component:AppointmentComponent},
-      {path:'appointment-creation',component:AppointmentCreateFormComponent},
+      { path: 'appointment', component: AppointmentComponent},
+      { path: 'appointment-creation', component: AppointmentCreateFormComponent},
       { path: 'booking-page', component: BookingPageComponent },
       { path: 'landing-page-component', component: LandingPageConfigurationComponent },
       { path: 'schedule-configuration', component: ScheduleConfigurationComponent },

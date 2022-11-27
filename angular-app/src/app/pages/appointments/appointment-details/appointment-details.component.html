@@ -2,47 +2,75 @@
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 </head>
 <app-default-header></app-default-header>
-<div class="main-container">
-    <div class="secondary-container">
-        <div class="day-list">
-            <div *ngFor="let date of allDates">
-                <div class="day-list-item">
-                    <h2>{{date | date: 'fullDate' }}</h2>
-                    <div *ngFor="let appt of dateApptDictionary | keyvalue" class="event-list-body">
-                        <div *ngIf="appt.key === date">
-                            <mat-accordion *ngFor="let value of appt.value">
-                                <mat-expansion-panel hideToggle>
-                                    <mat-expansion-panel-header class="event-list-item">
-                                        <div class="time-item">
-                                            <span>{{value.startTime | date: 'shortTime'}} - {{value.endTime | date: 'shortTime'}}</span><br>
-                                            <span *ngIf="(value.participants.length < value.totalSlots)" class="available-text">Appointment Available</span>
-                                            <span *ngIf="(value.participants.length === value.totalSlots)" class="unavailable-text">Appointment Unavailable</span>
-                                        </div>
-                                        <div class="title-item"><span>{{value.title}}</span></div>
-                                        <div class="participants-item"><span>Appointment with<br> {{value.participants[0]}}</span></div>
-                                    </mat-expansion-panel-header>
-                                    <div class="appt-content">
-                                        <div class="details-item">
-                                            <span><strong>Appointment Organizer</strong><br>     {{value.participants[0]}}</span><br><br>
-                                            <span><strong>Description</strong><br>               {{value.description}}</span><br><br>
-                                            <span><strong>Location</strong> <br>                 {{value.location}}</span><br><br>
-                                        </div>
-                                        <div class="appt-actions" *ngIf="(currentUser.role === 'PARTICIPANT')">
-                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)" (click)="bookCurrentUser(value)">Book Appointment</button><br>
-                                        </div>
-                                        <div class="appt-actions" *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN')">
-                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length === value.totalSlots)">Book Another User</button><br>
-                                            <button mat-raised-button class="action-button" [disabled]="(value.participants.length < value.totalSlots)" (click)="unbookUser(value)" >Unbook User</button><br>
-                                            <button mat-raised-button class="action-button">Cancel Appointment</button><br>
-                                        </div>
-                                    </div>
-                                </mat-expansion-panel>
-                            </mat-accordion>
+
+<mat-tab-group>
+    <mat-tab label="Display in List">
+        <div class="main-container">
+            <div class="secondary-container">
+                <div *ngIf="!reqCompleted"> <div class="spinner"><mat-spinner  aria-label="submitting"></mat-spinner> </div></div>
+                <div class="day-list">
+                    <div *ngFor="let date of allDates">
+                        <div class="day-list-item">
+                            <h2>{{date | date: 'fullDate' }}</h2>
+                            <div *ngFor="let appt of dateApptDictionary | keyvalue" class="event-list-body">
+                                <div *ngIf="appt.key === date">
+                                    <mat-accordion *ngFor="let apptValue of appt.value">
+                                        <mat-expansion-panel hideToggle>
+                                            <mat-expansion-panel-header class="event-list-item">
+                                                <div class="time-item">
+                                                    <span>{{apptValue.startTime | date: 'shortTime'}} - {{apptValue.endTime | date: 'shortTime'}}</span><br>
+                                                    <span *ngIf="(apptValue.participants.length < apptValue.totalSlots)" class="available-text">Appointment Available</span>
+                                                    <span *ngIf="(apptValue.participants.length === apptValue.totalSlots)" class="unavailable-text">Appointment Unavailable</span>
+                                                </div>
+                                                <div class="title-item"><span>{{apptValue.title}}</span></div>
+                                                <div class="participants-item"><span>Appointment with<br> {{apptValue.participants[0]}}</span></div>
+                                            </mat-expansion-panel-header>
+                                            <div class="appt-content">
+                                                <div class="details-item">
+                                                    <span><strong>Appointment Organizer</strong><br>     {{apptValue.participants[0]}}</span><br><br>
+                                                    <span><strong>Description</strong><br>               {{apptValue.description}}</span><br><br>
+                                                    <span><strong>Location</strong> <br>                 {{apptValue.location}}</span><br><br>
+                                                    <span *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN')">
+                                                        <strong>Client</strong> <br>                   
+                                                        {{apptValue.participants[1]}}
+                                                    </span><br><br>
+                                                </div>
+                                                <div class="appt-actions" *ngIf="(currentUser.role === 'PARTICIPANT')">
+                                                    <button mat-raised-button class="action-button" [disabled]="(apptValue.participants.length === apptValue.totalSlots)" (click)="bookCurrentUser(apptValue)">Book Appointment</button><br>
+                                                </div>
+                                                <div class="appt-actions" *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN') && !showBookUserForm">
+                                                    <button mat-raised-button class="action-button" [disabled]="(apptValue.participants.length === apptValue.totalSlots)" (click)="showBookOtherUserForm()">Book Another User</button><br>
+                                                    <button mat-raised-button class="action-button" [disabled]="(apptValue.participants.length < apptValue.totalSlots)" (click)="unbookUser(apptValue)" >Unbook User</button><br>
+                                                    <button mat-raised-button class="action-button">Cancel Appointment</button><br>
+                                                </div>
+                                                <div class="appt-actions" *ngIf="(currentUser.role === 'TALENT' || currentUser.role === 'ADMIN') && showBookUserForm">
+                                                    <form [formGroup]="userBookingForm" class="form-field">
+                                                        <ng-template matStepLabel>Choose Participant to Book for this Appointment</ng-template>
+                                                        <mat-form-field class="avail-to-select" appearance="fill">
+                                                            <mat-label>Choose user to Book</mat-label>
+                                                            <mat-select formControlName="email" matInput>
+                                                                <mat-option *ngFor="let user of myUserResponse.users" [value]="user.email">
+                                                                    {{user.displayName}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <button mat-raised-button class="action-button" (click)="bookOtherUser(userBookingForm.value, apptValue)" [disabled]="(apptValue.participants.length === apptValue.totalSlots) || (!userBookingForm.valid)">Book Selected User</button>
+                                                    </form>
+        
+                                                    <button mat-raised-button class="action-button" (click)="showBookUserForm = false">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-</div>
+    </mat-tab>
+    <mat-tab label="Display on Calendar">
+        <appointment></appointment>
+    </mat-tab>
+</mat-tab-group>

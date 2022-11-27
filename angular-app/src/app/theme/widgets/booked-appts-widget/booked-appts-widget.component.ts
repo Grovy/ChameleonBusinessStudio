@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ISchedule } from 'src/app/models/interfaces/ISchedule';
 import { IAppointment } from 'src/app/models/interfaces/IAppointment';
-import { IRepeatingAppointment } from 'src/app/models/interfaces/IRepeatingAppointment';
-import { IPage } from 'src/app/models/interfaces/IPage';
-import { ScheduleService } from 'src/app/services/ScheduleService.service';
 import { DateManager } from 'src/app/services/DateManager';
+import { AuthenticationService } from 'src/app/services/AuthenticationService.service';
+import { UserService } from 'src/app/services/UserService.service';
+import { IUser } from 'src/app/models/interfaces/IUser';
+import { AppointmentService } from 'src/app/services/AppointmentService.service';
 
 @Component({
   selector: 'app-booked-appts-widget',
@@ -13,60 +13,70 @@ import { DateManager } from 'src/app/services/DateManager';
 })
 export class BookedApptsWidgetComponent implements OnInit {
 
-  myPage: IPage;
-  mySchedules: ISchedule[];
-  myRepeatingAppointments: IRepeatingAppointment[];
   myBookedAppointments: IAppointment[];
   displayedColumns: string[] = ['startTime', 'endTime', 'title'];
 
-  constructor(private scheduleService: ScheduleService, private dateManager: DateManager) { }
+  public isRegisteredValue: boolean;
+  public isAuthenticatedValue: boolean;
+  public shouldDisplayModal: boolean;
+  public userEmail: string;
+  public currentUser: IUser;
+
+  constructor(private dateManager: DateManager, private authenticationService: AuthenticationService, 
+    private userService: UserService, private appointmentService: AppointmentService) { }
 
   ngOnInit(): void {
-    this.getSchedule();
+    this.getUserEmail();
   }
 
-  getSchedule() {
-    this.scheduleService.getAllSchedules().subscribe(
-        data => {
-        this.myPage = data;
-        this.parsePage(this.myPage);
-        }
-    );
-  }
-
-  parsePage(page: IPage) {
-    this.mySchedules = page.content;
-    let repeatingAppts: IRepeatingAppointment[] = [];
-    let appts: IAppointment[] = [];
-
-    // Construct array of RepeatingAppointments
-    this.mySchedules.map(
-      data => {
-        repeatingAppts = data.appointments;
-        this.myRepeatingAppointments = repeatingAppts;
-        return data;
+  getBookedAppts(user: IUser) {
+    let apptArray: IAppointment[] = [];
+    if(user.appointments) {
+      for(let i = 0; i < user.appointments?.length; i++) {
+        this.appointmentService.getAppointmentById(user.appointments[i] as string).subscribe( 
+          data => {
+            if(data.participants.length === data.totalSlots) {
+              let startdate: number[] = data.startTime as number[];
+              let enddate: number[] = data.endTime as number[];
+              data.startTime = this.dateManager.arrayToDate(startdate).toLocaleString();
+              data.endTime = this.dateManager.arrayToDate(enddate).toLocaleString() 
+              apptArray.push(data); 
+            }
+          }
+        );
       }
-    );
-
-    // Construct array of Appointments
-    this.myRepeatingAppointments.map( 
-      data => {
-        // Filtering booked appointments. Those that have 2 participants
-        if(data.appointment.participants[1] !== undefined) {
-          // Converting the date format to be more user friendly
-          let startdate: number[] = data.appointment.startTime as number[];
-          let enddate: number[] = data.appointment.endTime as number[];
-          data.appointment.startTime = this.dateManager.arrayToDate(startdate).toLocaleString();
-          data.appointment.endTime = this.dateManager.arrayToDate(enddate).toLocaleString()
-
-          appts.push(data.appointment);
-          this.myBookedAppointments = appts;
-          return data;
-        }
-        return data;
-      },
-  
-    );
-
+    }
+    
+    this.myBookedAppointments = apptArray;
+    
   }
+
+  getUserEmail() {
+    this.authenticationService.getPrincipal().subscribe(
+      data => { 
+        this.userEmail = data.valueOf(); 
+        this.userService.getUser(this.userEmail).subscribe(
+          data => {
+            this.currentUser = data; 
+            this.getBookedAppts(this.currentUser);
+          }
+        );
+    });  
+  }
+
+  checkIfAuthenticated() {
+    this.authenticationService.isAuthenticated().subscribe(
+      data => { 
+        this.isAuthenticatedValue = data;
+    });
+  }
+
+  checkIfRegisteredWithVendia() {
+    this.authenticationService.isUserRegistered().subscribe(
+      data => { 
+        this.isRegisteredValue = data;
+        this.getUserEmail();
+    });
+  }
+  
 }
