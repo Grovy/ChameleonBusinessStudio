@@ -18,9 +18,7 @@ export class SignupModalComponent implements OnInit {
     Validators.pattern("^(\\+\\d{1,2}\\s?)?1?\\-?\\.?\\s?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
   ];
 
-  constructor (@Inject(MAT_DIALOG_DATA) public data: { userEmailValue: string}, private userService: UserService, public dialogRef: MatDialogRef<SignupModalComponent>) { }
-
-  ngOnInit() {
+  constructor (@Inject(MAT_DIALOG_DATA) public data: { userEmailValue: string}, private userService: UserService, public dialogRef: MatDialogRef<SignupModalComponent>) {
     this.profileForm = new FormGroup({
       displayName: new FormControl ('', [ Validators.required ]),
       confirmDisplayName: new FormControl('', [ Validators.required ]),
@@ -34,7 +32,10 @@ export class SignupModalComponent implements OnInit {
     );
 
     this.userEmailValue = this.data.userEmailValue;
+
   }
+
+  ngOnInit() { }
 
   getDisplayName() {
     return this.profileForm.get('displayName');
@@ -49,9 +50,10 @@ export class SignupModalComponent implements OnInit {
   }
    
   onClickSubmit(data): void {
+    console.log("The value of data is: " + data);
     const newUser: IUser = {
       _id: uuidv4(),
-      displayName: data.displayName,
+      displayName: data.displayName, // these are returning empty the first click
       email: this.userEmailValue,
       role: "PARTICIPANT" as UserRole,
       phoneNumber: "+1" + data.phoneNumber
