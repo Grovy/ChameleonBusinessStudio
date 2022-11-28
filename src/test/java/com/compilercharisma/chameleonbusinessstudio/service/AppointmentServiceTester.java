@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 
 public class AppointmentServiceTester {
     private final AppointmentRepository repo = mock(AppointmentRepository.class);
+    private final TwilioMessagingService twilioMessagingService = mock(TwilioMessagingService.class);
     private final UserService users = mock(UserService.class);
     private final AppointmentValidator validator = mock(AppointmentValidator.class);
     private final Appointment theAppointment = new Appointment();
@@ -289,6 +290,6 @@ public class AppointmentServiceTester {
     }
 
     private AppointmentService makeSut(){
-        return new AppointmentService(repo, users, validator);
+        return new AppointmentService(repo, users, twilioMessagingService, validator);
     }
 }

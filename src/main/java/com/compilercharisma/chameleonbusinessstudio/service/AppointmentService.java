@@ -26,16 +26,18 @@ import reactor.core.publisher.Mono;
 public class AppointmentService {
 
     private final UserService userService;
+    private final TwilioMessagingService twilioMessagingService;
     private final AppointmentRepository appointmentRepository;
     private final AppointmentValidator validator;
 
     @Autowired
     public AppointmentService(
             AppointmentRepository appointmentRepository,
-            UserService userService, 
-            AppointmentValidator validator) {
+            UserService userService,
+            TwilioMessagingService twilioMessagingService, AppointmentValidator validator) {
         this.appointmentRepository = appointmentRepository;
         this.userService = userService;
+        this.twilioMessagingService = twilioMessagingService;
         this.validator = validator;
     }
 
@@ -150,6 +152,15 @@ public class AppointmentService {
                         "User with email [%s] does not exist".formatted(email))))
                 .flatMap(u -> userService.getUser(email))
                 .flatMap(u -> userService.addNewAppointmentForUser(u.get_id(), appointmentId))
+                .zipWith(appointmentRepository.getAppointment(appointmentId), (user, appointment) -> {
+                    if(user.getPhoneNumber() != null){
+                        var msg = twilioMessagingService.createAppointmentMessage(appointment, user);
+                        twilioMessagingService.sendSMSToUser(user.getPhoneNumber(), msg);
+                    } else {
+                        log.info("User [{}] does not have a phone number", user.getDisplayName());
+                    }
+                    return user;
+                })
                 .doOnSuccess(u -> log.info("Appointment [{}] was added to user with email [{}]", appointmentId, email))
                 .flatMap(a -> appointmentRepository.getAppointmentById(appointmentId))
                 .flatMap(apt -> bookEmailInAppointment(apt, email));

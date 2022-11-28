@@ -1,11 +1,13 @@
 package com.compilercharisma.chameleonbusinessstudio.dto;
 
+import com.compilercharisma.chameleonbusinessstudio.annotation.ValidPhoneNumber;
 import com.compilercharisma.chameleonbusinessstudio.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +44,13 @@ public class User implements Serializable {
     /**
      * The phone number of the user
      */
+    @ValidPhoneNumber
     private String phoneNumber;
 
     /**
      * List of appointment ids that the user has
      */
     @Builder.Default
-    private List<String> appointments = new ArrayList<String>();
+    private List<String> appointments = new ArrayList<>();
 
 }

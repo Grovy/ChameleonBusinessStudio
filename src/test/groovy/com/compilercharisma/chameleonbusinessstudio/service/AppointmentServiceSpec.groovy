@@ -9,6 +9,6 @@ class AppointmentServiceSpec extends Specification {
     def appointmentRepository = Mock(AppointmentRepository)
     def userService = Mock(UserService)
     def appointmentValidator = Mock(AppointmentValidator)
-    def sut = new AppointmentService(appointmentRepository, userService, appointmentValidator)
+    def sut = new AppointmentService(appointmentRepository, userService, twilioMessagingService, appointmentValidator)
 
 }

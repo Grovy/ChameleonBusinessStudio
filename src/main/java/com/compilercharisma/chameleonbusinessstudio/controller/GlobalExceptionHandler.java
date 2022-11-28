@@ -2,6 +2,7 @@ package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.HttpErrorMessage;
 import com.compilercharisma.chameleonbusinessstudio.exception.*;
+import com.twilio.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,16 @@ public class GlobalExceptionHandler {
                 .code(RESOURCE_NOT_FOUND_MESSAGE)
                 .build();
         return new ResponseEntity<>(response, ex.getHttpStatus());
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<HttpErrorMessage> handleTwilioNotFoundException(AppointmentNotFound ex) {
+        log.error(ex.getMessage(), ex);
+        var response = HttpErrorMessage.builder()
+                .message(ex.getMessage())
+                .code(RESOURCE_NOT_FOUND_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 }

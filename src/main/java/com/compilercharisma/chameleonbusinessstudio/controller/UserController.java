@@ -1,14 +1,17 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.*;
+import com.compilercharisma.chameleonbusinessstudio.dto.DeletionResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.User;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserAppointmentsResponse;
+import com.compilercharisma.chameleonbusinessstudio.dto.UserResponse;
+import com.compilercharisma.chameleonbusinessstudio.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.compilercharisma.chameleonbusinessstudio.service.UserService;
-
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path="/api/v1/users")
@@ -56,7 +59,8 @@ public class UserController {
      * @return The {@link User} that was created
      */
     @PostMapping()
-    public Mono<ResponseEntity<User>> createUser(@RequestBody User user){
+    public Mono<ResponseEntity<User>> createUser(
+            @RequestBody @Valid User user){
         log.info("Creating user in Vendia with parameters [{}]", user);
         return userService.createUser(user)
                 .map(r -> new ResponseEntity<>(r, HttpStatus.OK))
