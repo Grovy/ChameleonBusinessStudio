@@ -94,7 +94,6 @@ export class SplashComponent implements OnInit {
       data => { 
         this.isRegisteredValue = data;
         this.getUserEmail();
-        this.updateShouldDisplayModal(this.isRegisteredValue, this.userEmail); 
     });
   }
 
@@ -106,7 +105,7 @@ export class SplashComponent implements OnInit {
   }
 
   updateShouldDisplayModal(newRegisteredValue: boolean, email: string): void {
-    if(this.shouldDisplayModal = (this.isAuthenticatedValue && newRegisteredValue === false) && email !== undefined){
+    if(this.shouldDisplayModal = (this.isAuthenticatedValue && newRegisteredValue === false) && (email !== undefined || email != '')){
       this.displayModal(email);
     }
   }
