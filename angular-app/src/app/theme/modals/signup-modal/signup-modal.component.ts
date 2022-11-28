@@ -50,7 +50,6 @@ export class SignupModalComponent implements OnInit {
   }
    
   onClickSubmit(data): void {
-    console.log("The value of data is: " + data);
     const newUser: IUser = {
       _id: uuidv4(),
       displayName: data.displayName,
