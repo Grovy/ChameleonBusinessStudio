@@ -2,8 +2,6 @@ package com.compilercharisma.chameleonbusinessstudio.repository;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,8 +10,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.compilercharisma.chameleonbusinessstudio.dto.Appointment;
-import com.compilercharisma.chameleonbusinessstudio.dto.RepeatingAppointment;
 import com.compilercharisma.chameleonbusinessstudio.dto.Schedule;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -63,62 +59,10 @@ public class JsonScheduleRepository implements ScheduleRepository {
     }
 
     private void storeTestData(){
-        var enabledSchedule = Schedule.builder()
-            .name("Classes")
-            .isEnabled(true)
-            .appointments(List.of(
-                RepeatingAppointment.builder()
-                    .isEnabled(true)
-                    .repeatsOn(List.of(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY))
-                    .appointment(
-                        Appointment.builder()
-                            .title("CSC152")
-                            .location("Sac State")
-                            .description("Cryptography")
-                            .startTime(LocalDateTime.parse("2022-10-11T15:00:00"))
-                            .endTime(LocalDateTime.parse("2022-10-11T16:15:00"))
-                            .build()
-                    )
-                    .build(),
-                RepeatingAppointment.builder()
-                    .isEnabled(true)
-                    .repeatsOn(List.of(DayOfWeek.WEDNESDAY))
-                    .appointment(
-                        Appointment.builder()
-                            .title("CSC191")
-                            .location("Online")
-                            .description("Senior project")
-                            .startTime(LocalDateTime.parse("2022-10-12T19:00:00"))
-                            .endTime(LocalDateTime.parse("2022-10-12T19:50:00"))
-                            .build()
-                    )
-                    .build()
-            ))
-            .build();
-        var disabledSchedule = Schedule.builder()
-            .name("Social Life")
-            .isEnabled(false)
-            .appointments(List.of(
-                RepeatingAppointment.builder()
-                    .isEnabled(true)
-                    .repeatsOn(List.of(DayOfWeek.SUNDAY))
-                    .appointment(
-                        Appointment.builder()
-                            .title("D&D")
-                            .location("Home")
-                            .description("Dungeons and Dragons")
-                            .startTime(LocalDateTime.parse("2022-10-09T12:30:00"))
-                            .endTime(LocalDateTime.parse("2022-10-09T13:30:00"))
-                            .build()
-                    )
-                    .build()
-            ))
-            .build();
         var schedules = new ArrayList<Schedule>();
-        schedules.add(enabledSchedule);
-        schedules.add(disabledSchedule);
-
-        setSchedules(schedules).subscribe();
+        // add your test data here!
+        setSchedules(schedules)
+            .subscribe(); // need to subscribe to ensure it runs
     }
 
     @Override
