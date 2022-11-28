@@ -43,7 +43,7 @@ class UserControllerITSpec extends BaseITSpec {
                 .jsonPath('$.users[?(@._id == "0183764f-3b7d-2277-29d3-be7c8c43c93b")].appointments.size()').isEqualTo(0)
 
         and: "only one call to /graphql/ was made"
-        verify(2, postRequestedFor(urlEqualTo("/graphql/")))
+        verify(1, postRequestedFor(urlEqualTo("/graphql/")))
 
     }
 

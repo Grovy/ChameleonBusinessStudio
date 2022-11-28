@@ -45,26 +45,6 @@ TODO add instructions for setting environment variables
     2. run the command `> npm install --save @angular/material @angular/cdk`
     3. Double check that under `/angular-app/angular.json` in line 32, the first stylesheet Angular is using is `"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"`, if its not, then you can go ahead and copy and paste it as the first element of the json array.
 
-### Google API Credentials
-
-1. create your Google API credentials for Login with Google
-
-    1. https://developers.google.com/identity/gsi/web/guides/overview
-    2. https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
-    3. add "http://localhost:8080" and "http://localhost" as authorized **JS origins**
-    4. add "http://localhost:8080/login/oauth2/code/google" as an authorized **REDIRECT**
-
-2. update `application.properties`
-
-for example, if your Google Client Id is `123456789-abcde12345.apps.googleusercontent.com`,
-and your Google Client Secret is `ABCDE-abcde12345`
-your application.properties should contain these:
-```    
-spring.security.oauth2.client.registration.google.clientId=123456789-abcde12345.apps.googleusercontent.com
-spring.security.oauth2.client.registration.google.clientSecret=ABCDE-abcde12345
-```
-
-
 ## Launching the application
 
 To run the application, you'll need to make sure your Angular App is built, if
@@ -78,14 +58,6 @@ once the Angular App is built, run spring via
 
 You can now access the web application via ```http://localhost:8080```
 For a list of application routes, check out [routes.txt](./docs/routes.txt)
-
-## Jira Timeline: Plan for CSC 191
-Sprint 5: Begin Mitigating Data Layer to Vendia's Data Services. </br>
-Sprint 6: Implement Functionality to Appointment Booking Pages </br>
-Sprint 7: Implement Notifications and a Simple Statistics Functionality </br>
-Sprint 8: Data Deletion Implementation </br>
-Sprint 9: Polish Up the Application </br>
-Sprint 10: Deliver Documentation (User Guide, Maintainance Manual, Test Doc) and Deployment
 
 ## API Documentation
 
@@ -109,7 +81,7 @@ Note that these tests are very thurough, but are also slow.
 ## Contributors
 
 - [Matt Crow](https://github.com/matt-crow) - mattcrow19@gmail.com
-- todo add yourselves!
+- todo add yourselves! 
 
 ## Known Issues
 
