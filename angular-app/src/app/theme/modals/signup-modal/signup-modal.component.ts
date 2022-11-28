@@ -53,10 +53,10 @@ export class SignupModalComponent implements OnInit {
     console.log("The value of data is: " + data);
     const newUser: IUser = {
       _id: uuidv4(),
-      displayName: data.displayName, // these are returning empty the first click
+      displayName: data.displayName,
       email: this.userEmailValue,
       role: "PARTICIPANT" as UserRole,
-      phoneNumber: "+1" + data.phoneNumber
+      phoneNumber: data.phoneNumber ? "+1" + data.phoneNumber : '',
     }
     
     // Will need to add error handling and a spinner animation here later
