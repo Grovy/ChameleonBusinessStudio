@@ -90,7 +90,8 @@ Note that these tests are very thurough, but are also slow.
 
 ## Misc
 
-- The application stores website configuration information in your home folder, 
+- The application stores website configuration information in your home folder,
+  or the folder set by the `CHAMELEON_HOME` environment variable,
   in a folder named ```ChameleonBusinessStudio```
 - [About springdoc](https://springdoc.org/)
 - todo link to user manual

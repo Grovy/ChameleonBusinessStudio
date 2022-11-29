@@ -12,6 +12,8 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class FileSystemWebsiteConfigurationRepository implements WebsiteConfigurationRepository {
-    private static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
+    public static final Path ROOT = ApplicationFolder.ROOT;
     
     private final Path filePath;
     private Properties cache;
