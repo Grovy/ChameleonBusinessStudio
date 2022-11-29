@@ -25,7 +25,11 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class ApplicationFolder {
-    public static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
+    // store under CHAMELEON_HOME, or user.home, or the current directory
+    public static final String USER_HOME = System.getProperty("user.home", "./");
+    public static final String APP_HOME = System.getenv("CHAMELEON_HOME");
+    public static final Path ROOT = Paths.get((APP_HOME == null) ? USER_HOME : APP_HOME, "ChameleonBusinessStudio");
+
     private static final String BANNER_IMAGE_DIR = "bannerImages";
     private static final String LOGO_DIR = "logos";
     private static final String SPLASH_DIR = "splashes";
@@ -49,6 +53,8 @@ public class ApplicationFolder {
      * @throws IOException if any errors occur while creating folders
      */
     public void createAbsentFolders() throws IOException{
+        log.info("Setting up ApplicationFolder in {}", ROOT);
+
         String[] dirs = {
             SPLASH_DIR,
             BANNER_IMAGE_DIR,
