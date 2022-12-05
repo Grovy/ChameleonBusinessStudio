@@ -29,7 +29,7 @@ export class ScheduleService {
     }
 
     private handleError(error: HttpErrorResponse): Observable<never> {
-        console.log(error);
-        return throwError(`An error occured - Error code: ${error.status}`);
+        console.error(error);
+        return throwError(() => `An error occured - Error code: ${error.status}`);
     }
 }

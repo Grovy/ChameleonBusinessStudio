@@ -98,12 +98,6 @@ export class EventWidgetComponent implements OnInit {
 
     let subTime = this.dateManager.subtractTime(timeAasISO, timeBasISO);
     this.eventDuration = this.dateManager.timeToDuration(subTime);
-    console.log(timeA);
-    console.log(timeB);
-    console.log(timeAasISO);
-    console.log(timeBasISO);
-    console.log("Duration: " + subTime);
-
   }
 
 }

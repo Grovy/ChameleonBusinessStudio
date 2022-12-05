@@ -44,10 +44,10 @@ import { SignInComponent } from './pages/auth/signin/signin.component';
 import { SignInFormComponent } from './pages/auth/sign-in-form/sign-in-form.component';
 import { SignupModalComponent } from './theme/modals/signup-modal/signup-modal.component';
 import { SiteFooterComponent } from './theme/site-footer/site-footer.component';
-import { SiteHeaderComponent } from './theme/site-header/site-header.component';
 import { SplashComponent } from './pages/dashboard/splash/splash.component';
 import { TalentNavComponent } from './pages/nav/talent-nav/talent-nav.component';
 import { UserService } from './services/UserService.service';
+import { WebsiteAppearanceService } from './services/WebsiteAppearanceService.service';
 
 
 
@@ -106,7 +106,6 @@ import { AdminPanelWidgetComponent } from './theme/widgets/admin-panel-widget/ad
     SignInFormComponent,
     SignupModalComponent,
     SiteFooterComponent,
-    SiteHeaderComponent,
     SplashComponent,
     AccountModalComponent,
     TalentNavComponent,
@@ -154,8 +153,6 @@ import { AdminPanelWidgetComponent } from './theme/widgets/admin-panel-widget/ad
       { path: 'schedule-configuration', component: ScheduleConfigurationComponent },
       { path: 'setup-wizard', component: SetupWizardComponent},
       { path: 'sign-in', component: SignInFormComponent },
-      { path: 'site-header', component: SiteHeaderComponent },
-
       { path: '**', component: PageNotFoundComponent }
     ]),
     CalendarModule.forRoot({
@@ -170,7 +167,7 @@ import { AdminPanelWidgetComponent } from './theme/widgets/admin-panel-widget/ad
     DateManager,
     ScheduleService,
     UserService,
-    AppointmentService
+    WebsiteAppearanceService
   ],
   bootstrap: [AppComponent]
 })

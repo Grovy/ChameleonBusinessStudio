@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
+import com.compilercharisma.chameleonbusinessstudio.formdata.SplashContent;
 import com.compilercharisma.chameleonbusinessstudio.repository.WebsiteConfigurationRepository;
 import com.compilercharisma.chameleonbusinessstudio.webconfig.ApplicationFolder;
 
@@ -16,7 +17,6 @@ import reactor.core.publisher.Mono;
  */
 @Service
 public class WebsiteAppearanceService {
-    private static final String LANDING_PAGE_CONTENT = "pages.landing.content";
     private static final String SPLASH_PAGE_CONTENT = "pages.splash.content";
     private static final String BANNER_COLOR = "banner.color";
     private static final String BANNER_IMAGE = "banner.image";
@@ -61,21 +61,20 @@ public class WebsiteAppearanceService {
      * @param file the file to set as the splash page content
      * @return 
      */
-    public Mono<Void> setSplashPageContent(FileAdapter file){
-        repo.set(SPLASH_PAGE_CONTENT, file.getFileName());
-        return folder.saveSplash(file);
+    public Mono<Void> setSplashPageContent(SplashContent content){
+        repo.set(SPLASH_PAGE_CONTENT, content.getName());
+        return folder.saveSplash(content);
     }
 
     /**
      * returns the custom splash page content, if it has been configured
      *
-     * @return the HTML content of the custom splash page
+     * @return the text content of the custom splash page
      */
     public String getSplashPageContent(){
         String content = "";
         if(repo.isConfigured(SPLASH_PAGE_CONTENT)){
             content = folder.readSplash(repo.get(SPLASH_PAGE_CONTENT));
-            content = extractHtmlBody(content);
         }
         return content;
     }
@@ -119,7 +118,7 @@ public class WebsiteAppearanceService {
      * @return the CSS color to use for the website banner
      */
     public String getBannerColor(){
-        return repo.get(BANNER_COLOR, "#ffffff");
+        return repo.get(BANNER_COLOR, "#ff4081"); // default to a pink-ish color
     }
 
     public Mono<Void> setBannerImage(FileAdapter file){
@@ -143,45 +142,10 @@ public class WebsiteAppearanceService {
     }
 
     /**
-     * Sets & stores the given HTML file as the landing page content.
-     *
-     * @param file an HTML file, uploaded in a multipart form
-     * @return 
+     * removes the currently set banner image so the site will display the
+     * banner color instead
      */
-    public Mono<Void> setLandingPage(FileAdapter file){
-        repo.set(LANDING_PAGE_CONTENT, file.getFileName());
-        return folder.saveLandingPage(file);
-    }
-
-    /**
-     * returns the custom landing content, or the default if it hasn't been
-     * configured yet
-     *
-     * @return the HTML content of the custom landing page
-     */
-    public String getLandingPageContent(){
-        String content = "";
-        if(repo.isConfigured(LANDING_PAGE_CONTENT)){
-            content = folder.readLandingPage(repo.get(LANDING_PAGE_CONTENT));
-            content = extractHtmlBody(content);
-        }
-        return content;
-    }
-
-    private String extractHtmlBody(String content){
-        // strip some HTML formatting
-        if(content.contains("<html>")){
-            content = content.substring(
-                    content.indexOf("<html>") + 6,
-                    content.lastIndexOf("</html>")
-            );
-        }
-        if(content.contains("<body>")){
-            content = content.substring(
-                    content.indexOf("<body>") + 6,
-                    content.lastIndexOf("</body>")
-            );
-        }
-        return content;
+    public void removeBannerImage() {
+        repo.unset(BANNER_IMAGE);
     }
 }

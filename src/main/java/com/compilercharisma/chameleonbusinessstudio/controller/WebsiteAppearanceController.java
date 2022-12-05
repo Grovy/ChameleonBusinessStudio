@@ -1,7 +1,6 @@
 package com.compilercharisma.chameleonbusinessstudio.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,15 +19,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
 import com.compilercharisma.chameleonbusinessstudio.formdata.BannerColor;
 import com.compilercharisma.chameleonbusinessstudio.formdata.OrganizationName;
+import com.compilercharisma.chameleonbusinessstudio.formdata.SplashContent;
 import com.compilercharisma.chameleonbusinessstudio.formdata.UploadedFile;
-import com.compilercharisma.chameleonbusinessstudio.formdata.WebsiteConfigForm;
 import com.compilercharisma.chameleonbusinessstudio.service.WebsiteAppearanceService;
 
 import reactor.core.publisher.Mono;
 
 /**
- * Handles requests regarding customized website elements, such as its splash 
- * page or landing page details.
+ * Handles requests regarding customized website elements, such as the logo or
+ * banner color.
  * 
  * Note that all users, including those not logged in, can access the GET 
  * endpoints, while only authorized users can access the other HTTP verbs.
@@ -110,40 +110,16 @@ public class WebsiteAppearanceController {
             .then(Mono.just(ResponseEntity.created(at).build()));
     }
 
-    @GetMapping("/landing-page")
-    public Map<String, Object> getLandingPageContent(){
-        HashMap<String, Object> json = new HashMap<>();
-        json.put("content", serv.getLandingPageContent());
-        return json;
-    }
-
     /**
-     * Handles post request to /api/v1/config/landing-page
+     * removes the current banner image so the site will display the banner
+     * color instead
      * 
-     * <form action="/api/v1/config/landing-page" enctype="multipart/form-data" method="POST">
-     * <input type="file" name="file"/>
-     * 
-     * @param root a URI builder containing the current request root, such as
-     *  http://localhost:8080
-     * @param file an HTML file 
-     * @return a 201 Created At response if successful
+     * @return an OK response
      */
-    @PostMapping("landing-page")
-    public Mono<ResponseEntity<Void>> setLandingPage(
-            UriComponentsBuilder root,
-            @ModelAttribute UploadedFile file
-    ){
-        var adapted = FileAdapter.from(file.getFile());
-        adapted.setResourceType("landing-page");
-
-        if(!isHtml(adapted)){
-            return Mono.just(ResponseEntity
-                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build());
-        }
-        
-        return serv.setLandingPage(adapted)
-            .then(Mono.just(ResponseEntity.created(makeUri(root, "landing-page")).build()));        
+    @DeleteMapping("/banner-image")
+    public Mono<ResponseEntity<Void>> deleteBannerImage() {
+        serv.removeBannerImage();
+        return Mono.just(ResponseEntity.ok().build());
     }
 
     /**
@@ -202,7 +178,7 @@ public class WebsiteAppearanceController {
 
     /**
      * @return {
-     *  content: string // HTML content
+     *  content: string
      * }
      */
     @GetMapping("/splash")
@@ -215,68 +191,16 @@ public class WebsiteAppearanceController {
     @PostMapping("/splash")
     public Mono<ResponseEntity<Void>> setSplashPage(
             UriComponentsBuilder root,
-            @ModelAttribute UploadedFile file
+            @ModelAttribute SplashContent content
     ){
-        var adapted = FileAdapter.from(file.getFile());
-        adapted.setResourceType("splash");
-
-        if(!isHtml(adapted)){
-            return Mono.just(ResponseEntity
-                .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .build());
-        }
-
-        return serv.setSplashPageContent(adapted)
+        return serv.setSplashPageContent(content)
             .then(Mono.just(ResponseEntity.created(makeUri(root, "splash")).build()));
-    }
-    
-    @PostMapping
-    public Mono<ResponseEntity<Void>> handlePost(
-            @ModelAttribute WebsiteConfigForm form
-    ){
-        var monos = new ArrayList<Mono<Void>>();
-
-        if(form.getOrganizationName() != null){
-            serv.setOrganizationName(form.getOrganizationName());
-        }
-        if(form.getBannerColor() != null){
-            serv.setBannerColor(form.getBannerColor());
-        }
-
-        var logo = form.getLogo();
-        if(logo != null && isImage(FileAdapter.from(logo))){
-            monos.add(serv.setLogo(FileAdapter.from(logo)));
-        }
-
-        var banner = form.getBannerImage();
-        if(banner != null && isImage(FileAdapter.from(banner))){
-            monos.add(serv.setBannerImage(FileAdapter.from(banner)));
-        }
-
-        var splash = form.getSplashPage();
-        if(splash != null && isHtml(FileAdapter.from(splash))){
-            monos.add(serv.setSplashPageContent(FileAdapter.from(splash)));
-        }
-
-        var landing = form.getLandingPage();
-        if(landing != null && isHtml(FileAdapter.from(landing))){
-            monos.add(serv.setLandingPage(FileAdapter.from(landing)));
-        }
-        
-        return Mono.when(monos)
-            .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     private boolean isImage(FileAdapter file){
         var img = MediaType.IMAGE_JPEG.getType();
         var fileType = file.getMediaType().getType();
         return img.equals(fileType);
-    }
-
-    private boolean isHtml(FileAdapter file){
-        var html = MediaType.TEXT_HTML;
-        var fileType = file.getMediaType();
-        return html.equals(fileType);
     }
     
     private URI makeUri(UriComponentsBuilder root, String resource){

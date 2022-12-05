@@ -73,7 +73,7 @@ export class AppointmentComponent {
                 },
                 error:(err)=>{
                     this.reqCompleted = false;
-                    console.log(err);
+                    
                 }
               })
             } else{
@@ -81,7 +81,7 @@ export class AppointmentComponent {
               //  participants and TALENT: they are only allowed to view their appointments
               this.appointmentService.getMyAppointments().subscribe({
                 next:(data)=>{
-                  console.log("From Participant View");
+                 
 
                       this.appointments = [...data.content];
                       this.reqCompleted = true;
@@ -96,7 +96,7 @@ export class AppointmentComponent {
                 },
                 error:(err) =>{
                     this.reqCompleted = false;
-                    console.log(err);
+                    
                 }
               })
             }

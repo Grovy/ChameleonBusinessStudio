@@ -160,7 +160,7 @@ export class ScheduleConfigurationComponent {
     // Update with reaction elements later
     this.scheduleService.createSchedule(this.mySchedule).subscribe(
       data => { 
-        if(data.status.toString() === '200') {
+        if(data.status.toString().startsWith('2')) { // 2xx status codes are success
           this.openSnackBar("Schedule successfully created!", "Dismiss");
         } else {
           this.openSnackBar("An error occured when saving your schedule.", "Dismiss")

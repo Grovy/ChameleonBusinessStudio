@@ -35,7 +35,6 @@ public class SecurityConfiguration {
                         "/main.**.js",
                         "/oauth/**", // needed for login
                         "/**.ico", // angular icon
-                        "/site-header",
                         "/assets/images/**.svg")
                 .permitAll()
                 .pathMatchers(HttpMethod.GET, "/api/v1/**").authenticated() // by default, allow any logged-in user to GET

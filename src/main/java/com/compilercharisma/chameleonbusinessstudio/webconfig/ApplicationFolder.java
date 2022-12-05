@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.compilercharisma.chameleonbusinessstudio.dto.FileAdapter;
+import com.compilercharisma.chameleonbusinessstudio.formdata.SplashContent;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -24,12 +25,15 @@ import reactor.core.publisher.Mono;
 @Component
 @Slf4j
 public class ApplicationFolder {
-    public static final Path ROOT = Paths.get(System.getProperty("user.home", "./"), "ChameleonBusinessStudio");
-    private static final String LANDING_PAGES_DIR = "landingPages";
+    // store under CHAMELEON_HOME, or user.home, or the current directory
+    public static final String USER_HOME = System.getProperty("user.home", "./");
+    public static final String APP_HOME = System.getenv("CHAMELEON_HOME");
+    public static final Path ROOT = Paths.get((APP_HOME == null) ? USER_HOME : APP_HOME, "ChameleonBusinessStudio");
+
     private static final String BANNER_IMAGE_DIR = "bannerImages";
     private static final String LOGO_DIR = "logos";
     private static final String SPLASH_DIR = "splashes";
-    public static final String SCHED_DIR = "schedules"; // rm this once we store schedules in Vendia
+    public static final String SCHED_DIR = "schedules";
 
     private final Path root;
 
@@ -49,9 +53,10 @@ public class ApplicationFolder {
      * @throws IOException if any errors occur while creating folders
      */
     public void createAbsentFolders() throws IOException{
+        log.info("Setting up ApplicationFolder in {}", ROOT);
+
         String[] dirs = {
             SPLASH_DIR,
-            LANDING_PAGES_DIR,
             BANNER_IMAGE_DIR,
             LOGO_DIR,
             SCHED_DIR
@@ -74,20 +79,22 @@ public class ApplicationFolder {
         return save(BANNER_IMAGE_DIR, file);
     }
 
-    public Mono<Void> saveLandingPage(FileAdapter file){
-        return save(LANDING_PAGES_DIR, file);
-    }
-
-    public Mono<Void> saveSplash(FileAdapter file){
-        return save(SPLASH_DIR, file);
+    public Mono<Void> saveSplash(SplashContent content){
+        return Mono.just(content.getContent())
+                .map(text -> {
+                    var f = getFile(SPLASH_DIR, content.getName());
+                    try {
+                        Files.writeString(f.toPath(), text);
+                        log.info("Saved splash page to {}", f.getAbsolutePath());
+                    } catch (IOException e) {
+                        return Mono.error(e);
+                    }
+                    return 0;
+                }).then();
     }
 
     public String readSplash(String fileName){
         return readFile(Paths.get(getSubdir(SPLASH_DIR).toString(), fileName).toFile());
-    }
-
-    public String readLandingPage(String fileName){
-        return readFile(Paths.get(getSubdir(LANDING_PAGES_DIR).toString(), fileName).toFile());
     }
 
     public File getFile(String subdir, String fileName){
