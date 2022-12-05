@@ -9,16 +9,16 @@ Chameleon Business Studio aspires to adapt to its users, changing itself to "ble
 ## Application Screenshots
 
 #### Splash Page. This is the default splash page for our application. The user of our application will be able to customize the look of their splash page to their own liking. </br>
-<img src="/ReadmeImages/SplashPage.JPG" width="700" >
+<img src="/ReadmeImages/SplashPage_May2022.JPG" width="700" >
 
 #### Booking Page. This page presents the users with available appointments for them to book themselves. 
-<img src="ReadmeImages/bookingPage.JPG" width="700" >
+<img src="ReadmeImages/bookingPage_May2022.JPG" width="700" >
 
 #### Admin Panel. Allows administrators to generate users and assign them specific roles. Classification of users is an integral feature to distinguish permissions between different business roles.
-<img src="ReadmeImages/adminPanel.JPG" height="250" >
+<img src="ReadmeImages/adminPanel_May2022.JPG" height="250" >
 
 #### Splash Page Configuration. Allows the administrator/business owner to customize the splash page by changing the site banner and content. This will replace the look of the splash page demonstrated above.
-<img src="ReadmeImages/AdminConfig.JPG" width="700" >
+<img src="ReadmeImages/AdminConfig_May2022.JPG" width="700" >
 
 
 ## Setting up the application
