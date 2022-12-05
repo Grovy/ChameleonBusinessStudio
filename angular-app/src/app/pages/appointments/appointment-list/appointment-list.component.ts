@@ -7,6 +7,7 @@ import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { ChangeDetectionStrategy } from '@angular/compiler';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { AppointmentService } from 'src/app/services/AppointmentService.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -41,7 +42,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private cdt: ChangeDetectorRef,private appointmentService: AppointmentService){
+    constructor(private cdt: ChangeDetectorRef,private appointmentService: AppointmentService,private snackBar: MatSnackBar){
       }
 
   ngAfterViewInit(): void {
@@ -115,17 +116,17 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
       return this.appointments.length>0;
     }
 
+    
+    
 
 
-
-
-    public cancelApp(id :any,email: string)
+    public cancelApp(id :any)
     {
       //Cancel the appointment
-      if(id && email){
+      if(id ){
         this.isLoading = true;
-        console.log(`Email: ${email} and id is ${id}`);
-        this.appointmentService.unbookOtherUser(id, email).subscribe(
+        
+        this.appointmentService.unbookCurrentUser(id).subscribe(
         {
           next:(data)=>{
 
@@ -133,7 +134,11 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
             window.location.reload();
           },
           error:(err)=>{
-
+            
+            this.isLoading = false;
+            this.snackBar.open("An error have occured!","dismiss",{
+              duration: 5000,
+            });
           }
         }
 
@@ -141,13 +146,13 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
        }
        else{
-        console.log("Something Went Wrong Either Id or Email is undefined");
+      
        }
     }
 
-    // public isAdmin(){
-    //   return this.role == UserRole.ADMIN
-    //                  || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;
-    // }
+    openSnackBar(message, action?, config?) {
+      this.snackBar.open(message, action, config);
+    }
+
 }
 

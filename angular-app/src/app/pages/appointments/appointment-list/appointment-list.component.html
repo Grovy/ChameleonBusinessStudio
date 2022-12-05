@@ -72,7 +72,7 @@
 
               <div class="element-items">
               <mat-spinner *ngIf="isLoading"></mat-spinner>
-              <button [disabled]="isLoading" (click)="cancelApp(element._id,element.participant[1])">Cancel</button>
+              <button *ngIf="currentUser.role==='PARTICIPANT'" [disabled]="isLoading" (click)="cancelApp(element._id)">Cancel</button>
             </div>
           </div>
         </div>

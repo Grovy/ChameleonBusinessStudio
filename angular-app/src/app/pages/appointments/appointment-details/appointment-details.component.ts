@@ -38,7 +38,7 @@ export class AppointmentDetailsComponent {
     this.checkIfAuthenticated();
     this.checkIfRegisteredWithVendia();
     this.getAppointments();
-    this.activatedRoute.queryParams.subscribe( data => { this.filterApptName = data['event']; console.log(this.filterApptName); } );
+    this.activatedRoute.queryParams.subscribe( data => { this.filterApptName = data['event'];} );
     this.userBookingForm = this.formBuilder.group({
       email: ['', Validators.required],
     });
@@ -59,7 +59,7 @@ export class AppointmentDetailsComponent {
         if(this.filterApptName) {
           let newAppts: IAppointment[] = [];
           newAppts = this.findByApptTitle(this.allAppointments);
-          console.log(newAppts);
+         
           this.allAppointments = newAppts;
         }
         this.getDates(this.allAppointments);
@@ -99,7 +99,6 @@ export class AppointmentDetailsComponent {
       }
     )
     this.dateApptDictionary = dictionary;
-    console.log(this.dateApptDictionary);
   }
 
   getUserEmail() {
@@ -130,7 +129,7 @@ export class AppointmentDetailsComponent {
     if(appt.participants.length < appt.totalSlots) {
       this.appointmentService.bookCurrentUser(appt._id as string).subscribe(
         data => {
-          console.log(data);
+        
           if(data.status.toString() == '200') {
             this.openSnackBar("Appointment successfully booked!", "Dismiss", {
               duration: 5000,
@@ -144,14 +143,16 @@ export class AppointmentDetailsComponent {
         }
       );
     } else {
-      console.log("Cannot book this appointment. Something went wrong.");
+      this.openSnackBar("Cannot book this appointment. Something went wrong.", "Dismiss", {
+        duration: 5000,
+      });
     }
   }
 
   bookOtherUser(data, appt: IAppointment) {
     this.appointmentService.bookOtherUser(appt._id as string, data.email).subscribe( 
       data => {
-        console.log(data);
+        
         if(data.status.toString() == '200') {
           this.openSnackBar("You have successfully booked " + data.email + " for this appointment!", "Dismiss", {
             duration: 5000,
@@ -171,7 +172,7 @@ export class AppointmentDetailsComponent {
       let email = appt.participants[1] as string;
       this.appointmentService.unbookOtherUser(appt._id as string, email).subscribe(
         data => {
-          console.log(data);
+          
           if(data.status.toString() == '200') {
             this.openSnackBar("Appointment successfully unbooked!", "Dismiss", {
               duration: 5000,
@@ -185,7 +186,9 @@ export class AppointmentDetailsComponent {
         }
       );
     } else {
-      console.log("Cannot unbook this appointment. Something went wrong.");
+      this.openSnackBar("Something went wrong! cannot unbook this appointment.","Dismiss",{
+        duration: 5000,
+      });
     }
   }
 
@@ -199,8 +202,7 @@ export class AppointmentDetailsComponent {
     this.userService.getAllUsers().subscribe(
       data => { 
         this.myUserResponse = data;
-        console.log("The value of data: ");
-        console.log(data);
+        
       }
     );
   }
