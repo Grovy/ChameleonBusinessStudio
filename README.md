@@ -82,7 +82,7 @@ Note that these tests are very thurough, but are also slow.
 
 - [Matt Crow](https://github.com/matt-crow) - mattcrow19@gmail.com
 - [Daniel Ramos](https://github.com/rramsdany) - dramos3@csus.edu
-- [Daniel Villavicencio](https://github.com/dvillavicencio) - dvillavicenciomena@csus.edu
+- [Daniel Villavicencio] (https://github.com/dvillavicencio) - daniel.villavicencio.mena@gmail.com
 - [Dave Kaercher](https://github.com/dkaercher) - davekaercher@csus.edu
 - [Rojan Maharjan](https://github.com/Rojanmhj2055) - Rmaharjan@csus.edu 
 - [Ariel Camargo](https://github.com/arielcamargo) - arielcamargo@csus.edu
