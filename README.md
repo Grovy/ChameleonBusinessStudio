@@ -66,7 +66,7 @@ While the app is running, you can view its documentation at http://localhost:808
 ## Testing
 
 You can verify the application works using unit-tests and integration tests. For
-more information, see our testing document TODO: link to testing document
+more information, see our testing document: [System Test Manual](https://drive.google.com/file/d/1mtnvVTMj3DmtRkPomzXweAng4owOAyAM/view?usp=share_link)
 
 ### Unit Tests
 
@@ -81,7 +81,11 @@ Note that these tests are very thurough, but are also slow.
 ## Contributors
 
 - [Matt Crow](https://github.com/matt-crow) - mattcrow19@gmail.com
+- [Daniel Ramos](https://github.com/rramsdany) - dramos3@csus.edu
 - [Daniel Villavicencio] (https://github.com/dvillavicencio) - daniel.villavicencio.mena@gmail.com
+- [Dave Kaercher](https://github.com/dkaercher) - davekaercher@csus.edu
+- [Rojan Maharjan](https://github.com/Rojanmhj2055) - Rmaharjan@csus.edu 
+- [Ariel Camargo](https://github.com/arielcamargo) - arielcamargo@csus.edu
 
 ## Known Issues
 
@@ -94,4 +98,6 @@ Note that these tests are very thurough, but are also slow.
   or the folder set by the `CHAMELEON_HOME` environment variable,
   in a folder named ```ChameleonBusinessStudio```
 - [About springdoc](https://springdoc.org/)
-- todo link to user manual
+- [Maintenance Manual](https://drive.google.com/file/d/15oDuD2Z9YZCRYC_f8VAEx7H-kgWad9Qz/view?usp=share_link)
+- [System Test Report](https://drive.google.com/file/d/1mtnvVTMj3DmtRkPomzXweAng4owOAyAM/view?usp=share_link)
+- [User Manual](https://drive.google.com/file/d/1_0SBKNKQJ3muwa9MGUwQJV3lH2nZGi4H/view?usp=share_link)
