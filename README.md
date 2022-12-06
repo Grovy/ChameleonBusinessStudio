@@ -81,6 +81,7 @@ Note that these tests are very thurough, but are also slow.
 ## Contributors
 
 - [Matt Crow](https://github.com/matt-crow) - mattcrow19@gmail.com
+- [Daniel Villavicencio](https://github.com/dvillavicencio) - daniel.villavicencio.mena@gmail.com
 - [Daniel Ramos](https://github.com/rramsdany) - dramos3@csus.edu
 - [Daniel Villavicencio] (https://github.com/dvillavicencio) - daniel.villavicencio.mena@gmail.com
 - [Dave Kaercher](https://github.com/dkaercher) - davekaercher@csus.edu
