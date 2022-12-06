@@ -8,17 +8,35 @@ Chameleon Business Studio aspires to adapt to its users, changing itself to "ble
 
 ## Application Screenshots
 
-#### Splash Page. This is the default splash page for our application. The user of our application will be able to customize the look of their splash page to their own liking. </br>
-<img src="/ReadmeImages/SplashPage_May2022.JPG" width="700" >
+#### Participant account dashboard. This is a barbershop example, so someone who owns a barbershop can use this template for their business. Participants would be clients who want to book appointments with barbers. </br>
+<img src="/ReadmeImages/Sc7ParticipantDashboard.JPG" width="700" >
 
-#### Booking Page. This page presents the users with available appointments for them to book themselves. 
-<img src="ReadmeImages/bookingPage_May2022.JPG" width="700" >
+#### Participant account dashboard. This is a dance studio example, so someone who owns a dance studio can use this template for their business. Participants would be clients who want to book dance lessons. 
+<img src="ReadmeImages/Sc10DanceExample.JPG" width="700" >
 
-#### Admin Panel. Allows administrators to generate users and assign them specific roles. Classification of users is an integral feature to distinguish permissions between different business roles.
-<img src="ReadmeImages/adminPanel_May2022.JPG" height="250" >
+#### Admin account dashboard. A list of users will be provided for the user who can manage all users who are registered for the app. The user can change the role of the users from here.
+<img src="ReadmeImages/Sc1AdminPanel.JPG" width="700" >
 
-#### Splash Page Configuration. Allows the administrator/business owner to customize the splash page by changing the site banner and content. This will replace the look of the splash page demonstrated above.
-<img src="ReadmeImages/AdminConfig_May2022.JPG" width="700" >
+#### Booking page. This example shows an example of a talent user booking another user for a haircut appointment.
+<img src="ReadmeImages/Sc2BookingListView.JPG" width="700" >
+
+#### Booking page showing an admin account who has access to all the appointments on the site. The user can perform operations such as booking other users, unbooking appointments, and viewing who the clients are in each appointment.
+<img src="ReadmeImages/Sc3Unbooking.JPG" width="700" >
+
+#### Booking page where the appointments appear in the form of a calendar instead of a list as demonstrated above.
+<img src="ReadmeImages/Sc4CalendarView.JPG" width="700" >
+
+#### Admin panel page where the user can register a new user to the site. The form on the right is used to enter the new user's details and will appear on the table to the left when saved successfully.
+<img src="ReadmeImages/Sc5AddUserAdminPanel.JPG" width="700" >
+
+#### Talen account dashboard. The talent account will have a widget that holds information about the event they have configured, in this case it is an Office Hour event with a link to its booking page. It also has a list of upcoming appointments that have been booked to this account.
+<img src="ReadmeImages/Sc6TalentDashboard.JPG" width="700" >
+
+#### The first form in the schedule configuration page. The talent account will configure their availability for their schedule to be generated around.
+<img src="ReadmeImages/Sc8Availability.JPG" width="700" >
+
+#### The second form in the schedule configuration page. The talent account will configure their event or service details for their appointments.
+<img src="ReadmeImages/Sc9EventService.JPG" width="700" >
 
 
 ## Setting up the application
@@ -82,7 +100,7 @@ Note that these tests are very thurough, but are also slow.
 
 - [Matt Crow](https://github.com/matt-crow) - mattcrow19@gmail.com
 - [Daniel Villavicencio](https://github.com/dvillavicencio) - daniel.villavicencio.mena@gmail.com
-- [Daniel Ramos](https://github.com/rramsdany) - dramos3@csus.edu
+- [Daniel Ramos](https://github.com/rramsdany) - rramsdany@gmail.com
 - [Dave Kaercher](https://github.com/dkaercher) - davekaercher@csus.edu
 - [Rojan Maharjan](https://github.com/Rojanmhj2055) - Rmaharjan@csus.edu 
 - [Ariel Camargo](https://github.com/arielcamargo) - arielcamargo@csus.edu
