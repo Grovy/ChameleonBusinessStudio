@@ -30,7 +30,7 @@ Chameleon Business Studio aspires to adapt to its users, changing itself to "ble
 <img src="ReadmeImages/Sc5AddUserAdminPanel.JPG" width="700" >
 
 #### Talen account dashboard. The talent account will have a widget that holds information about the event they have configured, in this case it is an Office Hour event with a link to its booking page. It also has a list of upcoming appointments that have been booked to this account.
-<img src="ReadmeImages/SC6TalentDashboard.JPG" width="700" >
+<img src="ReadmeImages/Sc6TalentDashboard.JPG" width="700" >
 
 #### The first form in the schedule configuration page. The talent account will configure their availability for their schedule to be generated around.
 <img src="ReadmeImages/Sc8Availability.JPG" width="700" >
