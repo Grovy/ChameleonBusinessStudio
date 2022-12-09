@@ -69,8 +69,11 @@
 
         <div class="element-diag">
           <div class="element-buttons">
-            <div class="element-items"><button onclick="reSchedule(element._id)">Re Schedule</button></div>
-            <div class="element-items"><button onclick="cancelApp(element._id)">Cancel</button></div>
+
+              <div class="element-items">
+              <mat-spinner *ngIf="isLoading"></mat-spinner>
+              <button *ngIf="currentUser.role==='PARTICIPANT'" [disabled]="isLoading" (click)="cancelApp(element._id)">Cancel</button>
+            </div>
           </div>
         </div>
 

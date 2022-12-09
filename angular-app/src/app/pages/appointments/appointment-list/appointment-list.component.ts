@@ -6,6 +6,8 @@ import format from 'date-fns/format';
 import { IUser, UserRole } from 'src/app/models/interfaces/IUser';
 import { ChangeDetectionStrategy } from '@angular/compiler';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import { AppointmentService } from 'src/app/services/AppointmentService.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 /*
 we'll need to change this component a bit once we allow listing unavailable
 appointments.
@@ -31,6 +33,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
     @Input() currentUser?: IUser;
     displayedColumns: string[] = [ 'date', 'title','startTime', 'endTime','totalSlots'];
     columnsToDisplayWithExpand: string[]= [...this.displayedColumns,'expand'];
+    isLoading: boolean = false;
 
     expandedElement: IAppointment | null;
 
@@ -39,7 +42,7 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor(private cdt: ChangeDetectorRef){
+    constructor(private cdt: ChangeDetectorRef,private appointmentService: AppointmentService,private snackBar: MatSnackBar){
       }
 
   ngAfterViewInit(): void {
@@ -113,27 +116,43 @@ export class AppointmentListComponent implements OnInit, AfterViewInit{
       return this.appointments.length>0;
     }
 
+    
+    
 
 
-    reSchedule(id: any){
-      //go to the booking page
-      if(id){
-
-
-      }
-
-
-    }
-
-    cancelApp(id :any)
+    public cancelApp(id :any)
     {
       //Cancel the appointment
+      if(id ){
+        this.isLoading = true;
+        
+        this.appointmentService.unbookCurrentUser(id).subscribe(
+        {
+          next:(data)=>{
 
+            this.isLoading = false;
+            window.location.reload();
+          },
+          error:(err)=>{
+            
+            this.isLoading = false;
+            this.snackBar.open("An error have occured!","dismiss",{
+              duration: 5000,
+            });
+          }
+        }
+
+        );
+
+       }
+       else{
+      
+       }
     }
 
-    // public isAdmin(){
-    //   return this.role == UserRole.ADMIN
-    //                  || this.role == UserRole.ORGANIZER || this.role == UserRole.TALENT;
-    // }
+    openSnackBar(message, action?, config?) {
+      this.snackBar.open(message, action, config);
+    }
+
 }
 
